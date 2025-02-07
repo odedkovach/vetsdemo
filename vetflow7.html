@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Include Tailwind CSS for all modal and table styles -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VetFusion Dashboard</title>
+  <!-- Google Fonts for modern typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- UniPaas UI Web-Embeds Library -->
+  <script type="application/javascript" src="https://cdn.unipaas.com/embedded-ui.js"></script>
+  
+  <!-- Global Styles for non‑modal parts -->
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4e1ff; /* Light purple background */
+      color: #333;
+    }
+    a {
+      text-decoration: none;
+    }
+    .hidden {
+      display: none;
+    }
+    /* Dashboard Container */
+    #dashboard-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header.dashboard-header {
+      background: #7b1adb; /* Primary color */
+      color: #ffffff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header.dashboard-header h1 {
+      font-size: 1.5em;
+      margin: 0;
+    }
+    /* Main Content Area */
+    .dashboard-content {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+    /* Sidebar */
+    .sidebar {
+      background: #ffffff;
+      width: 250px; /* Increased width */
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      border-right: 1px solid #b932f8;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar ul li {
+      margin: 15px 0;
+    }
+    .sidebar ul li a {
+      display: block;
+      width: 100%;
+      padding: 0.5rem 1rem;
+      color: #7b1adb;
+      font-weight: 600;
+      border-radius: 0.375rem;
+      transition: background 0.3s ease;
+    }
+    .sidebar ul li a:hover {
+      background: #e0d7f7;
+    }
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      background: #f4e1ff;
+    }
+    /* Section Cards */
+    #tab-content .section {
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 0.5rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    /* Dashboard Overview Cards */
+    .cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      margin-bottom: 1.875rem;
+    }
+    .card {
+      flex: 1 1 200px;
+      background: #b932f8;
+      color: #ffffff;
+      padding: 1.25rem;
+      border-radius: 0.5rem;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .card h3 {
+      margin-bottom: 0.625rem;
+      font-size: 1.125rem;
+    }
+    .card p {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+    .recent-transactions h3 {
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+      color: #7b1adb;
+    }
+  </style>
+  
+</head>
+<body>
+  <!-- Dashboard (VetFusion) View -->
+  <div id="dashboard-container">
+    <header class="dashboard-header">
+      <h1>VetFusion Dashboard</h1>
+      <div id="settingsIcon" onclick="openSettingsModal()" style="cursor: pointer; font-size: 24px;">⚙️</div>
+    </header>
+    <div class="dashboard-content">
+      <aside class="sidebar">
+        <ul>
+          <li><a onclick="showTab('dashboard')">Dashboard</a></li>
+          <li><a onclick="showTab('clients')">Clients &amp; Patients</a></li>
+          <li><a onclick="showTab('appointments')">Appointments</a></li>
+          <li><a onclick="showTab('payments')">Payments</a></li>
+          <li><a onclick="showTab('reports')">Reports</a></li>
+          <li><a onclick="showTab('store')">Store</a></li>
+          <li><a onclick="showTab('estimate')">Estimates/Invoices</a></li>
+          <li><a onclick="showTab('settings')">Settings</a></li>
+        </ul>
+      </aside>
+      <main class="main-content">
+        <div id="tab-content">
+          <!-- Dashboard Overview Section -->
+          <div id="dashboard-section" class="section">
+            <h2 class="text-2xl font-semibold mb-4">Dashboard Overview</h2>
+            <div class="cards-container">
+              <div class="card">
+                <h3>Total Clients</h3>
+                <p>150</p>
+              </div>
+              <div class="card">
+                <h3>New Appointments</h3>
+                <p>20</p>
+              </div>
+              <div class="card">
+                <h3>Total Patients</h3>
+                <p>200</p>
+              </div>
+              <div class="card">
+                <h3>Payments Today</h3>
+                <p>£500</p>
+              </div>
+              <div class="card">
+                <h3>Monthly Revenue</h3>
+                <p>£12K</p>
+              </div>
+            </div>
+            <div class="recent-transactions">
+              <h3>Recent Transactions</h3>
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owner</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                      <td class="px-6 py-4 whitespace-nowrap">2025-01-25</td>
+                      <td class="px-6 py-4 whitespace-nowrap">John Doe</td>
+                      <td class="px-6 py-4 whitespace-nowrap">£50</td>
+                      <td class="px-6 py-4 whitespace-nowrap">Completed</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 whitespace-nowrap">2025-01-25</td>
+                      <td class="px-6 py-4 whitespace-nowrap">Jane Smith</td>
+                      <td class="px-6 py-4 whitespace-nowrap">£70</td>
+                      <td class="px-6 py-4 whitespace-nowrap">Completed</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 whitespace-nowrap">2025-01-24</td>
+                      <td class="px-6 py-4 whitespace-nowrap">Bob Johnson</td>
+                      <td class="px-6 py-4 whitespace-nowrap">£60</td>
+                      <td class="px-6 py-4 whitespace-nowrap">Pending</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Clients & Patients Section -->
+          <div id="clients-section" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Client &amp; Patient Management</h2>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owner Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pet Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pet Type</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Breed</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Visit</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Next Appointment</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Billing Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Method</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Health Plan</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">John Doe</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Bella</td>
+                    <td class="px-6 py-4 whitespace-nowrap">john.doe@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-1234</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Dog</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Labrador Retriever</td>
+                    <td class="px-6 py-4 whitespace-nowrap">2025-01-15</td>
+                    <td class="px-6 py-4 whitespace-nowrap">2025-02-15</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap">***4542</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Basic</td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Jane Smith</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Whiskers</td>
+                    <td class="px-6 py-4 whitespace-nowrap">jane.smith@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-2345</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Siamese</td>
+                    <td class="px-6 py-4 whitespace-nowrap">2025-02-01</td>
+                    <td class="px-6 py-4 whitespace-nowrap">2025-03-01</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap">***9876</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Premium</td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Bob Johnson</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Rex</td>
+                    <td class="px-6 py-4 whitespace-nowrap">bob.johnson@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-3456</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Dog</td>
+                    <td class="px-6 py-4 whitespace-nowrap">German Shepherd</td>
+                    <td class="px-6 py-4 whitespace-nowrap">2024-12-01</td>
+                    <td class="px-6 py-4 whitespace-nowrap">2025-01-10</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap">---</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Basic</td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Alice Brown</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Coco</td>
+                    <td class="px-6 py-4 whitespace-nowrap">alice.brown@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-4567</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Persian</td>
+                    <td class="px-6 py-4 whitespace-nowrap">2025-03-05</td>
+                    <td class="px-6 py-4 whitespace-nowrap">2025-04-05</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap">***1234</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Premium</td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Charlie Davis</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Max</td>
+                    <td class="px-6 py-4 whitespace-nowrap">charlie.davis@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-5678</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Dog</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Beagle</td>
+                    <td class="px-6 py-4 whitespace-nowrap">2025-04-10</td>
+                    <td class="px-6 py-4 whitespace-nowrap">2025-05-10</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap">***6789</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Premium</td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Diane Evans</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Luna</td>
+                    <td class="px-6 py-4 whitespace-nowrap">diane.evans@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-6789</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Maine Coon</td>
+                    <td class="px-6 py-4 whitespace-nowrap">2025-05-15</td>
+                    <td class="px-6 py-4 whitespace-nowrap">2025-06-15</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Expired</td>
+                    <!-- For Diane, the expired text in this column is for payment method -->
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <a href="#" onclick="openUpdatePaymentModal()" class="text-indigo-600 hover:underline cursor-pointer">expired</a>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">Basic</td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Karen Miller</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Zoe</td>
+                    <td class="px-6 py-4 whitespace-nowrap">karen.miller@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-1111</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Scottish Fold</td>
+                    <td class="px-6 py-4 whitespace-nowrap">2022-08-01</td>
+                    <td class="px-6 py-4 whitespace-nowrap">2023-08-01</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <!-- Payment Method column: plain text ***3333 -->
+                    <td class="px-6 py-4 whitespace-nowrap">***3333</td>
+                    <!-- Health Plan column: clickable expired link for membership renewal -->
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <a href="#" onclick="openRenewPlanModal()" class="text-indigo-600 hover:underline cursor-pointer">expired</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- Appointments Section -->
+          <div id="appointments-section" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Appointments</h2>
+            <p>Fake appointment schedule: General Check-up, Vaccination, Surgery, Dental Cleaning, Grooming.</p>
+          </div>
+          
+          <!-- Payments Section -->
+          <div id="payments-section" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Payment Processing</h2>
+            <div id="pay_portal"></div>
+          </div>
+          
+          <!-- Reports Section -->
+          <div id="reports-section" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Analytics &amp; Reporting</h2>
+            <p>Fake reports showing clinic performance metrics.</p>
+          </div>
+          
+          <!-- Store Section -->
+          <div id="store-section" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Store</h2>
+            <div class="flex flex-wrap gap-5 mt-5">
+              <!-- Item 1: Premium Dog Food -->
+              <div class="bg-white rounded-lg shadow p-6 w-56 text-center">
+                <div class="text-4xl">🐶</div>
+                <div class="mt-4">
+                  <h3 class="text-lg font-semibold">Dog Food</h3>
+                  <p>Price: £30.00</p>
+                  <button class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="openChooseCustomerModal(30)">Send Payment</button>
+                </div>
+              </div>
+              <!-- Item 2: Cat Litter -->
+              <div class="bg-white rounded-lg shadow p-6 w-56 text-center">
+                <div class="text-4xl">🐱</div>
+                <div class="mt-4">
+                  <h3 class="text-lg font-semibold">Cat Litter</h3>
+                  <p>Price: £15.00</p>
+                  <button class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="openChooseCustomerModal(15)">Send Payment</button>
+                </div>
+              </div>
+              <!-- Item 3: Flea & Tick Treatment -->
+              <div class="bg-white rounded-lg shadow p-6 w-56 text-center">
+                <div class="text-4xl">💊</div>
+                <div class="mt-4">
+                  <h3 class="text-lg font-semibold">Flea Treatment</h3>
+                  <p>Price: £25.00</p>
+                  <button class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="openChooseCustomerModal(25)">Send Payment</button>
+                </div>
+              </div>
+              <!-- Item 4: Pet Toy -->
+              <div class="bg-white rounded-lg shadow p-6 w-56 text-center">
+                <div class="text-4xl">🎾</div>
+                <div class="mt-4">
+                  <h3 class="text-lg font-semibold">Pet Toy</h3>
+                  <p>Price: £10.00</p>
+                  <button class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="openChooseCustomerModal(10)">Send Payment</button>
+                </div>
+              </div>
+              <!-- Item 5: Pet Bed -->
+              <div class="bg-white rounded-lg shadow p-6 w-56 text-center">
+                <div class="text-4xl">🛏️</div>
+                <div class="mt-4">
+                  <h3 class="text-lg font-semibold">Pet Bed</h3>
+                  <p>Price: £45.00</p>
+                  <button class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="openChooseCustomerModal(45)">Send Payment</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Estimates/Invoices Section -->
+          <div id="estimate-section" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Estimates/Invoices</h2>
+            <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="openEstimateModal()">Create Estimate/Invoice</button>
+          </div>
+          
+          <!-- Settings Section -->
+          <div id="settings-section" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Settings</h2>
+            <p>Fake settings page to configure veterinary software options.</p>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  
+  <!-- ================= Tailwind‑Styled Modals with X Close Button ================= -->
+  
+  <!-- Update Payment (Send Payment Link) Modal -->
+  <div id="updatePaymentModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeUpdatePaymentModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Send Payment Link</h2>
+      <div id="updatePaymentDetails" class="hidden">
+        <p class="mb-4 font-bold">Send the Payment Link to Customer</p>
+        <div class="flex flex-col gap-2 mb-4">
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendUpdatedPaymentLink('email')">Send via Email</button>
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendUpdatedPaymentLink('sms')">Send via SMS</button>
+        </div>
+        <p class="mb-2 font-bold">Use this QR code to access the checkout</p>
+        <div class="flex justify-center mb-2">
+          <img id="updatePaymentQRCode" src="" alt="QR Code" class="w-32 h-32">
+        </div>
+        <p><strong>Payment Link:</strong> <span id="updatePaymentLink"></span></p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Choose Customer Modal -->
+  <div id="chooseCustomerModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeChooseCustomerModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Choose Customer</h2>
+      <div class="mb-4">
+        <p class="mb-2">Select a customer (name or phone):</p>
+        <select id="customerSelect" class="w-full p-2 border-gray-300 rounded">
+          <option value="">--Select Customer--</option>
+          <option value="1">John Doe - 555-1234</option>
+          <option value="2">Jane Smith - 555-2345</option>
+          <option value="3">Alice Brown - 555-4567</option>
+        </select>
+      </div>
+      <div class="flex justify-center">
+        <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="chooseCustomerForItemPayment()">Proceed</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Purchase Completed Modal -->
+  <div id="purchaseCompleteModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closePurchaseCompleteModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Purchase Completed</h2>
+      <div>
+        <p class="mb-2">Purchase completed successfully!</p>
+        <p class="mb-2">Amount: <span id="completedAmount"></span></p>
+        <p class="mb-2">Currency: <span id="completedCurrency"></span></p>
+        <p class="mb-2">Reference: <span id="completedReference"></span></p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Renew Health Plan Modal -->
+  <div id="renewPlanModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeRenewPlanModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Renew Health Plan</h2>
+      <div id="renewalPlanSelection">
+        <p class="mb-4 font-bold">Select Health Plan</p>
+        <div id="planButtonsContainer" class="flex flex-col gap-2"></div>
+      </div>
+      <div id="renewalPlanDetails" class="hidden">
+        <p class="mb-4 font-bold">Send the Renewal Link to Customer</p>
+        <div class="flex flex-col gap-2 mb-4">
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendRenewalLink('email')">Send via Email</button>
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendRenewalLink('sms')">Send via SMS</button>
+        </div>
+        <p class="mb-2 font-bold">Use this QR code to access the renewal page</p>
+        <div class="flex justify-center mb-2">
+          <img id="renewalQRCode" src="" alt="QR Code" class="w-32 h-32">
+        </div>
+        <p><strong>Payment Link:</strong> <span id="renewalPaymentLink"></span></p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Register Health Plan Modal -->
+  <div id="registerPlanModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeRegisterPlanModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Register Health Plan</h2>
+      <div>
+        <p class="mb-4 font-bold">Send the Registration Link to Customer</p>
+        <p class="mb-4">Click below to send the health plan registration link directly to the customer using the email address or phone number on their profile.</p>
+        <div class="flex flex-col gap-2 mb-4">
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendRegistrationLink('email')">Send via Email</button>
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendRegistrationLink('sms')">Send via SMS</button>
+        </div>
+        <p class="mb-2 font-bold">Use this QR code to access the registration page</p>
+        <div class="flex justify-center">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=RegistrationLink" alt="QR Code" class="w-32 h-32">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeSettingsModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Settings</h2>
+      <div>
+        <p class="mb-4">Enter the ACCESS TOKEN:</p>
+        <input type="text" id="accessTokenInput" value="OoH3cpx8lO7uY3KsA5654A==" class="w-full p-2 border-gray-300 rounded">
+        <div class="flex justify-center mt-4">
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="saveAccessToken()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Estimate/Invoice Creation Modal -->
+  <div id="estimateModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeEstimateModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4"><span class="underline">Create</span> Estimate/Invoice</h2>
+      <!-- Pet Dropdown -->
+      <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Pet</label>
+          <select id="estimatePet" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+              <option value="">Select Pet</option>
+              <option value="pet1">Buddy (Dog)</option>
+              <option value="pet2">Mittens (Cat)</option>
+              <option value="pet3">Charlie (Parrot)</option>
+          </select>
+      </div>
+      <!-- Client Dropdown -->
+      <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Client</label>
+          <select id="estimateClient" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+              <option value="">Select Client</option>
+              <option value="client1">John Doe</option>
+              <option value="client2">Jane Smith</option>
+              <option value="client3">Alice Brown</option>
+          </select>
+      </div>
+      <!-- Reference Name Input -->
+      <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Reference name for Estimate/Invoice (Optional)</label>
+          <input type="text" id="estimateReference" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="">
+      </div>
+      <!-- Buttons -->
+      <div class="flex justify-between">
+          <button class="text-indigo-600 hover:underline" onclick="closeEstimateModal()">Cancel</button>
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="createEstimate()">Create Estimate/Invoice</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Invoice Details Modal -->
+  <div id="invoiceDetailsModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeInvoiceDetailsModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4"><span class="underline">Unipaas</span> Test : Louie @ 18 Jan 2025 - estimate</h2>
+      <!-- Services Section -->
+      <h3 class="text-lg font-semibold mt-4">Services</h3>
+      <div class="bg-gray-50 rounded-lg p-4 mt-2 overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-100">
+                  <tr>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Discount</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Final Price <span class="text-xs">(Incl. VAT)</span></th>
+                  </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                  <tr>
+                      <td class="px-4 py-2">BLOCK OFF</td>
+                      <td class="px-4 py-2">2</td>
+                      <td class="px-4 py-2">-</td>
+                      <td class="px-4 py-2">£0</td>
+                  </tr>
+                  <tr>
+                      <td class="px-4 py-2">BLOCK OFF</td>
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">-</td>
+                      <td class="px-4 py-2">£0</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+      <!-- Products Section -->
+      <h3 class="text-lg font-semibold mt-6">Products</h3>
+      <div class="bg-gray-50 rounded-lg p-4 mt-2 overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-100">
+                  <tr>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Discount</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Final Price <span class="text-xs">(Incl. VAT)</span></th>
+                  </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                  <tr>
+                      <td class="px-4 py-2">1.25mg . NVS. Amodip (100 tabs)</td>
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">-</td>
+                      <td class="px-4 py-2">£95.89</td>
+                  </tr>
+                  <tr>
+                      <td class="px-4 py-2">ACESADETE 2MG/ML SOL INJ DOG/CAT</td>
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">-</td>
+                      <td class="px-4 py-2">£9.70</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+      <!-- Due Date -->
+      <div class="flex items-center mt-6">
+          <span class="bg-gray-200 p-2 rounded-full">📅</span>
+          <p class="ml-2 text-gray-700">Due on: <strong>17/02/2025</strong></p>
+      </div>
+      <!-- Billing Summary -->
+      <div class="mt-6 border-t pt-4">
+          <h3 class="text-lg font-semibold">Billing Summary</h3>
+          <div class="flex justify-between items-center mt-2">
+              <p class="text-indigo-600 font-semibold">Total Price <span class="text-xs">(Incl. VAT)</span></p>
+              <p class="text-xl font-bold" id="invoiceTotal">£105.59</p>
+          </div>
+      </div>
+      <!-- Buttons Section -->
+      <div class="mt-6 flex justify-between">
+          <button class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700" onclick="generatePDF()">Generate Invoice PDF</button>
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendInvoicePayment()">Send Payment</button>
+      </div>
+      <script>
+          function generatePDF() {
+              alert("Generating PDF... (This will be replaced with actual PDF generation logic)");
+          }
+      </script>
+    </div>
+  </div>
+  
+  <!-- ================= End Tailwind‑Styled Modals ================= -->
+  
+  <!-- JavaScript Functions -->
+  <script>
+    // Global variables
+    let currentItemPaymentAmount = 0; // for store/invoice payment
+    let checkoutStatusTimer;
+    let selectedInvoiceClient = null; // holds the client selected via estimate
+    
+    // Dummy customers (for store payments)
+    const customers = [
+      { id: "1", name: "John Doe", phone: "555-1234", email: "john.doe@example.com" },
+      { id: "2", name: "Jane Smith", phone: "555-2345", email: "jane.smith@example.com" },
+      { id: "3", name: "Alice Brown", phone: "555-4567", email: "alice.brown@example.com" }
+    ];
+    
+    // Function to switch visible section based on sidebar selection.
+    function showTab(tab) {
+      document.querySelectorAll('#tab-content .section').forEach(section => {
+        section.classList.add('hidden');
+      });
+      const activeSection = document.getElementById(tab + '-section');
+      if (activeSection) activeSection.classList.remove('hidden');
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      showTab('dashboard');
+    });
+    
+    // ================= Update Payment Modal Functions =================
+    function openUpdatePaymentModal() {
+      document.getElementById('updatePaymentModal').classList.remove('hidden');
+      updatePaymentCheckout();
+    }
+    function closeUpdatePaymentModal() {
+      document.getElementById('updatePaymentModal').classList.add('hidden');
+      document.getElementById('updatePaymentDetails').classList.add('hidden');
+    }
+    function updatePaymentCheckout() {
+      const data = {
+        amount: 0,
+        currency: "GBP",
+        country: "GB",
+        phone: "+44 20 7123 4567",
+        email: "test@unipaas.com",
+        storePaymentMethod: true,
+        paymentMethods: ["card"],
+        reference: "update_payment_ref",
+        consumer: { reference: "update_consumer_ref" }
+      };
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer OoH3cpx8lO7uY3KsA5654A=="
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
+        return response.json();
+      })
+      .then(jsonData => {
+        console.log("Update Payment Checkout Session Created:", jsonData);
+        const paymentlink = jsonData.shortLink;
+        document.getElementById('updatePaymentLink').textContent = paymentlink;
+        document.getElementById('updatePaymentQRCode').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(paymentlink);
+        document.getElementById('updatePaymentDetails').classList.remove('hidden');
+      })
+      .catch(error => console.error("Error:", error));
+    }
+    function sendUpdatedPaymentLink(method) {
+      alert('Payment link sent via ' + method + '!');
+      closeUpdatePaymentModal();
+    }
+    
+    // ================= Item Payment Functions (for store/invoice) =================
+    function openChooseCustomerModal(amount) {
+      currentItemPaymentAmount = amount;
+      document.getElementById('chooseCustomerModal').classList.remove('hidden');
+    }
+    function closeChooseCustomerModal() {
+      document.getElementById('chooseCustomerModal').classList.add('hidden');
+    }
+    function chooseCustomerForItemPayment() {
+      const customerId = document.getElementById('customerSelect').value;
+      if (!customerId) {
+        alert("Please select a customer.");
+        return;
+      }
+      const selectedCustomer = customers.find(c => c.id === customerId);
+      closeChooseCustomerModal();
+      openItemPaymentModal(currentItemPaymentAmount, selectedCustomer);
+    }
+    function openItemPaymentModal(amount, customer) {
+      document.getElementById('updatePaymentModal').classList.remove('hidden');
+      itemPaymentCheckout(amount, customer);
+    }
+    function itemPaymentCheckout(amount, customer) {
+      const data = {
+        amount: amount,
+        currency: "GBP",
+        country: "GB",
+        email: customer.email,
+        paymentMethods: ["card"],
+        reference: "item_payment_ref_" + new Date().getTime(),
+        consumer: { reference: "item_consumer_ref_" + customer.id }
+      };
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer OoH3cpx8lO7uY3KsA5654A=="
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
+        return response.json();
+      })
+      .then(jsonData => {
+        console.log("Item Payment Checkout Session Created:", jsonData);
+        const paymentlink = jsonData.shortLink;
+        const checkoutId = jsonData.id;
+        document.getElementById('updatePaymentLink').textContent = paymentlink;
+        document.getElementById('updatePaymentQRCode').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(paymentlink);
+        document.getElementById('updatePaymentDetails').classList.remove('hidden');
+        startCheckoutStatusTimer(checkoutId);
+      })
+      .catch(error => console.error("Error:", error));
+    }
+    function startCheckoutStatusTimer(checkoutId) {
+      const startTime = Date.now();
+      checkoutStatusTimer = setInterval(() => {
+        const elapsedSeconds = (Date.now() - startTime) / 1000;
+        if (elapsedSeconds > 400) {
+          clearInterval(checkoutStatusTimer);
+          console.log("Checkout status timer stopped after 400 seconds");
+          return;
+        }
+        fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout/" + checkoutId, {
+          method: "GET",
+          headers: {
+            "Authorization": "Bearer OoH3cpx8lO7uY3KsA5654A==",
+            "Content-Type": "application/json"
+          }
+        })
+        .then(response => {
+          if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
+          return response.json();
+        })
+        .then(data => {
+          console.log("Checkout status:", data.status);
+          if (data.status && data.status.toLowerCase() === "paid") {
+            clearInterval(checkoutStatusTimer);
+            document.getElementById("completedAmount").textContent = data.amount;
+            document.getElementById("completedCurrency").textContent = data.currency;
+            document.getElementById("completedReference").textContent = data.reference;
+            document.getElementById("purchaseCompleteModal").classList.remove('hidden');
+          }
+        })
+        .catch(error => console.error("Error checking checkout status:", error));
+      }, 5000);
+    }
+    function closePurchaseCompleteModal() {
+      document.getElementById("purchaseCompleteModal").classList.add('hidden');
+    }
+    
+    // ================= Renewal Modal Functions =================
+    function openRenewPlanModal() {
+      document.getElementById('renewPlanModal').classList.remove('hidden');
+      document.getElementById('renewalPlanSelection').classList.remove('hidden');
+      document.getElementById('renewalPlanDetails').classList.add('hidden');
+      fetchPlans();
+    }
+    function closeRenewPlanModal() {
+      document.getElementById('renewPlanModal').classList.add('hidden');
+    }
+    function sendRenewalLink(method) {
+      alert('Renewal link sent via ' + method + '!');
+      closeRenewPlanModal();
+    }
+    function fetchPlans() {
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/plans", {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer OoH3cpx8lO7uY3KsA5654A==",
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
+        return response.json();
+      })
+      .then(data => {
+        let plans = [];
+        if (Array.isArray(data)) {
+          plans = data.length > 0 && data[0].items ? data[0].items : data;
+        } else if (data.items) {
+          plans = data.items;
+        }
+        const container = document.getElementById('planButtonsContainer');
+        container.innerHTML = "";
+        plans.forEach(plan => {
+          const btn = document.createElement('button');
+          btn.textContent = plan.description;
+          btn.className = "bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700";
+          btn.onclick = () => chooseRenewalPlan(plan.id, plan.price, plan.currency);
+          container.appendChild(btn);
+        });
+      })
+      .catch(error => console.error("Error fetching plans:", error));
+    }
+    function chooseRenewalPlan(planId, amount, currency) {
+      checkout(planId, amount, currency);
+    }
+    function checkout(planId, amount, currency) {
+      const data = {
+        amount: amount,
+        currency: currency,
+        email: "demo@test.com",
+        country: "GB",
+        paymentMethods: ["card"],
+        shippingSameAsBilling: true,
+        reference: "12345",
+        consumer: { reference: "12345678" },
+        plans: [planId]
+      };
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer OoH3cpx8lO7uY3KsA5654A=="
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
+        return response.json();
+      })
+      .then(jsonData => {
+        console.log("Checkout Session Created:", jsonData);
+        const paymentlink = jsonData.shortLink;
+        document.getElementById('renewalPaymentLink').textContent = paymentlink;
+        document.getElementById('renewalQRCode').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(paymentlink);
+        document.getElementById('renewalPlanSelection').classList.add('hidden');
+        document.getElementById('renewalPlanDetails').classList.remove('hidden');
+      })
+      .catch(error => console.error("Error:", error));
+    }
+    
+    // ================= Register Health Plan Modal Functions =================
+    function openRegisterPlanModal() {
+      document.getElementById('registerPlanModal').classList.remove('hidden');
+    }
+    function closeRegisterPlanModal() {
+      document.getElementById('registerPlanModal').classList.add('hidden');
+    }
+    function sendRegistrationLink(method) {
+      alert('Registration link sent via ' + method + '!');
+      closeRegisterPlanModal();
+    }
+    
+    // ================= Settings Modal Functions =================
+    let savedToken = "OoH3cpx8lO7uY3KsA5654A==";
+    function openSettingsModal() {
+      document.getElementById('settingsModal').classList.remove('hidden');
+      document.getElementById('accessTokenInput').value = savedToken;
+    }
+    function closeSettingsModal() {
+      document.getElementById('settingsModal').classList.add('hidden');
+    }
+    function saveAccessToken() {
+      savedToken = document.getElementById('accessTokenInput').value;
+      closeSettingsModal();
+      initializeUniPaas();
+    }
+    
+    // ================= Estimate/Invoice Modal Functions =================
+    function openEstimateModal() {
+      document.getElementById('estimateModal').classList.remove('hidden');
+    }
+    function closeEstimateModal() {
+      document.getElementById('estimateModal').classList.add('hidden');
+    }
+    function createEstimate() {
+      const pet = document.getElementById('estimatePet').value;
+      const clientId = document.getElementById('estimateClient').value;
+      if (!pet || !clientId) {
+        alert("Please select both a pet and a client.");
+        return;
+      }
+      const fakeClients = {
+        "client1": { id: "client1", name: "John Doe", phone: "555-1234", email: "john.doe@example.com" },
+        "client2": { id: "client2", name: "Jane Smith", phone: "555-2345", email: "jane.smith@example.com" },
+        "client3": { id: "client3", name: "Alice Brown", phone: "555-4567", email: "alice.brown@example.com" }
+      };
+      selectedInvoiceClient = fakeClients[clientId];
+      closeEstimateModal();
+      document.getElementById('invoiceDetailsModal').classList.remove('hidden');
+    }
+    function closeInvoiceDetailsModal() {
+      document.getElementById('invoiceDetailsModal').classList.add('hidden');
+    }
+    function sendInvoicePayment() {
+      const totalText = document.getElementById('invoiceTotal').innerText;
+      const total = parseFloat(totalText.replace('£',''));
+      if (!selectedInvoiceClient) {
+        alert("No client selected.");
+        return;
+      }
+      // Since the client was already selected during estimate creation, skip choose customer.
+      openItemPaymentModal(total, selectedInvoiceClient);
+      closeInvoiceDetailsModal();
+    }
+    
+    // ================= UniPaas UI Initialization =================
+    const config_general = {
+      paymentsEnabled: true,
+      theme: { 
+        colors: { 
+          primaryColor: "#7b1adb", 
+          secondaryColor: "#b932f8", 
+          accentTextColor: "#7b1adb", 
+          primaryButtonColor: "#7b1adb" 
+        },
+        fontFamily: "inherit",
+        boxShadow: "0px 3px 15px rgba(27, 79, 162, 0.11)" 
+      }
+    };
+    function initializeUniPaas() {
+      fetch("https://sandbox.unipaas.com/platform/authorize", {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer " + savedToken,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          scopes: ["portal_read", "portal_write"],
+          vendorId: "6735b2697085b113404a2e74"
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const accessToken = data.accessToken;
+        const components = unipaas.components(accessToken, config_general);
+        const payPortal = components.create("payPortal");
+        payPortal.mount("#pay_portal");
+      })
+      .catch(error => console.error('Error fetching access token:', error));
+    }
+    initializeUniPaas();
+  </script>
+  
+</body>
+</html>
