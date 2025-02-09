@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <!-- Include Tailwind CSS for all modal and table styles -->
+  <!-- Include Tailwind CSS for styling -->
   <script src="https://cdn.tailwindcss.com"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>VetFusion Dashboard</title>
@@ -11,7 +11,7 @@
   <!-- UniPaas UI Web-Embeds Library -->
   <script type="application/javascript" src="https://cdn.unipaas.com/embedded-ui.js"></script>
   
-  <!-- Global Styles for non‑modal parts -->
+  <!-- Global Styles -->
   <style>
     body {
       font-family: 'Montserrat', sans-serif;
@@ -23,9 +23,7 @@
     a {
       text-decoration: none;
     }
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
     /* Dashboard Container */
     #dashboard-container {
       display: flex;
@@ -33,8 +31,8 @@
       height: 100vh;
     }
     header.dashboard-header {
-      background: #7b1adb; /* Primary color */
-      color: #ffffff;
+      background: #7b1adb;
+      color: #fff;
       padding: 20px;
       display: flex;
       justify-content: space-between;
@@ -45,33 +43,29 @@
       font-size: 1.5em;
       margin: 0;
     }
-    /* Mobile Menu Button (visible only on mobile) */
+    /* Mobile Menu Button */
     #mobileMenuButton {
       display: none;
       cursor: pointer;
       font-size: 24px;
     }
     @media (max-width: 767px) {
-      #mobileMenuButton {
-        display: block;
-      }
+      #mobileMenuButton { display: block; }
     }
-    /* Main Content Area */
+    /* Main Content */
     .dashboard-content {
       flex: 1;
       display: flex;
-      flex-direction: column; /* mobile: stacked */
+      flex-direction: column;
       overflow: hidden;
     }
     @media (min-width: 768px) {
-      .dashboard-content {
-        flex-direction: row; /* desktop: sidebar + main content */
-      }
+      .dashboard-content { flex-direction: row; }
     }
     /* Sidebar */
     .sidebar {
-      background: #ffffff;
-      width: 250px; /* desktop width */
+      background: #fff;
+      width: 250px;
       padding: 20px;
       box-shadow: 2px 0 5px rgba(0,0,0,0.1);
       border-right: 1px solid #b932f8;
@@ -86,45 +80,31 @@
         z-index: 50;
         transition: left 0.3s ease;
       }
-      .sidebar.open {
-        left: 0;
-      }
+      .sidebar.open { left: 0; }
     }
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
-    }
-    .sidebar ul li {
-      margin: 15px 0;
-    }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar ul li { margin: 15px 0; }
     .sidebar ul li a {
       display: block;
-      width: 100%;
       padding: 0.5rem 1rem;
       color: #7b1adb;
       font-weight: 600;
       border-radius: 0.375rem;
       transition: background 0.3s ease;
     }
-    .sidebar ul li a:hover {
-      background: #e0d7f7;
-    }
-    /* Main Content */
+    .sidebar ul li a:hover { background: #e0d7f7; }
+    /* Main Content Area */
     .main-content {
       flex: 1;
       padding: 30px;
       overflow-y: auto;
       background: #f4e1ff;
     }
-    @media (max-width: 767px) {
-      .main-content {
-        padding: 15px;
-      }
-    }
+    @media (max-width: 767px) { .main-content { padding: 15px; } }
     /* Section Cards */
     #tab-content .section {
       padding: 20px;
-      background: #ffffff;
+      background: #fff;
       border-radius: 0.5rem;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       margin-bottom: 20px;
@@ -139,34 +119,26 @@
     .card {
       flex: 1 1 200px;
       background: #b932f8;
-      color: #ffffff;
+      color: #fff;
       padding: 1.25rem;
       border-radius: 0.5rem;
       text-align: center;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-    .card h3 {
-      margin-bottom: 0.625rem;
-      font-size: 1.125rem;
-    }
-    .card p {
-      font-size: 1.5rem;
-      margin: 0;
-    }
+    .card h3 { margin-bottom: 0.625rem; font-size: 1.125rem; }
+    .card p { font-size: 1.5rem; margin: 0; }
     .recent-transactions h3 {
       margin-bottom: 1rem;
       font-size: 1.25rem;
       color: #7b1adb;
     }
   </style>
-  
 </head>
 <body>
-  <!-- Dashboard (VetFusion) View -->
+  <!-- Dashboard -->
   <div id="dashboard-container">
     <header class="dashboard-header">
       <div class="flex items-center">
-        <!-- Hamburger menu button for mobile -->
         <button id="mobileMenuButton" onclick="toggleSidebar()">☰</button>
         <h1 class="ml-2">VetFusion Dashboard</h1>
       </div>
@@ -270,6 +242,7 @@
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
+                  <!-- (Client rows remain as in your original code) -->
                   <tr>
                     <td class="px-6 py-4 whitespace-nowrap">John Doe</td>
                     <td class="px-6 py-4 whitespace-nowrap">Bella</td>
@@ -283,7 +256,7 @@
                     <td class="px-6 py-4 whitespace-nowrap">***4542</td>
                     <td class="px-6 py-4 whitespace-nowrap">Basic</td>
                   </tr>
-                  <!-- Additional rows omitted for brevity -->
+                  <!-- Additional client rows… (omitted for brevity) -->
                 </tbody>
               </table>
             </div>
@@ -311,7 +284,7 @@
           <div id="store-section" class="section hidden">
             <h2 class="text-2xl font-semibold mb-4">Store</h2>
             <div class="flex flex-wrap gap-5 mt-5">
-              <!-- Item 1: Premium Dog Food -->
+              <!-- Example Store Items -->
               <div class="bg-white rounded-lg shadow p-6 w-56 text-center">
                 <div class="text-4xl">🐶</div>
                 <div class="mt-4">
@@ -320,7 +293,6 @@
                   <button class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="openChooseCustomerModal(30)">Send Payment</button>
                 </div>
               </div>
-              <!-- Item 2: Cat Litter -->
               <div class="bg-white rounded-lg shadow p-6 w-56 text-center">
                 <div class="text-4xl">🐱</div>
                 <div class="mt-4">
@@ -329,7 +301,6 @@
                   <button class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="openChooseCustomerModal(15)">Send Payment</button>
                 </div>
               </div>
-              <!-- Additional store items omitted for brevity -->
             </div>
           </div>
           
@@ -337,6 +308,27 @@
           <div id="estimate-section" class="section hidden">
             <h2 class="text-2xl font-semibold mb-4">Estimates/Invoices</h2>
             <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="openEstimateModal()">Create Estimate/Invoice</button>
+            <!-- Invoices Table Section -->
+            <div id="invoicesListSection" class="mt-6">
+              <h3 class="text-xl font-semibold mb-4">Invoices</h3>
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 table-fixed">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th class="px-4 py-2 text-left w-1/6">Invoice ID</th>
+                      <th class="px-4 py-2 text-left w-1/6">Pet</th>
+                      <th class="px-4 py-2 text-left w-1/6">Client</th>
+                      <th class="px-4 py-2 text-left w-1/6">Amount</th>
+                      <th class="px-4 py-2 text-left w-1/6">Payment Status</th>
+                      <th class="px-4 py-2 text-left w-1/6">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="invoicesTableBody" class="bg-white divide-y divide-gray-200">
+                    <!-- New invoice rows will be appended here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
           
           <!-- Settings Section -->
@@ -349,9 +341,9 @@
     </div>
   </div>
   
-  <!-- ================= Tailwind‑Styled Modals with X Close Button ================= -->
+  <!-- ================= Modals ================= -->
   
-  <!-- Update Payment (Send Payment Link) Modal -->
+  <!-- Update Payment Modal -->
   <div id="updatePaymentModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
     <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
       <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeUpdatePaymentModal()">&times;</button>
@@ -365,6 +357,10 @@
         <p class="mb-2 font-bold">Use this QR code to access the checkout</p>
         <div class="flex justify-center mb-2">
           <img id="updatePaymentQRCode" src="" alt="QR Code" class="w-32 h-32">
+        </div>
+        <!-- Button to open the operator modal -->
+        <div class="flex justify-center mb-2">
+          <button id="copyQRCodeButton" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="copyQRCode()">Copy QR code</button>
         </div>
         <p><strong>Payment Link:</strong> <span id="updatePaymentLink"></span></p>
       </div>
@@ -449,6 +445,18 @@
     </div>
   </div>
   
+  <!-- Operator QR Code Modal -->
+  <div id="operatorQRCodeModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeOperatorQRCodeModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Operator QR Code</h2>
+      <div class="flex justify-center mb-2">
+        <img id="operatorQRCode" src="" alt="Operator QR Code" class="w-32 h-32">
+      </div>
+      <p class="text-center text-sm">Show this QR code on your mobile device.</p>
+    </div>
+  </div>
+  
   <!-- Settings Modal -->
   <div id="settingsModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
     <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
@@ -489,9 +497,9 @@
               <option value="client3">Alice Brown</option>
           </select>
       </div>
-      <!-- Reference Name Input -->
+      <!-- Reference Input (Optional) -->
       <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">Reference name for Estimate/Invoice (Optional)</label>
+          <label class="block text-sm font-medium text-gray-700">Reference (Optional)</label>
           <input type="text" id="estimateReference" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="">
       </div>
       <!-- Buttons -->
@@ -502,7 +510,7 @@
     </div>
   </div>
   
-  <!-- Invoice Details Modal (Bug Fix Applied: max-h-screen & overflow-y-auto) -->
+  <!-- Invoice Details Modal (with fixed alignment and random total) -->
   <div id="invoiceDetailsModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
     <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl relative max-h-screen overflow-y-auto">
       <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeInvoiceDetailsModal()">&times;</button>
@@ -589,15 +597,22 @@
     </div>
   </div>
   
-  <!-- ================= End Tailwind‑Styled Modals ================= -->
+  <!-- ================= End Modals ================= -->
   
   <!-- JavaScript Functions -->
   <script>
-    // Global variables
+    // Global variables for payments and invoices
     let currentItemPaymentAmount = 0; // for store/invoice payment
     let checkoutStatusTimer;
     let selectedInvoiceClient = null; // holds the client selected via estimate
+    // Global variable to hold the URL from the response field "qrPaymentLink"
+    let qrPaymentLinkValue = "";
     
+    // Global variables for invoices table functionality
+    let invoiceCounter = 1;
+    let currentInvoiceRow = null; // temporarily holds the row for the invoice being created
+    let invoicePaymentMapping = {}; // maps checkoutId to the corresponding invoice row
+
     // Dummy customers (for store payments)
     const customers = [
       { id: "1", name: "John Doe", phone: "555-1234", email: "john.doe@example.com" },
@@ -618,9 +633,7 @@
         document.getElementById('sidebar').classList.remove('open');
       }
     }
-    document.addEventListener('DOMContentLoaded', () => {
-      showTab('dashboard');
-    });
+    document.addEventListener('DOMContentLoaded', () => { showTab('dashboard'); });
     
     // Mobile Sidebar Toggle
     function toggleSidebar() {
@@ -666,6 +679,8 @@
         const paymentlink = jsonData.shortLink;
         document.getElementById('updatePaymentLink').textContent = paymentlink;
         document.getElementById('updatePaymentQRCode').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(paymentlink);
+        // Store qrPaymentLink for operator QR popup
+        qrPaymentLinkValue = jsonData.qrPaymentLink;
         document.getElementById('updatePaymentDetails').classList.remove('hidden');
       })
       .catch(error => console.error("Error:", error));
@@ -673,6 +688,22 @@
     function sendUpdatedPaymentLink(method) {
       alert('Payment link sent via ' + method + '!');
       closeUpdatePaymentModal();
+    }
+    
+    // NEW FUNCTION: Open the operator QR code popup modal.
+    function copyQRCode() {
+      console.log("copyQRCode called, qrPaymentLinkValue:", qrPaymentLinkValue);
+      if (!qrPaymentLinkValue || qrPaymentLinkValue.trim() === "") {
+        alert("QR Code link not available yet.");
+        return;
+      }
+      // Generate a new QR code that encodes the URL of the original QR code image (from qrPaymentLinkValue)
+      const operatorQRCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(qrPaymentLinkValue);
+      document.getElementById('operatorQRCode').src = operatorQRCodeUrl;
+      document.getElementById('operatorQRCodeModal').classList.remove('hidden');
+    }
+    function closeOperatorQRCodeModal() {
+      document.getElementById('operatorQRCodeModal').classList.add('hidden');
     }
     
     // ================= Item Payment Functions (for store/invoice) =================
@@ -697,6 +728,7 @@
       document.getElementById('updatePaymentModal').classList.remove('hidden');
       itemPaymentCheckout(amount, customer);
     }
+    // Use the "correct" version of itemPaymentCheckout as provided:
     function itemPaymentCheckout(amount, customer) {
       const data = {
         amount: amount,
@@ -725,7 +757,14 @@
         const checkoutId = jsonData.id;
         document.getElementById('updatePaymentLink').textContent = paymentlink;
         document.getElementById('updatePaymentQRCode').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(paymentlink);
+        // Store the qrPaymentLink value for the operator modal:
+        qrPaymentLinkValue = jsonData.qrPaymentLink;
         document.getElementById('updatePaymentDetails').classList.remove('hidden');
+        // If this payment was initiated via an invoice creation, map the checkoutId to the invoice row.
+        if (currentInvoiceRow) {
+          invoicePaymentMapping[checkoutId] = currentInvoiceRow;
+          currentInvoiceRow = null;
+        }
         startCheckoutStatusTimer(checkoutId);
       })
       .catch(error => console.error("Error:", error));
@@ -758,6 +797,12 @@
             document.getElementById("completedCurrency").textContent = data.currency;
             document.getElementById("completedReference").textContent = data.reference;
             document.getElementById("purchaseCompleteModal").classList.remove('hidden');
+            // If this checkout is associated with an invoice, update the payment status cell (cell index 4)
+            if (invoicePaymentMapping[checkoutId]) {
+              const row = invoicePaymentMapping[checkoutId];
+              row.cells[4].innerHTML = `<span class="text-green-600 font-bold">Paid</span>`;
+              delete invoicePaymentMapping[checkoutId];
+            }
           }
         })
         .catch(error => console.error("Error checking checkout status:", error));
@@ -885,23 +930,72 @@
       document.getElementById('estimateModal').classList.add('hidden');
     }
     function createEstimate() {
-      const pet = document.getElementById('estimatePet').value;
-      const clientId = document.getElementById('estimateClient').value;
-      if (!pet || !clientId) {
+      const petSelect = document.getElementById('estimatePet');
+      const clientSelect = document.getElementById('estimateClient');
+      const petValue = petSelect.value;
+      const clientValue = clientSelect.value;
+      if (!petValue || !clientValue) {
         alert("Please select both a pet and a client.");
         return;
       }
+      const petText = petSelect.options[petSelect.selectedIndex].text;
+      const clientText = clientSelect.options[clientSelect.selectedIndex].text;
+      // (Reference input is kept for user entry but not used in the table)
+      const reference = document.getElementById('estimateReference').value || "N/A";
+      
+      // Save the selected client for invoice payment
       const fakeClients = {
         "client1": { id: "client1", name: "John Doe", phone: "555-1234", email: "john.doe@example.com" },
         "client2": { id: "client2", name: "Jane Smith", phone: "555-2345", email: "jane.smith@example.com" },
         "client3": { id: "client3", name: "Alice Brown", phone: "555-4567", email: "alice.brown@example.com" }
       };
-      selectedInvoiceClient = fakeClients[clientId];
+      selectedInvoiceClient = fakeClients[clientValue];
+      
+      // Generate a random total amount (e.g., between £50.00 and £550.00)
+      var randomTotal = "£" + (Math.floor(Math.random() * 500) + 50).toFixed(2);
+      document.getElementById("invoiceTotal").innerText = randomTotal;
+      
+      // Add a new row to the invoices table with fixed cell classes for alignment
+      const tbody = document.getElementById("invoicesTableBody");
+      const row = tbody.insertRow();
+      
+      var cell = row.insertCell();
+      cell.className = "px-4 py-2 text-left";
+      cell.innerText = "INV" + invoiceCounter;  // Invoice ID
+      
+      cell = row.insertCell();
+      cell.className = "px-4 py-2 text-left";
+      cell.innerText = petText;  // Pet
+      
+      cell = row.insertCell();
+      cell.className = "px-4 py-2 text-left";
+      cell.innerText = clientText;  // Client
+      
+      cell = row.insertCell();
+      cell.className = "px-4 py-2 text-left";
+      cell.innerText = randomTotal;  // Amount
+      
+      cell = row.insertCell();
+      cell.className = "px-4 py-2 text-left";
+      cell.innerText = "Pending";  // Payment Status
+      
+      cell = row.insertCell();
+      cell.className = "px-4 py-2 text-left";
+      cell.innerHTML = `<a href="#" class="text-indigo-600 hover:underline" onclick="viewInvoiceModal()">View invoice</a>`;
+      
+      currentInvoiceRow = row; // Save this row for later update when payment is done
+      invoiceCounter++;
+      
       closeEstimateModal();
+      // Show the Invoice Details Modal (simulate invoice creation)
       document.getElementById('invoiceDetailsModal').classList.remove('hidden');
     }
     function closeInvoiceDetailsModal() {
       document.getElementById('invoiceDetailsModal').classList.add('hidden');
+    }
+    // Function to show the invoice details modal when "View invoice" is clicked
+    function viewInvoiceModal() {
+      document.getElementById('invoiceDetailsModal').classList.remove('hidden');
     }
     function sendInvoicePayment() {
       const totalText = document.getElementById('invoiceTotal').innerText;
@@ -910,7 +1004,7 @@
         alert("No client selected.");
         return;
       }
-      // Since the client was already selected during estimate creation, skip choose customer.
+      // Since the client was already selected during estimate creation, skip customer selection.
       openItemPaymentModal(total, selectedInvoiceClient);
       closeInvoiceDetailsModal();
     }
