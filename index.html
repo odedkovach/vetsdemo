@@ -132,10 +132,32 @@
       font-size: 1.25rem;
       color: #7b1adb;
     }
+    /* Payment Method Logos CSS */
+    .visa {
+      display: inline-block;
+      width: 40px;
+      height: 15px;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png') no-repeat center;
+      background-size: contain;
+    }
+    .mastercard {
+      display: inline-block;
+      width: 40px;
+      height: 15px;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg') no-repeat center;
+      background-size: contain;
+    }
+    .direct-debit {
+      display: inline-block;
+      width: 40px;
+      height: 15px;
+      background: url('https://banner2.cleanpng.com/20180430/vuq/avdikoadr.webp') no-repeat center;
+      background-size: contain;
+    }
   </style>
 </head>
 <body>
-  <!-- Dashboard -->
+  <!-- Dashboard Container -->
   <div id="dashboard-container">
     <header class="dashboard-header">
       <div class="flex items-center">
@@ -221,7 +243,7 @@
             </div>
           </div>
           
-          <!-- Clients & Patients Section -->
+          <!-- Clients &amp; Patients Section with Updated Table -->
           <div id="clients-section" class="section hidden">
             <h2 class="text-2xl font-semibold mb-4">Client &amp; Patient Management</h2>
             <div class="overflow-x-auto">
@@ -234,15 +256,12 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pet Type</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Breed</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Visit</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Next Appointment</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Billing Status</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Method</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Health Plan</th>
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  <!-- (Client rows remain as in your original code) -->
                   <tr>
                     <td class="px-6 py-4 whitespace-nowrap">John Doe</td>
                     <td class="px-6 py-4 whitespace-nowrap">Bella</td>
@@ -250,13 +269,91 @@
                     <td class="px-6 py-4 whitespace-nowrap">555-1234</td>
                     <td class="px-6 py-4 whitespace-nowrap">Dog</td>
                     <td class="px-6 py-4 whitespace-nowrap">Labrador Retriever</td>
-                    <td class="px-6 py-4 whitespace-nowrap">2025-01-15</td>
-                    <td class="px-6 py-4 whitespace-nowrap">2025-02-15</td>
                     <td class="px-6 py-4 whitespace-nowrap">Successful</td>
-                    <td class="px-6 py-4 whitespace-nowrap">***4542</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="visa"></span> ***4542
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap">Basic</td>
                   </tr>
-                  <!-- Additional client rows… (omitted for brevity) -->
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Jane Smith</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Whiskers</td>
+                    <td class="px-6 py-4 whitespace-nowrap">jane.smith@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-2345</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Siamese</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="mastercard"></span> ***9876
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">Premium</td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Bob Johnson</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Rex</td>
+                    <td class="px-6 py-4 whitespace-nowrap">bob.johnson@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-3456</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Dog</td>
+                    <td class="px-6 py-4 whitespace-nowrap">German Shepherd</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap">---</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Basic</td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Alice Brown</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Coco</td>
+                    <td class="px-6 py-4 whitespace-nowrap">alice.brown@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-4567</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Persian</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="visa"></span> ***1234
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">Premium</td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Charlie Davis</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Max</td>
+                    <td class="px-6 py-4 whitespace-nowrap">charlie.davis@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-5678</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Dog</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Beagle</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="mastercard"></span> ***6789
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">Premium</td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Diane Evans</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Luna</td>
+                    <td class="px-6 py-4 whitespace-nowrap">diane.evans@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-6789</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Maine Coon</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Expired</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <a href="#" class="text-indigo-600 hover:underline" onclick="openUpdatePaymentModal()">expired</a>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">Basic</td>
+                  </tr>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Karen Miller</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Zoe</td>
+                    <td class="px-6 py-4 whitespace-nowrap">karen.miller@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-1111</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Scottish Fold</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span class="visa"></span> ***3333
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <!-- Pass "this" so the viewInvoiceModal function can determine the relevant row -->
+                      <a href="#" class="text-indigo-600 hover:underline" onclick="viewInvoiceModal(this)">View invoice</a>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -341,7 +438,22 @@
     </div>
   </div>
   
-  <!-- ================= Modals ================= -->
+  <!-- ================= Additional Modals ================= -->
+  
+  <!-- Vendor Selection Modal -->
+  <div id="vendorSelectionModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeVendorSelectionModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Select Vendor</h2>
+      <p class="mb-4">Choose the vendor associated with this private key:</p>
+      <select id="vendorSelect" class="w-full p-2 border-gray-300 rounded mb-4">
+        <!-- Options will be populated dynamically -->
+      </select>
+      <div class="flex justify-center">
+        <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="saveVendor()">Save Vendor</button>
+      </div>
+    </div>
+  </div>
   
   <!-- Update Payment Modal -->
   <div id="updatePaymentModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
@@ -510,7 +622,7 @@
     </div>
   </div>
   
-  <!-- Invoice Details Modal (with fixed alignment and random total) -->
+  <!-- Invoice Details Modal -->
   <div id="invoiceDetailsModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
     <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl relative max-h-screen overflow-y-auto">
       <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeInvoiceDetailsModal()">&times;</button>
@@ -581,17 +693,85 @@
           <h3 class="text-lg font-semibold">Billing Summary</h3>
           <div class="flex justify-between items-center mt-2">
               <p class="text-indigo-600 font-semibold">Total Price <span class="text-xs">(Incl. VAT)</span></p>
+              <!-- This field will be updated based on the clicked invoice row -->
               <p class="text-xl font-bold" id="invoiceTotal">£105.59</p>
           </div>
       </div>
       <!-- Buttons Section -->
       <div class="mt-6 flex justify-between">
-          <button class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700" onclick="generatePDF()">Generate Invoice PDF</button>
+          <!-- Updated Charge Button with Loader, fixed width, and restored text after response -->
+          <button id="chargeButton" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" onclick="chargeWithSavedCard()">Charge with Saved card</button>
           <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendInvoicePayment()">Send Payment</button>
       </div>
       <script>
           function generatePDF() {
               alert("Generating PDF... (This will be replaced with actual PDF generation logic)");
+          }
+
+          function chargeWithSavedCard() {
+              const button = document.getElementById("chargeButton");
+              const originalText = "Charge with Saved card";
+              const originalWidth = button.offsetWidth;
+              button.style.minWidth = originalWidth + "px";
+              button.innerText = "Processing...";
+              button.disabled = true;
+              const invoiceTotalElement = document.getElementById("invoiceTotal");
+              let invoiceAmount = 0;
+              if (invoiceTotalElement) {
+                  invoiceAmount = parseFloat(invoiceTotalElement.innerText.replace('£',''));
+              }
+              const payload = {
+                  amount: invoiceAmount,
+                  currency: "GBP",
+                  description: "Invoice Payment",
+                  vendorId: "6735b2697085b113404a2e74",
+                  paymentOptionId: "67a3759c2d2d4420a8b7842f",
+                  consumer: {
+                      email: "test@example.com",
+                      firstName: "User",
+                      lastName: "Test",
+                      country: "GB"
+                  }
+              };
+
+              fetch("https://sandbox.unipaas.com/platform/pay-ins", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                      "Authorization": "Bearer " + savedToken
+                  },
+                  body: JSON.stringify(payload)
+              })
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error("Network response was not OK, status = " + response.status);
+                  }
+                  return response.json();
+              })
+              .then(jsonData => {
+                  console.log("Payment Request Successful:", jsonData);
+                  if (jsonData.transactionStatus === "Approved") {
+                      if (currentInvoiceRow) {
+                          currentInvoiceRow.cells[4].innerHTML = `<span class="text-green-600 font-bold">Paid</span>`;
+                      }
+                  } else {
+                      if (currentInvoiceRow) {
+                          currentInvoiceRow.cells[4].innerHTML = `<span class="text-red-600 font-bold">Failed</span>`;
+                      }
+                  }
+                  closeInvoiceDetailsModal();
+              })
+              .catch(error => {
+                  console.error("Error in Payment Request:", error);
+                  if (currentInvoiceRow) {
+                      currentInvoiceRow.cells[4].innerHTML = `<span class="text-red-600 font-bold">Failed</span>`;
+                  }
+                  closeInvoiceDetailsModal();
+              })
+              .finally(() => {
+                  button.innerText = originalText;
+                  button.disabled = false;
+              });
           }
       </script>
     </div>
@@ -601,47 +781,74 @@
   
   <!-- JavaScript Functions -->
   <script>
-    // Global variables for payments and invoices
-    let currentItemPaymentAmount = 0; // for store/invoice payment
-    let checkoutStatusTimer;
-    let selectedInvoiceClient = null; // holds the client selected via estimate
-    // Global variable to hold the URL from the response field "qrPaymentLink"
-    let qrPaymentLinkValue = "";
+    let savedToken = "OoH3cpx8lO7uY3KsA5654A==";
+    let globalVendorId = "6735b2697085b113404a2e74";
+    let uniPaasComponents = null;
+    function getApiHeaders() {
+      return {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + savedToken
+      };
+    }
     
-    // Global variables for invoices table functionality
+    function loadPayPortal() {
+      fetch("https://sandbox.unipaas.com/platform/authorize", {
+        method: "POST",
+        headers: getApiHeaders(),
+        body: JSON.stringify({
+          scopes: ["portal_read", "portal_write"],
+          vendorId: globalVendorId
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const newAccessToken = data.accessToken;
+        if (uniPaasComponents) {
+          console.log(newAccessToken);
+          uniPaasComponents.reset({ accessToken: newAccessToken });
+        } else {
+          uniPaasComponents = unipaas.components(newAccessToken, config_general);
+          const payPortal = uniPaasComponents.create("payPortal");
+          payPortal.mount("#pay_portal");
+        }
+      })
+      .catch(error => console.error('Error fetching access token:', error));
+    }
+    
+    let currentItemPaymentAmount = 0;
+    let checkoutStatusTimer;
+    let selectedInvoiceClient = null;
+    let qrPaymentLinkValue = "";
     let invoiceCounter = 1;
-    let currentInvoiceRow = null; // temporarily holds the row for the invoice being created
-    let invoicePaymentMapping = {}; // maps checkoutId to the corresponding invoice row
-
-    // Dummy customers (for store payments)
+    let currentInvoiceRow = null;
+    let invoicePaymentMapping = {};
     const customers = [
       { id: "1", name: "John Doe", phone: "555-1234", email: "john.doe@example.com" },
       { id: "2", name: "Jane Smith", phone: "555-2345", email: "jane.smith@example.com" },
       { id: "3", name: "Alice Brown", phone: "555-4567", email: "alice.brown@example.com" }
     ];
     
-    // Function to switch visible section based on sidebar selection.
     function showTab(tab) {
       document.querySelectorAll('#tab-content .section').forEach(section => {
         section.classList.add('hidden');
       });
       const activeSection = document.getElementById(tab + '-section');
       if (activeSection) activeSection.classList.remove('hidden');
-      
-      // On mobile, close sidebar after selection
       if(window.innerWidth < 768) {
         document.getElementById('sidebar').classList.remove('open');
+      }
+      if(tab === "payments") {
+        loadPayPortal();
       }
     }
     document.addEventListener('DOMContentLoaded', () => { showTab('dashboard'); });
     
-    // Mobile Sidebar Toggle
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       sidebar.classList.toggle('open');
     }
     
-    // ================= Update Payment Modal Functions =================
     function openUpdatePaymentModal() {
       document.getElementById('updatePaymentModal').classList.remove('hidden');
       updatePaymentCheckout();
@@ -651,6 +858,7 @@
       document.getElementById('updatePaymentDetails').classList.add('hidden');
     }
     function updatePaymentCheckout() {
+      const uniqueRef = Date.now();
       const data = {
         amount: 0,
         currency: "GBP",
@@ -658,16 +866,14 @@
         phone: "+44 20 7123 4567",
         email: "test@unipaas.com",
         storePaymentMethod: true,
+        vendorId : globalVendorId,
         paymentMethods: ["card"],
-        reference: "update_payment_ref",
-        consumer: { reference: "update_consumer_ref" }
+        reference: "payment_ref" + uniqueRef,
+        consumer: { reference: "consumer_ref"  + uniqueRef}
       };
       fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer OoH3cpx8lO7uY3KsA5654A=="
-        },
+        headers: getApiHeaders(),
         body: JSON.stringify(data)
       })
       .then(response => {
@@ -679,7 +885,6 @@
         const paymentlink = jsonData.shortLink;
         document.getElementById('updatePaymentLink').textContent = paymentlink;
         document.getElementById('updatePaymentQRCode').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(paymentlink);
-        // Store qrPaymentLink for operator QR popup
         qrPaymentLinkValue = jsonData.qrPaymentLink;
         document.getElementById('updatePaymentDetails').classList.remove('hidden');
       })
@@ -690,23 +895,6 @@
       closeUpdatePaymentModal();
     }
     
-    // NEW FUNCTION: Open the operator QR code popup modal.
-    function copyQRCode() {
-      console.log("copyQRCode called, qrPaymentLinkValue:", qrPaymentLinkValue);
-      if (!qrPaymentLinkValue || qrPaymentLinkValue.trim() === "") {
-        alert("QR Code link not available yet.");
-        return;
-      }
-      // Generate a new QR code that encodes the URL of the original QR code image (from qrPaymentLinkValue)
-      const operatorQRCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(qrPaymentLinkValue);
-      document.getElementById('operatorQRCode').src = operatorQRCodeUrl;
-      document.getElementById('operatorQRCodeModal').classList.remove('hidden');
-    }
-    function closeOperatorQRCodeModal() {
-      document.getElementById('operatorQRCodeModal').classList.add('hidden');
-    }
-    
-    // ================= Item Payment Functions (for store/invoice) =================
     function openChooseCustomerModal(amount) {
       currentItemPaymentAmount = amount;
       document.getElementById('chooseCustomerModal').classList.remove('hidden');
@@ -728,23 +916,20 @@
       document.getElementById('updatePaymentModal').classList.remove('hidden');
       itemPaymentCheckout(amount, customer);
     }
-    // Use the "correct" version of itemPaymentCheckout as provided:
     function itemPaymentCheckout(amount, customer) {
       const data = {
         amount: amount,
         currency: "GBP",
         country: "GB",
         email: customer.email,
+        vendorId : globalVendorId,
         paymentMethods: ["card"],
         reference: "item_payment_ref_" + new Date().getTime(),
-        consumer: { reference: "item_consumer_ref_" + customer.id }
+        consumer: { reference: "item_consumer_ref_" + new Date().getTime() }
       };
       fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer OoH3cpx8lO7uY3KsA5654A=="
-        },
+        headers: getApiHeaders(),
         body: JSON.stringify(data)
       })
       .then(response => {
@@ -757,10 +942,8 @@
         const checkoutId = jsonData.id;
         document.getElementById('updatePaymentLink').textContent = paymentlink;
         document.getElementById('updatePaymentQRCode').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(paymentlink);
-        // Store the qrPaymentLink value for the operator modal:
         qrPaymentLinkValue = jsonData.qrPaymentLink;
         document.getElementById('updatePaymentDetails').classList.remove('hidden');
-        // If this payment was initiated via an invoice creation, map the checkoutId to the invoice row.
         if (currentInvoiceRow) {
           invoicePaymentMapping[checkoutId] = currentInvoiceRow;
           currentInvoiceRow = null;
@@ -780,10 +963,7 @@
         }
         fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout/" + checkoutId, {
           method: "GET",
-          headers: {
-            "Authorization": "Bearer OoH3cpx8lO7uY3KsA5654A==",
-            "Content-Type": "application/json"
-          }
+          headers: getApiHeaders()
         })
         .then(response => {
           if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
@@ -797,7 +977,6 @@
             document.getElementById("completedCurrency").textContent = data.currency;
             document.getElementById("completedReference").textContent = data.reference;
             document.getElementById("purchaseCompleteModal").classList.remove('hidden');
-            // If this checkout is associated with an invoice, update the payment status cell (cell index 4)
             if (invoicePaymentMapping[checkoutId]) {
               const row = invoicePaymentMapping[checkoutId];
               row.cells[4].innerHTML = `<span class="text-green-600 font-bold">Paid</span>`;
@@ -812,7 +991,6 @@
       document.getElementById("purchaseCompleteModal").classList.add('hidden');
     }
     
-    // ================= Renewal Modal Functions =================
     function openRenewPlanModal() {
       document.getElementById('renewPlanModal').classList.remove('hidden');
       document.getElementById('renewalPlanSelection').classList.remove('hidden');
@@ -829,10 +1007,7 @@
     function fetchPlans() {
       fetch("https://sandbox.unipaas.com/platform/pay-ins/plans", {
         method: "GET",
-        headers: {
-          "Authorization": "Bearer OoH3cpx8lO7uY3KsA5654A==",
-          "Content-Type": "application/json"
-        }
+        headers: getApiHeaders()
       })
       .then(response => {
         if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
@@ -861,6 +1036,7 @@
       checkout(planId, amount, currency);
     }
     function checkout(planId, amount, currency) {
+      const uniqueRef = Date.now();
       const data = {
         amount: amount,
         currency: currency,
@@ -868,16 +1044,14 @@
         country: "GB",
         paymentMethods: ["card"],
         shippingSameAsBilling: true,
-        reference: "12345",
-        consumer: { reference: "12345678" },
+        vendorId : globalVendorId,
+        reference: "ref_" + uniqueRef,
+        consumer: { reference: "con_ref_" + uniqueRef },
         plans: [planId]
       };
       fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer OoH3cpx8lO7uY3KsA5654A=="
-        },
+        headers: getApiHeaders(),
         body: JSON.stringify(data)
       })
       .then(response => {
@@ -895,7 +1069,6 @@
       .catch(error => console.error("Error:", error));
     }
     
-    // ================= Register Health Plan Modal Functions =================
     function openRegisterPlanModal() {
       document.getElementById('registerPlanModal').classList.remove('hidden');
     }
@@ -907,8 +1080,6 @@
       closeRegisterPlanModal();
     }
     
-    // ================= Settings Modal Functions =================
-    let savedToken = "OoH3cpx8lO7uY3KsA5654A==";
     function openSettingsModal() {
       document.getElementById('settingsModal').classList.remove('hidden');
       document.getElementById('accessTokenInput').value = savedToken;
@@ -919,10 +1090,41 @@
     function saveAccessToken() {
       savedToken = document.getElementById('accessTokenInput').value;
       closeSettingsModal();
-      initializeUniPaas();
+      fetchVendors(savedToken);
     }
     
-    // ================= Estimate/Invoice Modal Functions =================
+    function fetchVendors(newKey) {
+      fetch("https://sandbox.unipaas.com/platform/vendors", {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + newKey,
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        const vendorSelect = document.getElementById("vendorSelect");
+        vendorSelect.innerHTML = "";
+        data.forEach(vendor => {
+          const option = document.createElement("option");
+          option.value = vendor.id;
+          option.text = vendor.name;
+          vendorSelect.appendChild(option);
+        });
+        document.getElementById("vendorSelectionModal").classList.remove("hidden");
+      })
+      .catch(error => console.error("Error fetching vendors:", error));
+    }
+    function saveVendor() {
+      const vendorSelect = document.getElementById("vendorSelect");
+      globalVendorId = vendorSelect.value;
+      closeVendorSelectionModal();
+      loadPayPortal();
+    }
+    function closeVendorSelectionModal() {
+      document.getElementById("vendorSelectionModal").classList.add("hidden");
+    }
+    
     function openEstimateModal() {
       document.getElementById('estimateModal').classList.remove('hidden');
     }
@@ -940,10 +1142,8 @@
       }
       const petText = petSelect.options[petSelect.selectedIndex].text;
       const clientText = clientSelect.options[clientSelect.selectedIndex].text;
-      // (Reference input is kept for user entry but not used in the table)
       const reference = document.getElementById('estimateReference').value || "N/A";
       
-      // Save the selected client for invoice payment
       const fakeClients = {
         "client1": { id: "client1", name: "John Doe", phone: "555-1234", email: "john.doe@example.com" },
         "client2": { id: "client2", name: "Jane Smith", phone: "555-2345", email: "jane.smith@example.com" },
@@ -951,51 +1151,57 @@
       };
       selectedInvoiceClient = fakeClients[clientValue];
       
-      // Generate a random total amount (e.g., between £50.00 and £550.00)
       var randomTotal = "£" + (Math.floor(Math.random() * 500) + 50).toFixed(2);
+      // Set the global invoice total in the modal (this will be overwritten when viewing a specific invoice)
       document.getElementById("invoiceTotal").innerText = randomTotal;
       
-      // Add a new row to the invoices table with fixed cell classes for alignment
       const tbody = document.getElementById("invoicesTableBody");
       const row = tbody.insertRow();
       
-      var cell = row.insertCell();
+      let cell = row.insertCell();
       cell.className = "px-4 py-2 text-left";
-      cell.innerText = "INV" + invoiceCounter;  // Invoice ID
+      cell.innerText = "INV" + invoiceCounter;
       
       cell = row.insertCell();
       cell.className = "px-4 py-2 text-left";
-      cell.innerText = petText;  // Pet
+      cell.innerText = petText;
       
       cell = row.insertCell();
       cell.className = "px-4 py-2 text-left";
-      cell.innerText = clientText;  // Client
+      cell.innerText = clientText;
       
       cell = row.insertCell();
       cell.className = "px-4 py-2 text-left";
-      cell.innerText = randomTotal;  // Amount
+      cell.innerText = randomTotal;
       
       cell = row.insertCell();
       cell.className = "px-4 py-2 text-left";
-      cell.innerText = "Pending";  // Payment Status
+      cell.innerText = "Pending";
       
+      // Pass "this" to viewInvoiceModal so the function can identify the relevant row.
       cell = row.insertCell();
       cell.className = "px-4 py-2 text-left";
-      cell.innerHTML = `<a href="#" class="text-indigo-600 hover:underline" onclick="viewInvoiceModal()">View invoice</a>`;
+      cell.innerHTML = `<a href="#" class="text-indigo-600 hover:underline" onclick="viewInvoiceModal(this)">View invoice</a>`;
       
-      currentInvoiceRow = row; // Save this row for later update when payment is done
+      // Update currentInvoiceRow for later processing (e.g., sending payment)
+      currentInvoiceRow = row;
       invoiceCounter++;
       
       closeEstimateModal();
-      // Show the Invoice Details Modal (simulate invoice creation)
+      // Show the invoice details modal (the viewInvoiceModal function will update the total)
+      document.getElementById('invoiceDetailsModal').classList.remove('hidden');
+    }
+    // Updated viewInvoiceModal function: updates the modal's total based on the clicked row.
+    function viewInvoiceModal(elem) {
+      currentInvoiceRow = elem.closest('tr');
+      // Extract the total amount from the cell at index 3 of the clicked row.
+      const totalAmount = currentInvoiceRow.cells[3].innerText;
+      // Update the modal's total field with this value.
+      document.getElementById("invoiceTotal").innerText = totalAmount;
       document.getElementById('invoiceDetailsModal').classList.remove('hidden');
     }
     function closeInvoiceDetailsModal() {
       document.getElementById('invoiceDetailsModal').classList.add('hidden');
-    }
-    // Function to show the invoice details modal when "View invoice" is clicked
-    function viewInvoiceModal() {
-      document.getElementById('invoiceDetailsModal').classList.remove('hidden');
     }
     function sendInvoicePayment() {
       const totalText = document.getElementById('invoiceTotal').innerText;
@@ -1004,12 +1210,10 @@
         alert("No client selected.");
         return;
       }
-      // Since the client was already selected during estimate creation, skip customer selection.
       openItemPaymentModal(total, selectedInvoiceClient);
       closeInvoiceDetailsModal();
     }
     
-    // ================= UniPaas UI Initialization =================
     const config_general = {
       paymentsEnabled: true,
       theme: { 
@@ -1023,29 +1227,33 @@
         boxShadow: "0px 3px 15px rgba(27, 79, 162, 0.11)" 
       }
     };
-    function initializeUniPaas() {
-      fetch("https://sandbox.unipaas.com/platform/authorize", {
-        method: "POST",
-        headers: {
-          "Accept": "application/json",
-          "Authorization": "Bearer " + savedToken,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          scopes: ["portal_read", "portal_write"],
-          vendorId: "6735b2697085b113404a2e74"
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        const accessToken = data.accessToken;
-        const components = unipaas.components(accessToken, config_general);
-        const payPortal = components.create("payPortal");
-        payPortal.mount("#pay_portal");
-      })
-      .catch(error => console.error('Error fetching access token:', error));
+    
+    loadPayPortal();
+    
+    function copyQRCode() {
+      console.log("copyQRCode called, qrPaymentLinkValue:", qrPaymentLinkValue);
+      if (!qrPaymentLinkValue || qrPaymentLinkValue.trim() === "") {
+        alert("QR Code link not available yet.");
+        return;
+      }
+      const operatorQRCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(qrPaymentLinkValue);
+      document.getElementById('operatorQRCode').src = operatorQRCodeUrl;
+      document.getElementById('operatorQRCodeModal').classList.remove('hidden');
     }
-    initializeUniPaas();
+    
+    function closeOperatorQRCodeModal() {
+      document.getElementById('operatorQRCodeModal').classList.add('hidden');
+    }
+    
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Escape") {
+        const operatorModal = document.getElementById('operatorQRCodeModal');
+        if (operatorModal && !operatorModal.classList.contains('hidden')) {
+          closeOperatorQRCodeModal();
+        }
+      }
+    });
+    
   </script>
   
 </body>
