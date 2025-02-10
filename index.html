@@ -719,13 +719,13 @@
                   amount: invoiceAmount,
                   currency: "GBP",
                   description: "Invoice Payment",
-                  vendorId: "6735b2697085b113404a2e74",
+                  vendorId: globalVendorId,
                   paymentOptionId: "67a3759c2d2d4420a8b7842f",
  				 orderId: "item_payment_ref_" + new Date().getTime(),
                   consumer: {
                       email: "test@example.com",
-                      firstName: "User",
-                      lastName: "Test",
+                      firstName: "John",
+                      lastName: "Mitch",
                       country: "GB"
                   }
               };
@@ -1147,7 +1147,7 @@
       };
       selectedInvoiceClient = fakeClients[clientValue];
       
-      var randomTotal = "£" + (Math.floor(Math.random() * 500) + 50).toFixed(2);
+      var randomTotal = "£" + (Math.floor(Math.random() * 10) + 50).toFixed(2);
       document.getElementById("invoiceTotal").innerText = randomTotal;
       
       const tbody = document.getElementById("invoicesTableBody");
