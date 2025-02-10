@@ -243,7 +243,7 @@
             </div>
           </div>
           
-          <!-- Clients &amp; Patients Section with Updated Table -->
+          <!-- Clients &amp; Patients Section -->
           <div id="clients-section" class="section hidden">
             <h2 class="text-2xl font-semibold mb-4">Client &amp; Patient Management</h2>
             <div class="overflow-x-auto">
@@ -262,6 +262,7 @@
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
+                  <!-- John Doe -->
                   <tr>
                     <td class="px-6 py-4 whitespace-nowrap">John Doe</td>
                     <td class="px-6 py-4 whitespace-nowrap">Bella</td>
@@ -270,11 +271,10 @@
                     <td class="px-6 py-4 whitespace-nowrap">Dog</td>
                     <td class="px-6 py-4 whitespace-nowrap">Labrador Retriever</td>
                     <td class="px-6 py-4 whitespace-nowrap">Successful</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="visa"></span> ***4542
-                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap"><span class="visa"></span> ***4542</td>
                     <td class="px-6 py-4 whitespace-nowrap">Basic</td>
                   </tr>
+                  <!-- Jane Smith -->
                   <tr>
                     <td class="px-6 py-4 whitespace-nowrap">Jane Smith</td>
                     <td class="px-6 py-4 whitespace-nowrap">Whiskers</td>
@@ -283,11 +283,10 @@
                     <td class="px-6 py-4 whitespace-nowrap">Cat</td>
                     <td class="px-6 py-4 whitespace-nowrap">Siamese</td>
                     <td class="px-6 py-4 whitespace-nowrap">Successful</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="mastercard"></span> ***9876
-                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap"><span class="mastercard"></span> ***9876</td>
                     <td class="px-6 py-4 whitespace-nowrap">Premium</td>
                   </tr>
+                  <!-- Bob Johnson -->
                   <tr>
                     <td class="px-6 py-4 whitespace-nowrap">Bob Johnson</td>
                     <td class="px-6 py-4 whitespace-nowrap">Rex</td>
@@ -299,6 +298,7 @@
                     <td class="px-6 py-4 whitespace-nowrap">---</td>
                     <td class="px-6 py-4 whitespace-nowrap">Basic</td>
                   </tr>
+                  <!-- Alice Brown -->
                   <tr>
                     <td class="px-6 py-4 whitespace-nowrap">Alice Brown</td>
                     <td class="px-6 py-4 whitespace-nowrap">Coco</td>
@@ -307,11 +307,10 @@
                     <td class="px-6 py-4 whitespace-nowrap">Cat</td>
                     <td class="px-6 py-4 whitespace-nowrap">Persian</td>
                     <td class="px-6 py-4 whitespace-nowrap">Successful</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="visa"></span> ***1234
-                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap"><span class="visa"></span> ***1234</td>
                     <td class="px-6 py-4 whitespace-nowrap">Premium</td>
                   </tr>
+                  <!-- Charlie Davis -->
                   <tr>
                     <td class="px-6 py-4 whitespace-nowrap">Charlie Davis</td>
                     <td class="px-6 py-4 whitespace-nowrap">Max</td>
@@ -320,11 +319,10 @@
                     <td class="px-6 py-4 whitespace-nowrap">Dog</td>
                     <td class="px-6 py-4 whitespace-nowrap">Beagle</td>
                     <td class="px-6 py-4 whitespace-nowrap">Successful</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="mastercard"></span> ***6789
-                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap"><span class="mastercard"></span> ***6789</td>
                     <td class="px-6 py-4 whitespace-nowrap">Premium</td>
                   </tr>
+                  <!-- Diane Evans -->
                   <tr>
                     <td class="px-6 py-4 whitespace-nowrap">Diane Evans</td>
                     <td class="px-6 py-4 whitespace-nowrap">Luna</td>
@@ -338,6 +336,7 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">Basic</td>
                   </tr>
+                  <!-- Karen Miller -->
                   <tr>
                     <td class="px-6 py-4 whitespace-nowrap">Karen Miller</td>
                     <td class="px-6 py-4 whitespace-nowrap">Zoe</td>
@@ -346,12 +345,9 @@
                     <td class="px-6 py-4 whitespace-nowrap">Cat</td>
                     <td class="px-6 py-4 whitespace-nowrap">Scottish Fold</td>
                     <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap"><span class="visa"></span> ***3333</td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <span class="visa"></span> ***3333
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <!-- Pass "this" so the viewInvoiceModal function can determine the relevant row -->
-                      <a href="#" class="text-indigo-600 hover:underline" onclick="viewInvoiceModal(this)">View invoice</a>
+                      <a href="#" class="text-indigo-600 hover:underline" onclick="openRenewPlanModal()">expired</a>
                     </td>
                   </tr>
                 </tbody>
@@ -693,13 +689,12 @@
           <h3 class="text-lg font-semibold">Billing Summary</h3>
           <div class="flex justify-between items-center mt-2">
               <p class="text-indigo-600 font-semibold">Total Price <span class="text-xs">(Incl. VAT)</span></p>
-              <!-- This field will be updated based on the clicked invoice row -->
+              <!-- This field is updated when the relevant invoice is viewed -->
               <p class="text-xl font-bold" id="invoiceTotal">£105.59</p>
           </div>
       </div>
       <!-- Buttons Section -->
       <div class="mt-6 flex justify-between">
-          <!-- Updated Charge Button with Loader, fixed width, and restored text after response -->
           <button id="chargeButton" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" onclick="chargeWithSavedCard()">Charge with Saved card</button>
           <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendInvoicePayment()">Send Payment</button>
       </div>
@@ -726,6 +721,7 @@
                   description: "Invoice Payment",
                   vendorId: "6735b2697085b113404a2e74",
                   paymentOptionId: "67a3759c2d2d4420a8b7842f",
+ 				 orderId: "item_payment_ref_" + new Date().getTime(),
                   consumer: {
                       email: "test@example.com",
                       firstName: "User",
@@ -860,7 +856,7 @@
     function updatePaymentCheckout() {
       const uniqueRef = Date.now();
       const data = {
-        amount: 0,
+        amount: 0, 
         currency: "GBP",
         country: "GB",
         phone: "+44 20 7123 4567",
@@ -868,8 +864,8 @@
         storePaymentMethod: true,
         vendorId : globalVendorId,
         paymentMethods: ["card"],
-        reference: "payment_ref" + uniqueRef,
-        consumer: { reference: "consumer_ref"  + uniqueRef}
+        reference: "item_payment_ref_" + new Date().getTime(),
+        consumer: { reference: "consumer_ref"  + new Date().getTime()}
       };
       fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout", {
         method: "POST",
@@ -1045,8 +1041,8 @@
         paymentMethods: ["card"],
         shippingSameAsBilling: true,
         vendorId : globalVendorId,
-        reference: "ref_" + uniqueRef,
-        consumer: { reference: "con_ref_" + uniqueRef },
+        reference: "item_payment_ref_" + new Date().getTime(),
+        consumer: { reference: "con_ref_" + new Date().getTime() },
         plans: [planId]
       };
       fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout", {
@@ -1152,7 +1148,6 @@
       selectedInvoiceClient = fakeClients[clientValue];
       
       var randomTotal = "£" + (Math.floor(Math.random() * 500) + 50).toFixed(2);
-      // Set the global invoice total in the modal (this will be overwritten when viewing a specific invoice)
       document.getElementById("invoiceTotal").innerText = randomTotal;
       
       const tbody = document.getElementById("invoicesTableBody");
@@ -1178,25 +1173,20 @@
       cell.className = "px-4 py-2 text-left";
       cell.innerText = "Pending";
       
-      // Pass "this" to viewInvoiceModal so the function can identify the relevant row.
       cell = row.insertCell();
       cell.className = "px-4 py-2 text-left";
       cell.innerHTML = `<a href="#" class="text-indigo-600 hover:underline" onclick="viewInvoiceModal(this)">View invoice</a>`;
       
-      // Update currentInvoiceRow for later processing (e.g., sending payment)
       currentInvoiceRow = row;
       invoiceCounter++;
       
       closeEstimateModal();
-      // Show the invoice details modal (the viewInvoiceModal function will update the total)
       document.getElementById('invoiceDetailsModal').classList.remove('hidden');
     }
-    // Updated viewInvoiceModal function: updates the modal's total based on the clicked row.
+    // Updated viewInvoiceModal: updates the modal with the total from the clicked row.
     function viewInvoiceModal(elem) {
       currentInvoiceRow = elem.closest('tr');
-      // Extract the total amount from the cell at index 3 of the clicked row.
       const totalAmount = currentInvoiceRow.cells[3].innerText;
-      // Update the modal's total field with this value.
       document.getElementById("invoiceTotal").innerText = totalAmount;
       document.getElementById('invoiceDetailsModal').classList.remove('hidden');
     }
