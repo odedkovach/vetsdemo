@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Include Tailwind CSS for styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VetFusion Dashboard</title>
+  <!-- Google Fonts for modern typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- UniPaas UI Web-Embeds Library -->
+  <script type="application/javascript" src="https://cdn.unipaas.com/embedded-ui.js"></script>
+  
+  <!-- Global Styles -->
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4e1ff; /* Light purple background */
+      color: #333;
+    }
+    a {
+      text-decoration: none;
+    }
+    .hidden { display: none; }
+    /* Dashboard Container */
+    #dashboard-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header.dashboard-header {
+      background: #7b1adb;
+      color: #fff;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+    header.dashboard-header h1 {
+      font-size: 1.5em;
+      margin: 0;
+    }
+    /* Mobile Menu Button */
+    #mobileMenuButton {
+      display: none;
+      cursor: pointer;
+      font-size: 24px;
+    }
+    @media (max-width: 767px) {
+      #mobileMenuButton { display: block; }
+    }
+    /* Main Content */
+    .dashboard-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    @media (min-width: 768px) {
+      .dashboard-content { flex-direction: row; }
+    }
+    /* Sidebar */
+    .sidebar {
+      background: #fff;
+      width: 250px;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      border-right: 1px solid #b932f8;
+    }
+    @media (max-width: 767px) {
+      .sidebar {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: -100%;
+        height: 100%;
+        z-index: 50;
+        transition: left 0.3s ease;
+      }
+      .sidebar.open { left: 0; }
+    }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar ul li { margin: 15px 0; }
+    .sidebar ul li a {
+      display: block;
+      padding: 0.5rem 1rem;
+      color: #7b1adb;
+      font-weight: 600;
+      border-radius: 0.375rem;
+      transition: background 0.3s ease;
+    }
+    .sidebar ul li a:hover { background: #e0d7f7; }
+    /* Main Content Area */
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      background: #f4e1ff;
+    }
+    @media (max-width: 767px) { .main-content { padding: 15px; } }
+    /* Section Cards */
+    #tab-content .section {
+      padding: 20px;
+      background: #fff;
+      border-radius: 0.5rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    /* Dashboard Overview Cards */
+    .cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      margin-bottom: 1.875rem;
+    }
+    .card {
+      flex: 1 1 200px;
+      background: #b932f8;
+      color: #fff;
+      padding: 1.25rem;
+      border-radius: 0.5rem;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .card h3 { margin-bottom: 0.625rem; font-size: 1.125rem; }
+    .card p { font-size: 1.5rem; margin: 0; }
+    .recent-transactions h3 {
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+      color: #7b1adb;
+    }
+    /* Payment Method Logos CSS */
+    .visa {
+      display: inline-block;
+      width: 40px;
+      height: 15px;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png') no-repeat center;
+      background-size: contain;
+    }
+    .mastercard {
+      display: inline-block;
+      width: 40px;
+      height: 15px;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg') no-repeat center;
+      background-size: contain;
+    }
+    .direct-debit {
+      display: inline-block;
+      width: 40px;
+      height: 15px;
+      background: url('https://banner2.cleanpng.com/20180430/vuq/avdikoadr.webp') no-repeat center;
+      background-size: contain;
+    }
+  </style>
+</head>
+<body>
+  <!-- Dashboard Container -->
+  <div id="dashboard-container">
+    <header class="dashboard-header">
+      <div class="flex items-center">
+        <button id="mobileMenuButton" onclick="toggleSidebar()">☰</button>
+        <h1 class="ml-2">VetFusion Dashboard</h1>
+      </div>
+      <div id="settingsIcon" onclick="openSettingsModal()" style="cursor: pointer; font-size: 24px;">⚙️</div>
+    </header>
+    <div class="dashboard-content relative">
+      <aside class="sidebar" id="sidebar">
+        <ul>
+          <li><a onclick="showTab('dashboard')">Dashboard</a></li>
+          <li><a onclick="showTab('clients')">Clients &amp; Patients</a></li>
+          <li><a onclick="showTab('appointments')">Appointments</a></li>
+          <li><a onclick="showTab('payments')">Payments</a></li>
+          <li><a onclick="showTab('reports')">Reports</a></li>
+          <li><a onclick="showTab('store')">Store</a></li>
+          <li><a onclick="showTab('estimate')">Estimates/Invoices</a></li>
+          <li><a onclick="showTab('settings')">Settings</a></li>
+        </ul>
+      </aside>
+      <main class="main-content">
+        <div id="tab-content">
+          <!-- Dashboard Overview Section -->
+          <div id="dashboard-section" class="section">
+            <h2 class="text-2xl font-semibold mb-4">Dashboard Overview</h2>
+            <div class="cards-container">
+              <div class="card">
+                <h3>Total Clients</h3>
+                <p>150</p>
+              </div>
+              <div class="card">
+                <h3>New Appointments</h3>
+                <p>20</p>
+              </div>
+              <div class="card">
+                <h3>Total Patients</h3>
+                <p>200</p>
+              </div>
+              <div class="card">
+                <h3>Payments Today</h3>
+                <p>£500</p>
+              </div>
+              <div class="card">
+                <h3>Monthly Revenue</h3>
+                <p>£12K</p>
+              </div>
+            </div>
+            <div class="recent-transactions">
+              <h3>Recent Transactions</h3>
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owner</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                      <td class="px-6 py-4 whitespace-nowrap">2025-01-25</td>
+                      <td class="px-6 py-4 whitespace-nowrap">John Doe</td>
+                      <td class="px-6 py-4 whitespace-nowrap">£50</td>
+                      <td class="px-6 py-4 whitespace-nowrap">Completed</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 whitespace-nowrap">2025-01-25</td>
+                      <td class="px-6 py-4 whitespace-nowrap">Jane Smith</td>
+                      <td class="px-6 py-4 whitespace-nowrap">£70</td>
+                      <td class="px-6 py-4 whitespace-nowrap">Completed</td>
+                    </tr>
+                    <tr>
+                      <td class="px-6 py-4 whitespace-nowrap">2025-01-24</td>
+                      <td class="px-6 py-4 whitespace-nowrap">Bob Johnson</td>
+                      <td class="px-6 py-4 whitespace-nowrap">£60</td>
+                      <td class="px-6 py-4 whitespace-nowrap">Pending</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Clients &amp; Patients Section -->
+          <div id="clients-section" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Client &amp; Patient Management</h2>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owner Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pet Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pet Type</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Breed</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Billing Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Method</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Health Plan</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  <!-- John Doe -->
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">John Doe</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Bella</td>
+                    <td class="px-6 py-4 whitespace-nowrap">john.doe@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-1234</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Dog</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Labrador Retriever</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap"><span class="visa"></span> ***4542</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Basic</td>
+                  </tr>
+                  <!-- Jane Smith -->
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Jane Smith</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Whiskers</td>
+                    <td class="px-6 py-4 whitespace-nowrap">jane.smith@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-2345</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Siamese</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap"><span class="mastercard"></span> ***9876</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Premium</td>
+                  </tr>
+                  <!-- Bob Johnson -->
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Bob Johnson</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Rex</td>
+                    <td class="px-6 py-4 whitespace-nowrap">bob.johnson@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-3456</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Dog</td>
+                    <td class="px-6 py-4 whitespace-nowrap">German Shepherd</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap">---</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Basic</td>
+                  </tr>
+                  <!-- Alice Brown -->
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Alice Brown</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Coco</td>
+                    <td class="px-6 py-4 whitespace-nowrap">alice.brown@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-4567</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Persian</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap"><span class="visa"></span> ***1234</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Premium</td>
+                  </tr>
+                  <!-- Charlie Davis -->
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Charlie Davis</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Max</td>
+                    <td class="px-6 py-4 whitespace-nowrap">charlie.davis@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-5678</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Dog</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Beagle</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap"><span class="mastercard"></span> ***6789</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Premium</td>
+                  </tr>
+                  <!-- Diane Evans -->
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Diane Evans</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Luna</td>
+                    <td class="px-6 py-4 whitespace-nowrap">diane.evans@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-6789</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Maine Coon</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Expired</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <a href="#" class="text-indigo-600 hover:underline" onclick="openUpdatePaymentModal()">expired</a>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">Basic</td>
+                  </tr>
+                  <!-- Karen Miller -->
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Karen Miller</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Zoe</td>
+                    <td class="px-6 py-4 whitespace-nowrap">karen.miller@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">555-1111</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Scottish Fold</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
+                    <td class="px-6 py-4 whitespace-nowrap"><span class="visa"></span> ***3333</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <a href="#" class="text-indigo-600 hover:underline" onclick="openRenewPlanModal()">expired</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <!-- Appointments Section -->
+          <div id="appointments-section" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Appointments</h2>
+            <p>Fake appointment schedule: General Check-up, Vaccination, Surgery, Dental Cleaning, Grooming.</p>
+          </div>
+          
+          <!-- Payments Section -->
+          <div id="payments-section" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Payment Processing</h2>
+            <div id="pay_portal"></div>
+          </div>
+          
+          <!-- Reports Section -->
+          <div id="reports-section" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Analytics &amp; Reporting</h2>
+            <p>Fake reports showing clinic performance metrics.</p>
+          </div>
+          
+          <!-- Store Section -->
+          <div id="store-section" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Store</h2>
+            <div class="flex flex-wrap gap-5 mt-5">
+              <!-- Example Store Items -->
+              <div class="bg-white rounded-lg shadow p-6 w-56 text-center">
+                <div class="text-4xl">🐶</div>
+                <div class="mt-4">
+                  <h3 class="text-lg font-semibold">Dog Food</h3>
+                  <p>Price: £30.00</p>
+                  <button class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="openChooseCustomerModal(30)">Send Payment</button>
+                </div>
+              </div>
+              <div class="bg-white rounded-lg shadow p-6 w-56 text-center">
+                <div class="text-4xl">🐱</div>
+                <div class="mt-4">
+                  <h3 class="text-lg font-semibold">Cat Litter</h3>
+                  <p>Price: £15.00</p>
+                  <button class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="openChooseCustomerModal(15)">Send Payment</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Estimates/Invoices Section -->
+          <div id="estimate-section" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Estimates/Invoices</h2>
+            <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="openEstimateModal()">Create Estimate/Invoice</button>
+            <!-- Invoices Table Section -->
+            <div id="invoicesListSection" class="mt-6">
+              <h3 class="text-xl font-semibold mb-4">Invoices</h3>
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 table-fixed">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th class="px-4 py-2 text-left w-1/6">Invoice ID</th>
+                      <th class="px-4 py-2 text-left w-1/6">Pet</th>
+                      <th class="px-4 py-2 text-left w-1/6">Client</th>
+                      <th class="px-4 py-2 text-left w-1/6">Amount</th>
+                      <th class="px-4 py-2 text-left w-1/6">Payment Status</th>
+                      <th class="px-4 py-2 text-left w-1/6">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="invoicesTableBody" class="bg-white divide-y divide-gray-200">
+                    <!-- New invoice rows will be appended here -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Settings Section -->
+          <div id="settings-section" class="section hidden">
+            <h2 class="text-2xl font-semibold mb-4">Settings</h2>
+            <p>Fake settings page to configure veterinary software options.</p>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  
+  <!-- ================= Additional Modals ================= -->
+  
+  <!-- Vendor Selection Modal -->
+  <div id="vendorSelectionModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeVendorSelectionModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Select Vendor</h2>
+      <p class="mb-4">Choose the vendor associated with this private key:</p>
+      <select id="vendorSelect" class="w-full p-2 border-gray-300 rounded mb-4">
+        <!-- Options will be populated dynamically -->
+      </select>
+      <div class="flex justify-center">
+        <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="saveVendor()">Save Vendor</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Update Payment Modal -->
+  <div id="updatePaymentModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeUpdatePaymentModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Send Payment Link</h2>
+      <div id="updatePaymentDetails" class="hidden">
+        <p class="mb-4 font-bold">Send the Payment Link to Customer</p>
+        <div class="flex flex-col gap-2 mb-4">
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendUpdatedPaymentLink('email')">Send via Email</button>
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendUpdatedPaymentLink('sms')">Send via SMS</button>
+        </div>
+        <p class="mb-2 font-bold">Use this QR code to access the checkout</p>
+        <div class="flex justify-center mb-2">
+          <img id="updatePaymentQRCode" src="" alt="QR Code" class="w-32 h-32">
+        </div>
+        <!-- Button to open the operator modal -->
+        <div class="flex justify-center mb-2">
+          <button id="copyQRCodeButton" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="copyQRCode()">Copy QR code</button>
+        </div>
+        <p><strong>Payment Link:</strong> <span id="updatePaymentLink"></span></p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Choose Customer Modal -->
+  <div id="chooseCustomerModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeChooseCustomerModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Choose Customer</h2>
+      <div class="mb-4">
+        <p class="mb-2">Select a customer (name or phone):</p>
+        <select id="customerSelect" class="w-full p-2 border-gray-300 rounded">
+          <option value="">--Select Customer--</option>
+          <option value="1">John Doe - 555-1234</option>
+          <option value="2">Jane Smith - 555-2345</option>
+          <option value="3">Alice Brown - 555-4567</option>
+        </select>
+      </div>
+      <div class="flex justify-center">
+        <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="chooseCustomerForItemPayment()">Proceed</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Purchase Completed Modal -->
+  <div id="purchaseCompleteModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closePurchaseCompleteModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Purchase Completed</h2>
+      <div>
+        <p class="mb-2">Purchase completed successfully!</p>
+        <p class="mb-2">Amount: <span id="completedAmount"></span></p>
+        <p class="mb-2">Currency: <span id="completedCurrency"></span></p>
+        <p class="mb-2">Reference: <span id="completedReference"></span></p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Renew Health Plan Modal -->
+  <div id="renewPlanModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeRenewPlanModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Renew Health Plan</h2>
+      <div id="renewalPlanSelection">
+        <p class="mb-4 font-bold">Select Health Plan</p>
+        <div id="planButtonsContainer" class="flex flex-col gap-2"></div>
+      </div>
+      <div id="renewalPlanDetails" class="hidden">
+        <p class="mb-4 font-bold">Send the Renewal Link to Customer</p>
+        <div class="flex flex-col gap-2 mb-4">
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendRenewalLink('email')">Send via Email</button>
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendRenewalLink('sms')">Send via SMS</button>
+        </div>
+        <p class="mb-2 font-bold">Use this QR code to access the renewal page</p>
+        <div class="flex justify-center mb-2">
+          <img id="renewalQRCode" src="" alt="QR Code" class="w-32 h-32">
+        </div>
+        <p><strong>Payment Link:</strong> <span id="renewalPaymentLink"></span></p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Register Health Plan Modal -->
+  <div id="registerPlanModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeRegisterPlanModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Register Health Plan</h2>
+      <div>
+        <p class="mb-4 font-bold">Send the Registration Link to Customer</p>
+        <p class="mb-4">Click below to send the health plan registration link directly to the customer using the email address or phone number on their profile.</p>
+        <div class="flex flex-col gap-2 mb-4">
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendRegistrationLink('email')">Send via Email</button>
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendRegistrationLink('sms')">Send via SMS</button>
+        </div>
+        <p class="mb-2 font-bold">Use this QR code to access the registration page</p>
+        <div class="flex justify-center">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=RegistrationLink" alt="QR Code" class="w-32 h-32">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Operator QR Code Modal -->
+  <div id="operatorQRCodeModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeOperatorQRCodeModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Operator QR Code</h2>
+      <div class="flex justify-center mb-2">
+        <img id="operatorQRCode" src="" alt="Operator QR Code" class="w-32 h-32">
+      </div>
+      <p class="text-center text-sm">Show this QR code on your mobile device.</p>
+    </div>
+  </div>
+  
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeSettingsModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4">Settings</h2>
+      <div>
+        <p class="mb-4">Enter the ACCESS TOKEN:</p>
+        <input type="text" id="accessTokenInput" value="bihXLAzIENTLuFY1pmWFcg==" class="w-full p-2 border-gray-300 rounded">
+        <div class="flex justify-center mt-4">
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="saveAccessToken()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Estimate/Invoice Creation Modal -->
+  <div id="estimateModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeEstimateModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4"><span class="underline">Create</span> Estimate/Invoice</h2>
+      <!-- Pet Dropdown -->
+      <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Pet</label>
+          <select id="estimatePet" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+              <option value="">Select Pet</option>
+              <option value="pet1">Buddy (Dog)</option>
+              <option value="pet2">Mittens (Cat)</option>
+              <option value="pet3">Charlie (Parrot)</option>
+          </select>
+      </div>
+      <!-- Client Dropdown -->
+      <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Client</label>
+          <select id="estimateClient" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+              <option value="">Select Client</option>
+              <option value="client1">John Doe</option>
+              <option value="client2">Jane Smith</option>
+              <option value="client3">Alice Brown</option>
+          </select>
+      </div>
+      <!-- Reference Input (Optional) -->
+      <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Reference (Optional)</label>
+          <input type="text" id="estimateReference" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="">
+      </div>
+      <!-- Buttons -->
+      <div class="flex justify-between">
+          <button class="text-indigo-600 hover:underline" onclick="closeEstimateModal()">Cancel</button>
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="createEstimate()">Create Estimate/Invoice</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Invoice Details Modal -->
+  <div id="invoiceDetailsModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl relative max-h-screen overflow-y-auto">
+      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeInvoiceDetailsModal()">&times;</button>
+      <h2 class="text-xl font-semibold mb-4"><span class="underline">Unipaas</span> Test : Louie @ 18 Jan 2025 - estimate</h2>
+      <!-- Services Section -->
+      <h3 class="text-lg font-semibold mt-4">Services</h3>
+      <div class="bg-gray-50 rounded-lg p-4 mt-2 overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-100">
+                  <tr>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Discount</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Final Price <span class="text-xs">(Incl. VAT)</span></th>
+                  </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                  <tr>
+                      <td class="px-4 py-2">BLOCK OFF</td>
+                      <td class="px-4 py-2">2</td>
+                      <td class="px-4 py-2">-</td>
+                      <td class="px-4 py-2">£0</td>
+                  </tr>
+                  <tr>
+                      <td class="px-4 py-2">BLOCK OFF</td>
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">-</td>
+                      <td class="px-4 py-2">£0</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+      <!-- Products Section -->
+      <h3 class="text-lg font-semibold mt-6">Products</h3>
+      <div class="bg-gray-50 rounded-lg p-4 mt-2 overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-100">
+                  <tr>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Discount</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Final Price <span class="text-xs">(Incl. VAT)</span></th>
+                  </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                  <tr>
+                      <td class="px-4 py-2">1.25mg . NVS. Amodip (100 tabs)</td>
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">-</td>
+                      <td class="px-4 py-2">£95.89</td>
+                  </tr>
+                  <tr>
+                      <td class="px-4 py-2">ACESADETE 2MG/ML SOL INJ DOG/CAT</td>
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">-</td>
+                      <td class="px-4 py-2">£9.70</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+      <!-- Due Date -->
+      <div class="flex items-center mt-6">
+          <span class="bg-gray-200 p-2 rounded-full">📅</span>
+          <p class="ml-2 text-gray-700">Due on: <strong>17/02/2025</strong></p>
+      </div>
+      <!-- Billing Summary -->
+      <div class="mt-6 border-t pt-4">
+          <h3 class="text-lg font-semibold">Billing Summary</h3>
+          <div class="flex justify-between items-center mt-2">
+              <p class="text-indigo-600 font-semibold">Total Price <span class="text-xs">(Incl. VAT)</span></p>
+              <!-- This field is updated when the relevant invoice is viewed -->
+              <p class="text-xl font-bold" id="invoiceTotal">£105.59</p>
+          </div>
+      </div>
+      <!-- Buttons Section -->
+      <div class="mt-6 flex justify-between">
+          <button id="chargeButton" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" onclick="chargeWithSavedCard()">Charge with Saved card</button>
+          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendInvoicePayment()">Send Payment</button>
+      </div>
+      <script>
+          function generatePDF() {
+              alert("Generating PDF... (This will be replaced with actual PDF generation logic)");
+          }
+
+          function chargeWithSavedCard() {
+              const button = document.getElementById("chargeButton");
+              const originalText = "Charge with Saved card";
+              const originalWidth = button.offsetWidth;
+              button.style.minWidth = originalWidth + "px";
+              button.innerText = "Processing...";
+              button.disabled = true;
+              const invoiceTotalElement = document.getElementById("invoiceTotal");
+              let invoiceAmount = 0;
+              if (invoiceTotalElement) {
+                  invoiceAmount = parseFloat(invoiceTotalElement.innerText.replace('£',''));
+              }
+              const payload = {
+                  amount: invoiceAmount,
+                  currency: "GBP",
+                  description: "Invoice Payment",
+                  vendorId: globalVendorId,
+                  paymentOptionId: "67a3759c2d2d4420a8b7842f",
+ 				 orderId: "item_payment_ref_" + new Date().getTime(),
+                  consumer: {
+                      email: "test@example.com",
+                      firstName: "John",
+                      lastName: "Mitch",
+                      country: "GB"
+                  }
+              };
+
+              fetch("https://sandbox.unipaas.com/platform/pay-ins", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json",
+                      "Authorization": "Bearer " + savedToken
+                  },
+                  body: JSON.stringify(payload)
+              })
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error("Network response was not OK, status = " + response.status);
+                  }
+                  return response.json();
+              })
+              .then(jsonData => {
+                  console.log("Payment Request Successful:", jsonData);
+                  if (jsonData.transactionStatus === "Approved") {
+                      if (currentInvoiceRow) {
+                          currentInvoiceRow.cells[4].innerHTML = `<span class="text-green-600 font-bold">Paid</span>`;
+                      }
+                  } else {
+                      if (currentInvoiceRow) {
+                          currentInvoiceRow.cells[4].innerHTML = `<span class="text-red-600 font-bold">Failed</span>`;
+                      }
+                  }
+                  closeInvoiceDetailsModal();
+              })
+              .catch(error => {
+                  console.error("Error in Payment Request:", error);
+                  if (currentInvoiceRow) {
+                      currentInvoiceRow.cells[4].innerHTML = `<span class="text-red-600 font-bold">Failed</span>`;
+                  }
+                  closeInvoiceDetailsModal();
+              })
+              .finally(() => {
+                  button.innerText = originalText;
+                  button.disabled = false;
+              });
+          }
+      </script>
+    </div>
+  </div>
+  
+  <!-- ================= End Modals ================= -->
+  
+  <!-- JavaScript Functions -->
+  <script>
+    let savedToken = "bihXLAzIENTLuFY1pmWFcg==";
+    let globalVendorId = "67a85fe3fc5f8d3b7a1f17a7";
+    let uniPaasComponents = null;
+    function getApiHeaders() {
+      return {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + savedToken
+      };
+    }
+    
+    function loadPayPortal() {
+      fetch("https://sandbox.unipaas.com/platform/authorize", {
+        method: "POST",
+        headers: getApiHeaders(),
+        body: JSON.stringify({
+          scopes: ["portal_read", "portal_write"],
+          vendorId: globalVendorId
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        const newAccessToken = data.accessToken;
+        if (uniPaasComponents) {
+          console.log(newAccessToken);
+          uniPaasComponents.reset({ accessToken: newAccessToken });
+        } else {
+          uniPaasComponents = unipaas.components(newAccessToken, config_general);
+          const payPortal = uniPaasComponents.create("payPortal");
+          payPortal.mount("#pay_portal");
+        }
+      })
+      .catch(error => console.error('Error fetching access token:', error));
+    }
+    
+    let currentItemPaymentAmount = 0;
+    let checkoutStatusTimer;
+    let selectedInvoiceClient = null;
+    let qrPaymentLinkValue = "";
+    let invoiceCounter = 1;
+    let currentInvoiceRow = null;
+    let invoicePaymentMapping = {};
+    const customers = [
+      { id: "1", name: "John Doe", phone: "555-1234", email: "john.doe@example.com" },
+      { id: "2", name: "Jane Smith", phone: "555-2345", email: "jane.smith@example.com" },
+      { id: "3", name: "Alice Brown", phone: "555-4567", email: "alice.brown@example.com" }
+    ];
+    
+    function showTab(tab) {
+      document.querySelectorAll('#tab-content .section').forEach(section => {
+        section.classList.add('hidden');
+      });
+      const activeSection = document.getElementById(tab + '-section');
+      if (activeSection) activeSection.classList.remove('hidden');
+      if(window.innerWidth < 768) {
+        document.getElementById('sidebar').classList.remove('open');
+      }
+      if(tab === "payments") {
+        loadPayPortal();
+      }
+    }
+    document.addEventListener('DOMContentLoaded', () => { showTab('dashboard'); });
+    
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('open');
+    }
+    
+    function openUpdatePaymentModal() {
+      document.getElementById('updatePaymentModal').classList.remove('hidden');
+      updatePaymentCheckout();
+    }
+    function closeUpdatePaymentModal() {
+      document.getElementById('updatePaymentModal').classList.add('hidden');
+      document.getElementById('updatePaymentDetails').classList.add('hidden');
+    }
+    function updatePaymentCheckout() {
+      const uniqueRef = Date.now();
+      const data = {
+        amount: 0, 
+        currency: "GBP",
+        country: "GB",
+        phone: "+44 20 7123 4567",
+        email: "test@unipaas.com",
+        storePaymentMethod: true,
+        vendorId : globalVendorId,
+        paymentMethods: ["card"],
+        reference: "item_payment_ref_" + new Date().getTime(),
+        consumer: { reference: "consumer_ref"  + new Date().getTime()}
+      };
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout", {
+        method: "POST",
+        headers: getApiHeaders(),
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
+        return response.json();
+      })
+      .then(jsonData => {
+        console.log("Update Payment Checkout Session Created:", jsonData);
+        const paymentlink = jsonData.shortLink;
+        document.getElementById('updatePaymentLink').textContent = paymentlink;
+        document.getElementById('updatePaymentQRCode').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(paymentlink);
+        qrPaymentLinkValue = jsonData.qrPaymentLink;
+        document.getElementById('updatePaymentDetails').classList.remove('hidden');
+      })
+      .catch(error => console.error("Error:", error));
+    }
+    function sendUpdatedPaymentLink(method) {
+      alert('Payment link sent via ' + method + '!');
+      closeUpdatePaymentModal();
+    }
+    
+    function openChooseCustomerModal(amount) {
+      currentItemPaymentAmount = amount;
+      document.getElementById('chooseCustomerModal').classList.remove('hidden');
+    }
+    function closeChooseCustomerModal() {
+      document.getElementById('chooseCustomerModal').classList.add('hidden');
+    }
+    function chooseCustomerForItemPayment() {
+      const customerId = document.getElementById('customerSelect').value;
+      if (!customerId) {
+        alert("Please select a customer.");
+        return;
+      }
+      const selectedCustomer = customers.find(c => c.id === customerId);
+      closeChooseCustomerModal();
+      openItemPaymentModal(currentItemPaymentAmount, selectedCustomer);
+    }
+    function openItemPaymentModal(amount, customer) {
+      document.getElementById('updatePaymentModal').classList.remove('hidden');
+      itemPaymentCheckout(amount, customer);
+    }
+    function itemPaymentCheckout(amount, customer) {
+      const data = {
+        amount: amount,
+        currency: "GBP",
+        country: "GB",
+        email: customer.email,
+        vendorId : globalVendorId,
+        paymentMethods: ["card"],
+        reference: "item_payment_ref_" + new Date().getTime(),
+        consumer: { reference: "item_consumer_ref_" + new Date().getTime() }
+      };
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout", {
+        method: "POST",
+        headers: getApiHeaders(),
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
+        return response.json();
+      })
+      .then(jsonData => {
+        console.log("Item Payment Checkout Session Created:", jsonData);
+        const paymentlink = jsonData.shortLink;
+        const checkoutId = jsonData.id;
+        document.getElementById('updatePaymentLink').textContent = paymentlink;
+        document.getElementById('updatePaymentQRCode').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(paymentlink);
+        qrPaymentLinkValue = jsonData.qrPaymentLink;
+        document.getElementById('updatePaymentDetails').classList.remove('hidden');
+        if (currentInvoiceRow) {
+          invoicePaymentMapping[checkoutId] = currentInvoiceRow;
+          currentInvoiceRow = null;
+        }
+        startCheckoutStatusTimer(checkoutId);
+      })
+      .catch(error => console.error("Error:", error));
+    }
+    function startCheckoutStatusTimer(checkoutId) {
+      const startTime = Date.now();
+      checkoutStatusTimer = setInterval(() => {
+        const elapsedSeconds = (Date.now() - startTime) / 1000;
+        if (elapsedSeconds > 400) {
+          clearInterval(checkoutStatusTimer);
+          console.log("Checkout status timer stopped after 400 seconds");
+          return;
+        }
+        fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout/" + checkoutId, {
+          method: "GET",
+          headers: getApiHeaders()
+        })
+        .then(response => {
+          if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
+          return response.json();
+        })
+        .then(data => {
+          console.log("Checkout status:", data.status);
+          if (data.status && data.status.toLowerCase() === "paid") {
+            clearInterval(checkoutStatusTimer);
+            document.getElementById("completedAmount").textContent = data.amount;
+            document.getElementById("completedCurrency").textContent = data.currency;
+            document.getElementById("completedReference").textContent = data.reference;
+            document.getElementById("purchaseCompleteModal").classList.remove('hidden');
+            if (invoicePaymentMapping[checkoutId]) {
+              const row = invoicePaymentMapping[checkoutId];
+              row.cells[4].innerHTML = `<span class="text-green-600 font-bold">Paid</span>`;
+              delete invoicePaymentMapping[checkoutId];
+            }
+          }
+        })
+        .catch(error => console.error("Error checking checkout status:", error));
+      }, 5000);
+    }
+    function closePurchaseCompleteModal() {
+      document.getElementById("purchaseCompleteModal").classList.add('hidden');
+    }
+    
+    function openRenewPlanModal() {
+      document.getElementById('renewPlanModal').classList.remove('hidden');
+      document.getElementById('renewalPlanSelection').classList.remove('hidden');
+      document.getElementById('renewalPlanDetails').classList.add('hidden');
+      fetchPlans();
+    }
+    function closeRenewPlanModal() {
+      document.getElementById('renewPlanModal').classList.add('hidden');
+    }
+    function sendRenewalLink(method) {
+      alert('Renewal link sent via ' + method + '!');
+      closeRenewPlanModal();
+    }
+    function fetchPlans() {
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/plans", {
+        method: "GET",
+        headers: getApiHeaders()
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
+        return response.json();
+      })
+      .then(data => {
+        let plans = [];
+        if (Array.isArray(data)) {
+          plans = data.length > 0 && data[0].items ? data[0].items : data;
+        } else if (data.items) {
+          plans = data.items;
+        }
+        const container = document.getElementById('planButtonsContainer');
+        container.innerHTML = "";
+        plans.forEach(plan => {
+          const btn = document.createElement('button');
+          btn.textContent = plan.description;
+          btn.className = "bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700";
+          btn.onclick = () => chooseRenewalPlan(plan.id, plan.price, plan.currency);
+          container.appendChild(btn);
+        });
+      })
+      .catch(error => console.error("Error fetching plans:", error));
+    }
+    function chooseRenewalPlan(planId, amount, currency) {
+      checkout(planId, amount, currency);
+    }
+    function checkout(planId, amount, currency) {
+      const uniqueRef = Date.now();
+      const data = {
+        amount: amount,
+        currency: currency,
+        email: "demo@test.com",
+        country: "GB",
+        paymentMethods: ["card"],
+        shippingSameAsBilling: true,
+        vendorId : globalVendorId,
+        reference: "item_payment_ref_" + new Date().getTime(),
+        consumer: { reference: "con_ref_" + new Date().getTime() },
+        plans: [planId]
+      };
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout", {
+        method: "POST",
+        headers: getApiHeaders(),
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
+        return response.json();
+      })
+      .then(jsonData => {
+        console.log("Checkout Session Created:", jsonData);
+        const paymentlink = jsonData.shortLink;
+        document.getElementById('renewalPaymentLink').textContent = paymentlink;
+        document.getElementById('renewalQRCode').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(paymentlink);
+        document.getElementById('renewalPlanSelection').classList.add('hidden');
+        document.getElementById('renewalPlanDetails').classList.remove('hidden');
+      })
+      .catch(error => console.error("Error:", error));
+    }
+    
+    function openRegisterPlanModal() {
+      document.getElementById('registerPlanModal').classList.remove('hidden');
+    }
+    function closeRegisterPlanModal() {
+      document.getElementById('registerPlanModal').classList.add('hidden');
+    }
+    function sendRegistrationLink(method) {
+      alert('Registration link sent via ' + method + '!');
+      closeRegisterPlanModal();
+    }
+    
+    function openSettingsModal() {
+      document.getElementById('settingsModal').classList.remove('hidden');
+      document.getElementById('accessTokenInput').value = savedToken;
+    }
+    function closeSettingsModal() {
+      document.getElementById('settingsModal').classList.add('hidden');
+    }
+    function saveAccessToken() {
+      savedToken = document.getElementById('accessTokenInput').value;
+      closeSettingsModal();
+      fetchVendors(savedToken);
+    }
+    
+    function fetchVendors(newKey) {
+      fetch("https://sandbox.unipaas.com/platform/vendors", {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + newKey,
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        const vendorSelect = document.getElementById("vendorSelect");
+        vendorSelect.innerHTML = "";
+        data.forEach(vendor => {
+          const option = document.createElement("option");
+          option.value = vendor.id;
+          option.text = vendor.name;
+          vendorSelect.appendChild(option);
+        });
+        document.getElementById("vendorSelectionModal").classList.remove("hidden");
+      })
+      .catch(error => console.error("Error fetching vendors:", error));
+    }
+    function saveVendor() {
+      const vendorSelect = document.getElementById("vendorSelect");
+      globalVendorId = vendorSelect.value;
+      closeVendorSelectionModal();
+      loadPayPortal();
+    }
+    function closeVendorSelectionModal() {
+      document.getElementById("vendorSelectionModal").classList.add("hidden");
+    }
+    
+    function openEstimateModal() {
+      document.getElementById('estimateModal').classList.remove('hidden');
+    }
+    function closeEstimateModal() {
+      document.getElementById('estimateModal').classList.add('hidden');
+    }
+    function createEstimate() {
+      const petSelect = document.getElementById('estimatePet');
+      const clientSelect = document.getElementById('estimateClient');
+      const petValue = petSelect.value;
+      const clientValue = clientSelect.value;
+      if (!petValue || !clientValue) {
+        alert("Please select both a pet and a client.");
+        return;
+      }
+      const petText = petSelect.options[petSelect.selectedIndex].text;
+      const clientText = clientSelect.options[clientSelect.selectedIndex].text;
+      const reference = document.getElementById('estimateReference').value || "N/A";
+      
+      const fakeClients = {
+        "client1": { id: "client1", name: "John Doe", phone: "555-1234", email: "john.doe@example.com" },
+        "client2": { id: "client2", name: "Jane Smith", phone: "555-2345", email: "jane.smith@example.com" },
+        "client3": { id: "client3", name: "Alice Brown", phone: "555-4567", email: "alice.brown@example.com" }
+      };
+      selectedInvoiceClient = fakeClients[clientValue];
+      
+      var randomTotal = "£" + (Math.floor(Math.random() * 10) + 50).toFixed(2);
+      document.getElementById("invoiceTotal").innerText = randomTotal;
+      
+      const tbody = document.getElementById("invoicesTableBody");
+      const row = tbody.insertRow();
+      
+      let cell = row.insertCell();
+      cell.className = "px-4 py-2 text-left";
+      cell.innerText = "INV" + invoiceCounter;
+      
+      cell = row.insertCell();
+      cell.className = "px-4 py-2 text-left";
+      cell.innerText = petText;
+      
+      cell = row.insertCell();
+      cell.className = "px-4 py-2 text-left";
+      cell.innerText = clientText;
+      
+      cell = row.insertCell();
+      cell.className = "px-4 py-2 text-left";
+      cell.innerText = randomTotal;
+      
+      cell = row.insertCell();
+      cell.className = "px-4 py-2 text-left";
+      cell.innerText = "Pending";
+      
+      cell = row.insertCell();
+      cell.className = "px-4 py-2 text-left";
+      cell.innerHTML = `<a href="#" class="text-indigo-600 hover:underline" onclick="viewInvoiceModal(this)">View invoice</a>`;
+      
+      currentInvoiceRow = row;
+      invoiceCounter++;
+      
+      closeEstimateModal();
+      document.getElementById('invoiceDetailsModal').classList.remove('hidden');
+    }
+    // Updated viewInvoiceModal: updates the modal with the total from the clicked row.
+    function viewInvoiceModal(elem) {
+      currentInvoiceRow = elem.closest('tr');
+      const totalAmount = currentInvoiceRow.cells[3].innerText;
+      document.getElementById("invoiceTotal").innerText = totalAmount;
+      document.getElementById('invoiceDetailsModal').classList.remove('hidden');
+    }
+    function closeInvoiceDetailsModal() {
+      document.getElementById('invoiceDetailsModal').classList.add('hidden');
+    }
+    function sendInvoicePayment() {
+      const totalText = document.getElementById('invoiceTotal').innerText;
+      const total = parseFloat(totalText.replace('£',''));
+      if (!selectedInvoiceClient) {
+        alert("No client selected.");
+        return;
+      }
+      openItemPaymentModal(total, selectedInvoiceClient);
+      closeInvoiceDetailsModal();
+    }
+    
+    const config_general = {
+      paymentsEnabled: true,
+      theme: { 
+        colors: { 
+          primaryColor: "#7b1adb", 
+          secondaryColor: "#b932f8", 
+          accentTextColor: "#7b1adb", 
+          primaryButtonColor: "#7b1adb" 
+        },
+        fontFamily: "inherit",
+        boxShadow: "0px 3px 15px rgba(27, 79, 162, 0.11)" 
+      }
+    };
+    
+    loadPayPortal();
+    
+    function copyQRCode() {
+      console.log("copyQRCode called, qrPaymentLinkValue:", qrPaymentLinkValue);
+      if (!qrPaymentLinkValue || qrPaymentLinkValue.trim() === "") {
+        alert("QR Code link not available yet.");
+        return;
+      }
+      const operatorQRCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(qrPaymentLinkValue);
+      document.getElementById('operatorQRCode').src = operatorQRCodeUrl;
+      document.getElementById('operatorQRCodeModal').classList.remove('hidden');
+    }
+    
+    function closeOperatorQRCodeModal() {
+      document.getElementById('operatorQRCodeModal').classList.add('hidden');
+    }
+    
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Escape") {
+        const operatorModal = document.getElementById('operatorQRCodeModal');
+        if (operatorModal && !operatorModal.classList.contains('hidden')) {
+          closeOperatorQRCodeModal();
+        }
+      }
+    });
+    
+  </script>
+  
+</body>
+</html>
