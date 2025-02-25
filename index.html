@@ -1469,7 +1469,7 @@
       </div>
       <p class="qr-instructions">Use this QR code to access the mandate</p>
       <img id="mandateQRCode" src="" alt="Mandate QR Code" class="qr-code"/>
-      <button class="copy-qr-btn" onclick="copyMandateQRCode()">Copy QR Code</button>
+      <button class="copy-qr-btn" onclick="copyMandateQRCode()">Open Link</button>
       <p class="payment-link-label">Mandate Link:</p>
       <!-- Changed to anchor element -->
       <a id="mandateLink" class="payment-link-value" href="#" target="_blank" onclick="openFloatingModal(this.href); return false;"></a>
@@ -1604,7 +1604,7 @@
     /* Toggle HIM Vendor Functionality */
     function toggleHIMVendor(checkbox) {
       if (checkbox.checked) {
-        globalVendorId = "67bcf9878d319d67880218d2";
+        globalVendorId = "67be052d378501254f315979";
         // Hide the footer banner when HIM vendor is selected
         document.querySelector('.footer-banner').style.display = "none";
       } else {
