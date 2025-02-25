@@ -1,785 +1,1581 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <!-- Include Tailwind CSS for styling -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>VetFusion Dashboard</title>
-  <!-- Google Fonts for modern typography -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- UniPaas UI Web-Embeds Library -->
-  <script type="application/javascript" src="https://cdn.unipaas.com/embedded-ui.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GymPro Admin Dashboard</title>
   
-  <!-- Global Styles -->
+  <!-- Import fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  />
+  
+  <!-- UniPaas Embedded UI -->
+  <script src="https://cdn.unipaas.com/embedded-ui.js"></script>
+  
   <style>
-    body {
-      font-family: 'Montserrat', sans-serif;
+    /* Reset/normalize */
+    * {
       margin: 0;
       padding: 0;
-      background: #f4e1ff; /* Light purple background */
-      color: #333;
+      box-sizing: border-box;
     }
-    a {
-      text-decoration: none;
+    
+    /* Root variables for theming */
+    :root {
+      --primary-color: #2916BA;      
+      --body-bg-color: #F8F8F8;        
+      --menu-bg-color: #EDF0F5;        
+      --card-bg-color: #FFFFFF;        
+      --text-color: #333333;           
+      --light-text-color: #888888;     
+      --nav-height: 60px;              
+      --transition-speed: 0.3s;
     }
-    .hidden { display: none; }
-    /* Dashboard Container */
-    #dashboard-container {
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      background-color: var(--body-bg-color);
+      color: var(--text-color);
+      line-height: 1.4;
+    }
+    
+    /* TOP NAVIGATION */
+    .top-nav {
       display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-    header.dashboard-header {
-      background: #7b1adb;
-      color: #fff;
-      padding: 20px;
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      position: relative;
+      justify-content: space-between;
+      background-color: var(--primary-color);
+      color: #FFF;
+      height: var(--nav-height);
+      padding: 0 1rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
     }
-    header.dashboard-header h1 {
-      font-size: 1.5em;
-      margin: 0;
+    .top-nav .logo img {
+      width: 77px;
+      height: 24.9px;
     }
-    /* Mobile Menu Button */
-    #mobileMenuButton {
-      display: none;
+    .top-menu {
+      display: flex;
+      align-items: center;
+    }
+    .top-menu a {
+      color: #FFF;
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-left: 1rem;
+      transition: color var(--transition-speed);
       cursor: pointer;
-      font-size: 24px;
     }
-    @media (max-width: 767px) {
-      #mobileMenuButton { display: block; }
+    .top-menu a:hover {
+      color: #ddd;
     }
-    /* Main Content */
-    .dashboard-content {
-      flex: 1;
+    /* Toggle switch container in the top menu */
+    .toggle-container {
       display: flex;
-      flex-direction: column;
-      overflow: hidden;
+      align-items: center;
+      margin-left: 1rem;
     }
-    @media (min-width: 768px) {
-      .dashboard-content { flex-direction: row; }
+    .toggle-container span {
+      margin-left: 0.5rem;
+      font-size: 0.9rem;
     }
-    /* Sidebar */
-    .sidebar {
-      background: #fff;
-      width: 250px;
-      padding: 20px;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-      border-right: 1px solid #b932f8;
+    /* Toggle Switch CSS */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 20px;
     }
-    @media (max-width: 767px) {
-      .sidebar {
-        width: 100%;
-        position: absolute;
-        top: 0;
-        left: -100%;
-        height: 100%;
-        z-index: 50;
-        transition: left 0.3s ease;
-      }
-      .sidebar.open { left: 0; }
+    .switch input { 
+      opacity: 0;
+      width: 0;
+      height: 0;
     }
-    .sidebar ul { list-style: none; padding: 0; }
-    .sidebar ul li { margin: 15px 0; }
-    .sidebar ul li a {
-      display: block;
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 20px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+    
+    /* CONTENT WRAPPER (push below fixed header) */
+    .content-wrapper {
+      display: flex;
+      align-items: flex-start;
+      padding: 1.5rem;
+      gap: 1.5rem;
+      margin-top: var(--nav-height);
+    }
+    
+    /* SIDEBAR (MENU) */
+    #sidebar {
+      width: 231px;
+      background-color: var(--menu-bg-color);
+      border-radius: 8px;
+      padding: 1rem;
+      flex-shrink: 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .sidebar-header {
+      margin-bottom: 1.5rem;
+    }
+    .myclub-admin-btn {
+      display: inline-block;
+      background-color: #FFF;
+      color: #000;
       padding: 0.5rem 1rem;
-      color: #7b1adb;
-      font-weight: 600;
-      border-radius: 0.375rem;
-      transition: background 0.3s ease;
+      border-radius: 4px;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      line-height: 18.2px;
+      text-decoration: none;
+      transition: background-color var(--transition-speed);
+      cursor: pointer;
     }
-    .sidebar ul li a:hover { background: #e0d7f7; }
-    /* Main Content Area */
-    .main-content {
+    .myclub-admin-btn:hover {
+      background-color: #f2f2f2;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .sidebar ul li {
+      display: block;
+      padding: 0.75rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color var(--transition-speed);
+      font-family: 'Roboto', sans-serif;
+      font-size: 13px;
+    }
+    .sidebar ul li:hover {
+      background-color: #E0E4EA;
+    }
+    .sidebar ul li.active {
+      background-color: #EDEAFD;
+      color: var(--primary-color);
+    }
+    .sidebar ul li img {
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
+    /* Submenu for plan */
+    #planSubmenu {
+      list-style: none;
+      padding-left: 1rem;
+      display: none;
+    }
+    #planSubmenu li {
+      padding: 0.5rem;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    #planSubmenu li:hover {
+      background-color: #dcdcdc;
+    }
+    
+    /* MAIN CONTENT */
+    main {
       flex: 1;
-      padding: 30px;
-      overflow-y: auto;
-      background: #f4e1ff;
     }
-    @media (max-width: 767px) { .main-content { padding: 15px; } }
-    /* Section Cards */
-    #tab-content .section {
-      padding: 20px;
-      background: #fff;
-      border-radius: 0.5rem;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
+    .page-section {
+      display: none;
     }
-    /* Dashboard Overview Cards */
-    .cards-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.25rem;
-      margin-bottom: 1.875rem;
+    .page-section.active {
+      display: block;
+    }
+    .page-title {
+      margin-bottom: 2rem;
+    }
+    .page-title h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .page-title p {
+      color: var(--light-text-color);
+      font-size: 0.95rem;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
     }
     .card {
-      flex: 1 1 200px;
-      background: #b932f8;
-      color: #fff;
-      padding: 1.25rem;
-      border-radius: 0.5rem;
+      background-color: var(--card-bg-color);
+      border-radius: 4px;
+      padding: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .card h2 {
+      font-family: 'Roboto', sans-serif;
+      font-weight: 600;
+      font-size: 18px;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+    .card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .card .subtitle {
+      font-size: 0.875rem;
+      color: var(--light-text-color);
+    }
+    .chart-placeholder {
+      background-color: #EAEAEA;
+      height: 300px;
+      border-radius: 4px;
+      margin-bottom: 2rem;
+    }
+    
+    /* FOOTER BANNER */
+    .footer-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #F2F2F2;
+      padding: 1rem;
       text-align: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      z-index: 1000;
     }
-    .card h3 { margin-bottom: 0.625rem; font-size: 1.125rem; }
-    .card p { font-size: 1.5rem; margin: 0; }
-    .recent-transactions h3 {
+    .footer-banner p {
+      font-size: 0.875rem;
+    }
+    .learn-more-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 108px;
+      height: 32px;
+      padding: 6.4px 12.8px;
+      border-radius: 4px;
+      border: none;
+      background-color: var(--primary-color);
+      color: #FFF;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    
+    /* Modal Backdrop */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-backdrop.active {
+      display: flex;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 6px;
+      max-width: 90%;
+      max-height: 90%;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    /* New "QR style" modal design */
+    .qr-modal {
+      width: 500px;
+      padding: 1.5rem;
+      text-align: center;
+      border-radius: 6px;
+    }
+    .qr-modal .close-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #666;
+      cursor: pointer;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+    .qr-modal h2 {
       margin-bottom: 1rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+    /* New modal header section for Payment Option Modal */
+    .modal-header-details {
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      text-align: left;
+    }
+    .modal-header-details > div {
+      margin-bottom: 0.5rem;
+    }
+    .modal-header-details label {
+      margin-right: 0.5rem;
+    }
+    
+    .qr-modal .button-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    .qr-modal .action-btn {
+      background-color: var(--primary-color);
+      color: #fff;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .qr-modal .action-btn:hover {
+      opacity: 0.9;
+    }
+    .qr-modal .disabled-btn {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    .qr-modal .qr-instructions {
+      margin: 1rem 0;
+      color: var(--light-text-color);
+      font-size: 0.9rem;
+    }
+    .qr-modal .qr-code {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 1rem auto;
+      display: block;
+    }
+    .qr-modal .copy-qr-btn {
+      display: block;
+      margin: 0 auto 1rem auto;
+      background-color: #edf0f5;
+      color: var(--text-color);
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .qr-modal .copy-qr-btn:hover {
+      background-color: #ddd;
+    }
+    .qr-modal .payment-link-label {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .qr-modal .payment-link-value {
+      color: var(--primary-color);
+      word-break: break-all;
+      font-size: 0.88rem;
+    }
+
+    /* MEMBERS SECTION */
+    .members-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .members-filters .search-bar input {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .members-filters select {
+      padding: 0.45rem 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #fff;
+      font-size: 0.95rem;
+    }
+    .show-only {
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+    .show-only > span {
+      margin-right: 0.5rem;
+      color: var(--light-text-color);
+    }
+    .show-only input {
+      margin-right: 4px;
+    }
+    .members-actions .btn {
+      background-color: var(--primary-color);
+      color: #fff;
+      border: none;
+      padding: 0.45rem 1rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .members-actions .btn:hover {
+      background-color: #1d0e87;
+    }
+    .customer-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .customer-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background-color: var(--card-bg-color);
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      padding: 1rem;
+      position: relative;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--menu-bg-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-color);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+    .customer-info {
+      flex: 1;
+    }
+    .customer-name {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 2px;
+      cursor: pointer;
+    }
+    .customer-email {
+      font-size: 0.9rem;
+      color: var(--light-text-color);
+    }
+    .customer-status {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-right: 0.5rem;
+    }
+    .customer-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      line-height: 1.2;
+      color: #333;
+      background-color: #e0e4ea;
+    }
+    .customer-badge.new {
+      background-color: #d1e7dd;
+      color: #0f5132;
+    }
+    .customer-badge.unclaimed {
+      background-color: #fff3cd;
+      color: #664d03;
+    }
+
+    /* MEMBER PROFILE SECTION */
+    .member-profile-section {
+      margin-top: 1rem;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      max-width: 900px;
+    }
+    .member-profile-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .member-profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #F0E9D8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #666;
+    }
+    .member-profile-name {
       font-size: 1.25rem;
-      color: #7b1adb;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      text-transform: capitalize;
     }
-    /* Payment Method Logos CSS */
-    .visa {
+    .member-profile-joined {
+      font-size: 0.9rem;
+      color: var(--light-text-color);
+    }
+    .member-tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .member-tabs > div {
+      background-color: #f5f5f5;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .member-tabs > div:hover {
+      background-color: #e8e8e8;
+    }
+    #member-payment-details {
+      margin-bottom: 1rem;
+    }
+    .member-details-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+    .member-details-table th,
+    .member-details-table td {
+      text-align: left;
+      padding: 0.5rem;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+    }
+    .back-to-list-btn {
+      background-color: var(--primary-color);
+      color: #fff;
+      border: none;
+      padding: 0.45rem 1rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .back-to-list-btn:hover {
+      background-color: #1d0e87;
+    }
+
+    /* Payment Method Table */
+    .payment-method-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .payment-method-table th, .payment-method-table td {
+      padding: 8px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+    .visa-logo {
+      display: inline-block;
+      width: 24px;
+      height: 16px;
+      background-image: url('visa-logo.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+
+    /* Common .btn style */
+    .btn {
+      background-color: var(--primary-color);
+      color: #fff;
+      border: none;
+      padding: 0.45rem 1rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #1d0e87;
+    }
+    .btn-sm {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.8rem;
+    }
+
+    /* ===== New Store Section Styles (3 products) ===== */
+    .store-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      background-color: var(--card-bg-color);
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .store-search-customer {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .store-search-customer > label {
+      font-weight: 600;
+    }
+    .selected-customer {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #f0f0f0;
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+    }
+    .selected-customer .customer-name-tag {
+      font-weight: 600;
+    }
+    .selected-customer .customer-email-tag {
+      color: var(--light-text-color);
+      font-size: 0.85rem;
+    }
+    .remove-customer-btn {
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .create-customer-btn {
+      background-color: #fff;
+      color: #000;
+      border: 1px solid #ccc;
+      padding: 0.45rem 0.8rem;
+      font-size: 0.9rem;
+    }
+    .create-customer-btn:hover {
+      background-color: #f2f2f2;
+    }
+
+    .store-products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+    .store-product-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+      background-color: #fff;
+      border-radius: 4px;
+      padding: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .product-image-placeholder {
+      width: 100%;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+    }
+    .store-product-card .product-title {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .product-stock {
+      font-size: 0.9rem;
+      color: var(--light-text-color);
+    }
+    .product-price {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    .product-quantity {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.5rem 0;
+    }
+    .qty-btn {
+      background-color: #eee;
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .product-quantity input {
+      width: 50px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      height: 28px;
+    }
+    .add-to-cart-btn {
+      margin-top: 0.5rem;
+    }
+    
+    /* ===== New Floating Preview Modal (iPhone 12 size) ===== */
+    .floating-modal {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 390px;
+      height: 844px;
+      background-color: #fff;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      border-radius: 20px;
+      z-index: 3000;
+      display: none;
+    }
+    .floating-modal-content {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+    .floating-modal-content iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 20px;
+    }
+    .floating-close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 3100;
+    }
+
+    /* ===== Improved Create Plan Section Styles ===== */
+    .page-header h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .page-header p {
+      font-size: 1rem;
+      color: var(--light-text-color);
+      margin-bottom: 1rem;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: 500;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .toggle-switch {
+      position: relative;
       display: inline-block;
       width: 40px;
-      height: 15px;
-      background: url('https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png') no-repeat center;
-      background-size: contain;
+      height: 20px;
     }
-    .mastercard {
-      display: inline-block;
-      width: 40px;
-      height: 15px;
-      background: url('https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg') no-repeat center;
-      background-size: contain;
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
     }
-    .direct-debit {
-      display: inline-block;
-      width: 40px;
-      height: 15px;
-      background: url('https://banner2.cleanpng.com/20180430/vuq/avdikoadr.webp') no-repeat center;
-      background-size: contain;
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 20px;
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background-color: #fff;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    input:checked + .toggle-slider {
+      background-color: #2196F3;
+    }
+    input:checked + .toggle-slider:before {
+      transform: translateX(20px);
     }
   </style>
 </head>
 <body>
-  <!-- Dashboard Container -->
-  <div id="dashboard-container">
-    <header class="dashboard-header">
-      <div class="flex items-center">
-        <button id="mobileMenuButton" onclick="toggleSidebar()">☰</button>
-        <h1 class="ml-2">VetFusion Dashboard</h1>
+  <!-- TOP NAVIGATION -->
+  <header class="top-nav">
+    <div class="logo">
+      <img src="gympro-logo.png" alt="GymPro" />
+    </div>
+    <nav class="top-menu">
+      <a onclick="showTab('settings')">Settings</a>
+      <a>Support</a>
+      <!-- New Toggle Button for HIM Vendor -->
+      <div class="toggle-container">
+        <label class="switch">
+          <input type="checkbox" id="himToggle" onchange="toggleHIMVendor(this)">
+          <span class="slider"></span>
+        </label>
+        <span>HIM</span>
       </div>
-      <div id="settingsIcon" onclick="openSettingsModal()" style="cursor: pointer; font-size: 24px;">⚙️</div>
-    </header>
-    <div class="dashboard-content relative">
-      <aside class="sidebar" id="sidebar">
-        <ul>
-          <li><a onclick="showTab('dashboard')">Dashboard</a></li>
-          <li><a onclick="showTab('clients')">Clients &amp; Patients</a></li>
-          <li><a onclick="showTab('appointments')">Appointments</a></li>
-          <li><a onclick="showTab('payments')">Payments</a></li>
-          <li><a onclick="showTab('reports')">Reports</a></li>
-          <li><a onclick="showTab('store')">Store</a></li>
-          <li><a onclick="showTab('estimate')">Estimates/Invoices</a></li>
-          <li><a onclick="showTab('settings')">Settings</a></li>
+    </nav>
+  </header>
+  
+  <!-- CONTENT WRAPPER -->
+  <div class="content-wrapper">
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <a class="myclub-admin-btn">MyClub Admin</a>
+      </div>
+      <ul>
+        <li class="active" onclick="showTab('dashboard')">
+          <img src="dashboard.png" alt="Dashboard Icon">Dashboard
+        </li>
+        <li onclick="showTab('members')">
+          <img src="members.png" alt="Members Icon">Members
+        </li>
+        <li onclick="showTab('shop')">
+          <img src="store.png" alt="Store Icon">Store
+        </li>
+        <li onclick="showTab('reports')">
+          <img src="reports.png" alt="Reports Icon">Gympro Pay
+        </li>
+        <li onclick="togglePlanSubmenu(event)">
+          <img src="plans.png" alt="Plans">Plans
+        </li>
+        <ul id="planSubmenu">
+          <li onclick="showTab('createPlan')">Create Plan</li>
+          <li onclick="showTab('managePlan')">Manage Plans</li>
         </ul>
-      </aside>
-      <main class="main-content">
-        <div id="tab-content">
-          <!-- Dashboard Overview Section -->
-          <div id="dashboard-section" class="section">
-            <h2 class="text-2xl font-semibold mb-4">Dashboard Overview</h2>
-            <div class="cards-container">
-              <div class="card">
-                <h3>Total Clients</h3>
-                <p>150</p>
-              </div>
-              <div class="card">
-                <h3>New Appointments</h3>
-                <p>20</p>
-              </div>
-              <div class="card">
-                <h3>Total Patients</h3>
-                <p>200</p>
-              </div>
-              <div class="card">
-                <h3>Payments Today</h3>
-                <p>£500</p>
-              </div>
-              <div class="card">
-                <h3>Monthly Revenue</h3>
-                <p>£12K</p>
-              </div>
-            </div>
-            <div class="recent-transactions">
-              <h3>Recent Transactions</h3>
-              <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                  <thead class="bg-gray-50">
-                    <tr>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owner</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody class="bg-white divide-y divide-gray-200">
-                    <tr>
-                      <td class="px-6 py-4 whitespace-nowrap">2025-01-25</td>
-                      <td class="px-6 py-4 whitespace-nowrap">John Doe</td>
-                      <td class="px-6 py-4 whitespace-nowrap">£50</td>
-                      <td class="px-6 py-4 whitespace-nowrap">Completed</td>
-                    </tr>
-                    <tr>
-                      <td class="px-6 py-4 whitespace-nowrap">2025-01-25</td>
-                      <td class="px-6 py-4 whitespace-nowrap">Jane Smith</td>
-                      <td class="px-6 py-4 whitespace-nowrap">£70</td>
-                      <td class="px-6 py-4 whitespace-nowrap">Completed</td>
-                    </tr>
-                    <tr>
-                      <td class="px-6 py-4 whitespace-nowrap">2025-01-24</td>
-                      <td class="px-6 py-4 whitespace-nowrap">Bob Johnson</td>
-                      <td class="px-6 py-4 whitespace-nowrap">£60</td>
-                      <td class="px-6 py-4 whitespace-nowrap">Pending</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+        <li onclick="showTab('settings')">
+          <img src="settings.png" alt="Settings Icon">Settings
+        </li>
+      </ul>
+    </aside>
+    
+    <!-- MAIN CONTENT -->
+    <main>
+      <!-- Dashboard Section -->
+      <div id="dashboard-section" class="page-section active">
+        <div class="page-title">
+        </div>
+        <div class="cards">
+          <div class="card">
+            <h2>Active Members</h2>
+            <p class="value">320</p>
+            <p class="subtitle">Monthly subscribers</p>
           </div>
-          
-          <!-- Clients &amp; Patients Section -->
-          <div id="clients-section" class="section hidden">
-            <h2 class="text-2xl font-semibold mb-4">Client &amp; Patient Management</h2>
-            <div class="overflow-x-auto">
-              <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                  <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Owner Name</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pet Name</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pet Type</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Breed</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Billing Status</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment Method</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Health Plan</th>
-                  </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                  <!-- John Doe -->
-                  <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">John Doe</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Bella</td>
-                    <td class="px-6 py-4 whitespace-nowrap">john.doe@example.com</td>
-                    <td class="px-6 py-4 whitespace-nowrap">555-1234</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Dog</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Labrador Retriever</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
-                    <td class="px-6 py-4 whitespace-nowrap"><span class="visa"></span> ***4542</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Basic</td>
-                  </tr>
-                  <!-- Jane Smith -->
-                  <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">Jane Smith</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Whiskers</td>
-                    <td class="px-6 py-4 whitespace-nowrap">jane.smith@example.com</td>
-                    <td class="px-6 py-4 whitespace-nowrap">555-2345</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Siamese</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
-                    <td class="px-6 py-4 whitespace-nowrap"><span class="mastercard"></span> ***9876</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Premium</td>
-                  </tr>
-                  <!-- Bob Johnson -->
-                  <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">Bob Johnson</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Rex</td>
-                    <td class="px-6 py-4 whitespace-nowrap">bob.johnson@example.com</td>
-                    <td class="px-6 py-4 whitespace-nowrap">555-3456</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Dog</td>
-                    <td class="px-6 py-4 whitespace-nowrap">German Shepherd</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
-                    <td class="px-6 py-4 whitespace-nowrap">---</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Basic</td>
-                  </tr>
-                  <!-- Alice Brown -->
-                  <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">Alice Brown</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Coco</td>
-                    <td class="px-6 py-4 whitespace-nowrap">alice.brown@example.com</td>
-                    <td class="px-6 py-4 whitespace-nowrap">555-4567</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Persian</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
-                    <td class="px-6 py-4 whitespace-nowrap"><span class="visa"></span> ***1234</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Premium</td>
-                  </tr>
-                  <!-- Charlie Davis -->
-                  <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">Charlie Davis</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Max</td>
-                    <td class="px-6 py-4 whitespace-nowrap">charlie.davis@example.com</td>
-                    <td class="px-6 py-4 whitespace-nowrap">555-5678</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Dog</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Beagle</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
-                    <td class="px-6 py-4 whitespace-nowrap"><span class="mastercard"></span> ***6789</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Premium</td>
-                  </tr>
-                  <!-- Diane Evans -->
-                  <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">Diane Evans</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Luna</td>
-                    <td class="px-6 py-4 whitespace-nowrap">diane.evans@example.com</td>
-                    <td class="px-6 py-4 whitespace-nowrap">555-6789</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Maine Coon</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Expired</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <a href="#" class="text-indigo-600 hover:underline" onclick="openUpdatePaymentModal()">expired</a>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">Basic</td>
-                  </tr>
-                  <!-- Karen Miller -->
-                  <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">Karen Miller</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Zoe</td>
-                    <td class="px-6 py-4 whitespace-nowrap">karen.miller@example.com</td>
-                    <td class="px-6 py-4 whitespace-nowrap">555-1111</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Cat</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Scottish Fold</td>
-                    <td class="px-6 py-4 whitespace-nowrap">Successful</td>
-                    <td class="px-6 py-4 whitespace-nowrap"><span class="visa"></span> ***3333</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <a href="#" class="text-indigo-600 hover:underline" onclick="openRenewPlanModal()">expired</a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          <div class="card">
+            <h2>Today’s Revenue</h2>
+            <p class="value">£450</p>
+            <p class="subtitle">From memberships &amp; sales</p>
           </div>
-          
-          <!-- Appointments Section -->
-          <div id="appointments-section" class="section hidden">
-            <h2 class="text-2xl font-semibold mb-4">Appointments</h2>
-            <p>Fake appointment schedule: General Check-up, Vaccination, Surgery, Dental Cleaning, Grooming.</p>
+          <div class="card">
+            <h2>Expiring Plans</h2>
+            <p class="value">7</p>
+            <p class="subtitle">Need renewal soon</p>
           </div>
-          
-          <!-- Payments Section -->
-          <div id="payments-section" class="section hidden">
-            <h2 class="text-2xl font-semibold mb-4">Payment Processing</h2>
-            <div id="pay_portal"></div>
-          </div>
-          
-          <!-- Reports Section -->
-          <div id="reports-section" class="section hidden">
-            <h2 class="text-2xl font-semibold mb-4">Analytics &amp; Reporting</h2>
-            <p>Fake reports showing clinic performance metrics.</p>
-          </div>
-          
-          <!-- Store Section -->
-          <div id="store-section" class="section hidden">
-            <h2 class="text-2xl font-semibold mb-4">Store</h2>
-            <div class="flex flex-wrap gap-5 mt-5">
-              <!-- Example Store Items -->
-              <div class="bg-white rounded-lg shadow p-6 w-56 text-center">
-                <div class="text-4xl">🐶</div>
-                <div class="mt-4">
-                  <h3 class="text-lg font-semibold">Dog Food</h3>
-                  <p>Price: £30.00</p>
-                  <button class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="openChooseCustomerModal(30)">Send Payment</button>
-                </div>
-              </div>
-              <div class="bg-white rounded-lg shadow p-6 w-56 text-center">
-                <div class="text-4xl">🐱</div>
-                <div class="mt-4">
-                  <h3 class="text-lg font-semibold">Cat Litter</h3>
-                  <p>Price: £15.00</p>
-                  <button class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="openChooseCustomerModal(15)">Send Payment</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Estimates/Invoices Section -->
-          <div id="estimate-section" class="section hidden">
-            <h2 class="text-2xl font-semibold mb-4">Estimates/Invoices</h2>
-            <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="openEstimateModal()">Create Estimate/Invoice</button>
-            <!-- Invoices Table Section -->
-            <div id="invoicesListSection" class="mt-6">
-              <h3 class="text-xl font-semibold mb-4">Invoices</h3>
-              <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 table-fixed">
-                  <thead class="bg-gray-50">
-                    <tr>
-                      <th class="px-4 py-2 text-left w-1/6">Invoice ID</th>
-                      <th class="px-4 py-2 text-left w-1/6">Pet</th>
-                      <th class="px-4 py-2 text-left w-1/6">Client</th>
-                      <th class="px-4 py-2 text-left w-1/6">Amount</th>
-                      <th class="px-4 py-2 text-left w-1/6">Payment Status</th>
-                      <th class="px-4 py-2 text-left w-1/6">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody id="invoicesTableBody" class="bg-white divide-y divide-gray-200">
-                    <!-- New invoice rows will be appended here -->
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Settings Section -->
-          <div id="settings-section" class="section hidden">
-            <h2 class="text-2xl font-semibold mb-4">Settings</h2>
-            <p>Fake settings page to configure veterinary software options.</p>
+          <div class="card">
+            <h2> Payments </h2>
+            <p class="value">£16,470</p>
+             <p class="subtitle"><a href="#" onclick="dashboardCollectPayment()">Collect Payment</a></p>
           </div>
         </div>
-      </main>
-    </div>
+        
+        <div id="balance" style="width:490px; height:420px; margin-top:1rem;"></div>
+      </div>
+      
+      <!-- Members Section -->
+      <div id="members-section" class="page-section">
+        <div class="page-title">
+          <h1>Customer List</h1>
+        </div>
+
+        <div class="members-filters">
+          <div class="search-bar">
+            <input type="text" placeholder="Enter customer's name or email" />
+          </div>
+          <div class="status-filter">
+            <label for="statusSelect" style="display:none;">Status</label>
+            <select id="statusSelect">
+              <option>Active Customers</option>
+              <option>Inactive Customers</option>
+              <option>All Customers</option>
+            </select>
+          </div>
+          <div class="membership-filter">
+            <label for="membershipSelect" style="display:none;">Membership</label>
+            <select id="membershipSelect">
+              <option>All Memberships</option>
+              <option>Basic</option>
+              <option>Premium</option>
+            </select>
+          </div>
+          <div class="show-only">
+            <span>Show only:</span>
+            <div>
+              <input type="checkbox" id="newMembers" />
+              <label for="newMembers">New</label>
+            </div>
+            <div>
+              <input type="checkbox" id="slippingAway" />
+              <label for="slippingAway">Slipping Away</label>
+            </div>
+          </div>
+          <div class="members-actions" style="margin-left:auto;">
+            <button class="btn export-btn">Export Filtered List (2 customers)</button>
+            <button class="btn add-customer-btn">Add a Customer</button>
+          </div>
+        </div>
+
+        <!-- Customer List -->
+        <div class="customer-list">
+          <!-- Example Member 1 -->
+          <div class="customer-card">
+            <div class="avatar">OK</div>
+            <div class="customer-info">
+              <div class="customer-name" onclick="openMemberProfile(
+                     'Oded Kovach',
+                     'Feb. 20, 2025',
+                     'adam.stevens@unipaas.com',
+                     '21 baker street London London, London, W1W 6XH, GB',
+                     '+972547674444',
+                     'Male',
+                     'Jan. 7, 1988',
+                     'George',
+                     '+97254545454',
+                     'oded'
+                   )">
+                oded kovach
+              </div>
+              <div class="customer-email">adam.stevens@unipaas.com</div>
+            </div>
+            <div class="customer-status">ACTIVE</div>
+            <div class="customer-badge new">NEW</div>
+          </div>
+
+          <!-- Example Member 2 -->
+          <div class="customer-card">
+            <div class="avatar">JM</div>
+            <div class="customer-info">
+              <div class="customer-name" onclick="openMemberProfile(
+                     'John Mitch',
+                     'Jan. 10, 2025',
+                     'john.mitch@gmail.com',
+                     '123 Green Street, London, UK',
+                     '+44 20 7000 8888',
+                     'Male',
+                     'Apr. 2, 1990',
+                     'Jenny',
+                     '+44 20 5000 1234',
+                     'friend'
+                   )">
+                John Mitch
+              </div>
+              <div class="customer-email">john.mitch@gmail.com</div>
+            </div>
+            <div class="customer-status">ACTIVE</div>
+            <div class="customer-badge unclaimed">UNCLAIMED</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Store Section (3 products, side by side) -->
+      <div id="shop-section" class="page-section">
+        <div class="page-title">
+          <h1>Store</h1>
+          <p>Manage gym‐related products &amp; process sales.</p>
+        </div>
+
+        <div class="store-container">
+          <!-- Customer Search / Selection -->
+          <div class="store-search-customer">
+            <label for="selectedCustomer">Search Customer</label>
+            <div class="selected-customer">
+              <span class="customer-name-tag">John Mitch</span>
+              <span class="customer-email-tag">john.mitch@gmail.com</span>
+              <button class="remove-customer-btn">&times;</button>
+            </div>
+            <span>Or</span>
+            <button class="create-customer-btn">Create New Customer</button>
+          </div>
+
+          <!-- Three Products -->
+          <div class="store-products">
+            <!-- Product 1: Gym T-Shirt -->
+            <div class="store-product-card">
+              <div class="product-image-placeholder">
+                <img src="https://img.icons8.com/ios-filled/50/000000/t-shirt.png" alt="Gym T‐Shirt Icon" />
+              </div>
+              <h3 class="product-title">Gym T‐Shirt</h3>
+              <p class="product-stock">12 left in stock</p>
+              <p class="product-price">£15.00</p>
+              <div class="product-quantity">
+                <button class="qty-btn">−</button>
+                <input type="number" value="1" min="1" />
+                <button class="qty-btn">+</button>
+              </div>
+              <button class="btn add-to-cart-btn" onclick="openModal('paymentOptionModal')">Collect Payment</button>
+            </div>
+
+            <!-- Product 2: Protein Shake -->
+            <div class="store-product-card">
+              <div class="product-image-placeholder">
+                <img src="https://img.icons8.com/ios-filled/50/000000/milkshake.png" alt="Protein Shake Icon" />
+              </div>
+              <h3 class="product-title">Protein Shake</h3>
+              <p class="product-stock">6 left in stock</p>
+              <p class="product-price">£25.00</p>
+              <div class="product-quantity">
+                <button class="qty-btn">−</button>
+                <input type="number" value="1" min="1" />
+                <button class="qty-btn">+</button>
+              </div>
+              <button class="btn add-to-cart-btn" onclick="openModal('paymentOptionModal')">Collect Payment</button>
+            </div>
+
+            <!-- Product 3: Yoga Mat -->
+            <div class="store-product-card">
+              <div class="product-image-placeholder">
+                <img src="https://img.icons8.com/ios-filled/50/000000/yoga.png" alt="Yoga Mat Icon" />
+              </div>
+              <h3 class="product-title">Yoga Mat</h3>
+              <p class="product-stock">5 left in stock</p>
+              <p class="product-price">£12.00</p>
+              <div class="product-quantity">
+                <button class="qty-btn">−</button>
+                <input type="number" value="1" min="1" />
+                <button class="qty-btn">+</button>
+              </div>
+              <button class="btn add-to-cart-btn" onclick="openModal('paymentOptionModal')">Collect Payment</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Reports Section -->
+      <div id="reports-section" class="page-section">
+        <div class="page-title">
+        </div>
+        <div class="table-container" style="padding:1rem;">
+          <div id="pay_portal"></div>
+        </div>
+      </div>
+      
+      <!-- Plan Section -->
+      <div id="plan-section" class="page-section">
+        <div class="page-title">
+          <h1>Membership Plans</h1>
+          <p>Create or Manage membership plans for your gym.</p>
+        </div>
+        <div style="display:flex; gap:1rem;">
+          <button class="btn" onclick="showTab('createPlan')">Create Plan</button>
+          <button class="btn" onclick="showTab('managePlan')">Manage Plans</button>
+        </div>
+      </div>
+      
+      <!-- Create Plan Section (Improved Design) -->
+      <div id="createPlan-section" class="page-section">
+        <div class="page-header">
+          <h1>Create a Plan</h1>
+          <p>Define plan pricing, frequency, and optional trial/setup fees.</p>
+        </div>
+        <div style="background:#fff; padding:1rem; border-radius:6px; max-width:600px;">
+          <!-- (Same create plan form as working file) -->
+          <form id="createPlanForm">
+            <div class="form-group">
+              <label for="planName">Plan Name</label>
+              <input type="text" id="planName" required placeholder="Example: Basic Plan" />
+            </div>
+            <div class="form-group">
+              <label for="planDescription">Plan Description</label>
+              <textarea id="planDescription" placeholder="Describe the plan..."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="amount">Amount</label>
+              <div style="display:flex; gap:0.5rem;">
+                <input type="number" id="amount" required step="0.01" min="0.01" placeholder="0.00" style="flex:1;" />
+                <select id="currency" style="width:100px;">
+                  <option value="GBP">GBP</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group" style="display:flex; gap:0.5rem;">
+              <div style="flex:1;">
+                <label for="frequency">Frequency</label>
+                <select id="frequency" style="width:100%;">
+                  <option value="monthly" selected>Monthly</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
+              <div style="flex:1;">
+                <label for="duration">Duration</label>
+                <input type="text" id="duration" placeholder="(e.g., 12)" style="width:100%;" />
+              </div>
+            </div>
+            <!-- Toggles: autoRenewal, trialPeriod, setupFee, pricingModel -->
+            <div class="form-group" style="display:flex; justify-content:space-between; align-items:center;">
+              <span>Auto-Renewal</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="autoRenewal" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="form-group" style="display:flex; justify-content:space-between; align-items:center;">
+              <span>Trial Period</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="trialPeriodToggle" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div id="trialPeriodFields" style="display:none; background:#f9f9f9; padding:0.5rem; border:1px solid #ddd; border-radius:4px; margin-bottom:1rem;">
+              <label for="trialPeriodType">Trial Period Type</label>
+              <select id="trialPeriodType" style="margin-bottom:0.5rem;">
+                <option value="day">Day</option>
+                <option value="week">Week</option>
+                <option value="month">Month</option>
+              </select>
+              <label for="trialPeriodDuration">Duration</label>
+              <input type="number" id="trialPeriodDuration" placeholder="e.g., 7" />
+            </div>
+            <div class="form-group" style="display:flex; justify-content:space-between; align-items:center;">
+              <span>Setup Fee</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="setupFeeToggle" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div id="setupFeeFields" style="display:none; background:#f9f9f9; padding:0.5rem; border:1px solid #ddd; border-radius:4px; margin-bottom:1rem;">
+              <label for="setupFeeAmount">Setup Fee Amount</label>
+              <div style="display:flex; gap:0.5rem;">
+                <input type="number" id="setupFeeAmount" step="0.01" min="0" placeholder="0.00" style="flex:1;" />
+                <select id="setupFeeCurrency" style="width:100px;">
+                  <option value="GBP">GBP</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group" style="display:flex; justify-content:space-between; align-items:center;">
+              <span>Pricing Model</span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="pricingModelToggle" />
+                <span class="toggle-slider"></span>
+              </label>
+              <span id="pricingModelLabel" style="margin-left:0.5rem;">Fixed</span>
+            </div>
+            <div id="rampIntervalsSection" style="display:none; background:#f9f9f9; padding:0.5rem; border:1px solid #ddd; border-radius:4px; margin-bottom:1rem;">
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <h3 style="margin:0; font-size:1rem;">Ramp Intervals</h3>
+                <button type="button" id="addRampInterval" style="background:#d32f2f; color:#fff; border:none; padding:0.4rem 0.6rem; border-radius:4px; cursor:pointer;">Add Interval</button>
+              </div>
+              <div id="rampIntervalsContainer" style="margin-top:0.5rem;"></div>
+            </div>
+            <button type="submit" class="btn" style="width:100%;">Create Plan</button>
+          </form>
+          <div id="planCreationResult" style="margin-top:0.5rem; font-weight:600;"></div>
+        </div>
+      </div>
+      
+      <!-- Manage Plan Section (Updated Modern Design) -->
+      <div id="managePlan-section" class="page-section">
+        <div class="page-title">
+          <h1>Manage Plans</h1>
+          <p>Update or remove membership plans.</p>
+        </div>
+        <div class="table-container" style="background-color: var(--card-bg-color); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead style="background-color: var(--menu-bg-color);">
+              <tr>
+                <th style="padding: 12px; text-align: left; font-weight: 600;">Plan ID</th>
+                <th style="padding: 12px; text-align: left; font-weight: 600;">Name</th>
+                <th style="padding: 12px; text-align: left; font-weight: 600;">Description</th>
+                <th style="padding: 12px; text-align: left; font-weight: 600;">Status</th>
+                <th style="padding: 12px; text-align: left; font-weight: 600;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="plansTableBody">
+              <!-- Dynamic plan rows will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Settings Section -->
+      <div id="settings-section" class="page-section">
+        <div class="page-title">
+          <h1>Settings</h1>
+          <p>Configure payment keys, manage tokens, etc.</p>
+        </div>
+        <button class="btn" onclick="openSettingsModal()">Open Payment Settings</button>
+      </div>
+
+      <!-- MEMBER PROFILE -->
+      <div id="member-profile-section" class="page-section" style="display:none;">
+        <div class="member-profile-section">
+          <div class="member-profile-header">
+            <div class="member-profile-avatar" id="mpAvatar">OK</div>
+            <div>
+              <div class="member-profile-name" id="mpName">oded kovach</div>
+              <div class="member-profile-joined">Date joined: <span id="mpJoined">Feb. 20, 2025</span></div>
+            </div>
+          </div>
+          <div class="member-tabs">
+            <div>Profile</div>
+            <div>Activity</div>
+            <div>Registrations</div>
+            <div>Waivers</div>
+            <div>Family</div>
+            <div onclick="showPaymentDetailsForCustomer(this)">Payments</div>
+            <div onclick="showMembershipsForCustomer()">Memberships</div>
+            <div>Forms</div>
+          </div>
+          <div id="member-payment-details"></div>
+          <table class="member-details-table">
+            <tr>
+              <th>Name</th>
+              <td id="mpFieldName">oded kovach</td>
+            </tr>
+            <tr>
+              <th>Account Management</th>
+              <td>The customer manages this account</td>
+            </tr>
+            <tr>
+              <th>Email</th>
+              <td id="mpEmail">adam.stevens@unipaas.com</td>
+            </tr>
+            <tr>
+              <th>Address</th>
+              <td id="mpAddress">21 baker street London London, London, W1W 6XH, GB</td>
+            </tr>
+            <tr>
+              <th>Phone</th>
+              <td id="mpPhone">+972547674444</td>
+            </tr>
+            <tr>
+              <th>Gender</th>
+              <td id="mpGender">Male</td>
+            </tr>
+            <tr>
+              <th>Date of birth</th>
+              <td id="mpDOB">Jan. 7, 1988</td>
+            </tr>
+            <tr>
+              <th>Emergency Contact Name</th>
+              <td id="mpEmergencyContactName">George</td>
+            </tr>
+            <tr>
+              <th>Emergency Contact Phone</th>
+              <td id="mpEmergencyContactPhone">+97254545454</td>
+            </tr>
+            <tr>
+              <th>Emergency Contact Relationship</th>
+              <td id="mpEmergencyRelationship">oded</td>
+            </tr>
+          </table>
+          <button class="back-to-list-btn" onclick="closeMemberProfile()">Back to Customer List</button>
+        </div>
+      </div>
+    </main>
   </div>
   
-  <!-- ================= Additional Modals ================= -->
-  
+  <!-- FOOTER BANNER -->
+  <div class="footer-banner">
+    <p>Integrate your gym finances with UniPaas for seamless transactions.</p>
+    <button class="learn-more-btn" onclick="openOnboardingComponent()">Learn more</button>
+  </div>
+  <!-- ================= MODALS (except customer selector merged into store) ================= -->
+
   <!-- Vendor Selection Modal -->
-  <div id="vendorSelectionModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
-    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
-      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeVendorSelectionModal()">&times;</button>
-      <h2 class="text-xl font-semibold mb-4">Select Vendor</h2>
-      <p class="mb-4">Choose the vendor associated with this private key:</p>
-      <select id="vendorSelect" class="w-full p-2 border-gray-300 rounded mb-4">
-        <!-- Options will be populated dynamically -->
-      </select>
-      <div class="flex justify-center">
-        <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="saveVendor()">Save Vendor</button>
-      </div>
+  <div id="vendorSelectionModal" class="modal-backdrop">
+    <div class="modal-content">
+      <h2>Select a Vendor</h2>
+      <select id="vendorSelect"></select>
+      <button onclick="saveVendor()">Save Vendor</button>
+      <button onclick="closeModal('vendorSelectionModal')">Close</button>
     </div>
   </div>
   
-  <!-- Update Payment Modal -->
-  <div id="updatePaymentModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
-    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
-      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeUpdatePaymentModal()">&times;</button>
-      <h2 class="text-xl font-semibold mb-4">Send Payment Link</h2>
-      <div id="updatePaymentDetails" class="hidden">
-        <p class="mb-4 font-bold">Send the Payment Link to Customer</p>
-        <div class="flex flex-col gap-2 mb-4">
-          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendUpdatedPaymentLink('email')">Send via Email</button>
-          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendUpdatedPaymentLink('sms')">Send via SMS</button>
-        </div>
-        <p class="mb-2 font-bold">Use this QR code to access the checkout</p>
-        <div class="flex justify-center mb-2">
-          <img id="updatePaymentQRCode" src="" alt="QR Code" class="w-32 h-32">
-        </div>
-        <!-- Button to open the operator modal -->
-        <div class="flex justify-center mb-2">
-          <button id="copyQRCodeButton" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="copyQRCode()">Copy QR code</button>
-        </div>
-        <p><strong>Payment Link:</strong> <span id="updatePaymentLink"></span></p>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Choose Customer Modal -->
-  <div id="chooseCustomerModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
-    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
-      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeChooseCustomerModal()">&times;</button>
-      <h2 class="text-xl font-semibold mb-4">Choose Customer</h2>
-      <div class="mb-4">
-        <p class="mb-2">Select a customer (name or phone):</p>
-        <select id="customerSelect" class="w-full p-2 border-gray-300 rounded">
-          <option value="">--Select Customer--</option>
-          <option value="1">John Doe - 555-1234</option>
-          <option value="2">Jane Smith - 555-2345</option>
-          <option value="3">Alice Brown - 555-4567</option>
-        </select>
-      </div>
-      <div class="flex justify-center">
-        <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="chooseCustomerForItemPayment()">Proceed</button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Purchase Completed Modal -->
-  <div id="purchaseCompleteModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
-    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
-      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closePurchaseCompleteModal()">&times;</button>
-      <h2 class="text-xl font-semibold mb-4">Purchase Completed</h2>
-      <div>
-        <p class="mb-2">Purchase completed successfully!</p>
-        <p class="mb-2">Amount: <span id="completedAmount"></span></p>
-        <p class="mb-2">Currency: <span id="completedCurrency"></span></p>
-        <p class="mb-2">Reference: <span id="completedReference"></span></p>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Renew Health Plan Modal -->
-  <div id="renewPlanModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
-    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
-      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeRenewPlanModal()">&times;</button>
-      <h2 class="text-xl font-semibold mb-4">Renew Health Plan</h2>
-      <div id="renewalPlanSelection">
-        <p class="mb-4 font-bold">Select Health Plan</p>
-        <div id="planButtonsContainer" class="flex flex-col gap-2"></div>
-      </div>
-      <div id="renewalPlanDetails" class="hidden">
-        <p class="mb-4 font-bold">Send the Renewal Link to Customer</p>
-        <div class="flex flex-col gap-2 mb-4">
-          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendRenewalLink('email')">Send via Email</button>
-          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendRenewalLink('sms')">Send via SMS</button>
-        </div>
-        <p class="mb-2 font-bold">Use this QR code to access the renewal page</p>
-        <div class="flex justify-center mb-2">
-          <img id="renewalQRCode" src="" alt="QR Code" class="w-32 h-32">
-        </div>
-        <p><strong>Payment Link:</strong> <span id="renewalPaymentLink"></span></p>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Register Health Plan Modal -->
-  <div id="registerPlanModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
-    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
-      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeRegisterPlanModal()">&times;</button>
-      <h2 class="text-xl font-semibold mb-4">Register Health Plan</h2>
-      <div>
-        <p class="mb-4 font-bold">Send the Registration Link to Customer</p>
-        <p class="mb-4">Click below to send the health plan registration link directly to the customer using the email address or phone number on their profile.</p>
-        <div class="flex flex-col gap-2 mb-4">
-          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendRegistrationLink('email')">Send via Email</button>
-          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendRegistrationLink('sms')">Send via SMS</button>
-        </div>
-        <p class="mb-2 font-bold">Use this QR code to access the registration page</p>
-        <div class="flex justify-center">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=RegistrationLink" alt="QR Code" class="w-32 h-32">
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Operator QR Code Modal -->
-  <div id="operatorQRCodeModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
-    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
-      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeOperatorQRCodeModal()">&times;</button>
-      <h2 class="text-xl font-semibold mb-4">Operator QR Code</h2>
-      <div class="flex justify-center mb-2">
-        <img id="operatorQRCode" src="" alt="Operator QR Code" class="w-32 h-32">
-      </div>
-      <p class="text-center text-sm">Show this QR code on your mobile device.</p>
+  <!-- Purchase Complete Modal -->
+  <div id="purchaseCompleteModal" class="modal-backdrop">
+    <div class="modal-content">
+      <h2>Purchase Complete</h2>
+      <p>Amount: <span id="completedAmount"></span></p>
+      <p>Currency: <span id="completedCurrency"></span></p>
+      <p>Reference: <span id="completedReference"></span></p>
+      <button onclick="closePurchaseCompleteModal()">Close</button>
     </div>
   </div>
   
   <!-- Settings Modal -->
-  <div id="settingsModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
-    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
-      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeSettingsModal()">&times;</button>
-      <h2 class="text-xl font-semibold mb-4">Settings</h2>
-      <div>
-        <p class="mb-4">Enter the ACCESS TOKEN:</p>
-        <input type="text" id="accessTokenInput" value="bihXLAzIENTLuFY1pmWFcg==" class="w-full p-2 border-gray-300 rounded">
-        <div class="flex justify-center mt-4">
-          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="saveAccessToken()">Save</button>
+  <div id="settingsModal" class="modal-backdrop">
+    <div class="modal-content">
+      <h2>Settings</h2>
+      <label for="accessTokenInput">Access Token</label>
+      <input type="text" id="accessTokenInput" value="bihXLAzIENTLuFY1pmWFcg==" />
+      <br/>
+      <label for="zeroStateToggle">Zero State</label>
+      <input type="checkbox" id="zeroStateToggle" />
+      <br/>
+      <span id="stateStatusLabel"></span>
+      <br/>
+      <button onclick="saveAccessToken()">Save Access Token</button>
+      <button onclick="closeModal('settingsModal')">Close</button>
+    </div>
+  </div>
+  
+  <!-- Update Plan Modal -->
+  <div id="updatePlanModal" class="modal-backdrop">
+    <div class="modal-content">
+      <h2>Update Plan</h2>
+      <form id="updatePlanForm">
+        <input type="hidden" id="updatePlanId" />
+        <div>
+          <label for="updatePlanName">Plan Name</label>
+          <input type="text" id="updatePlanName" required />
+        </div>
+        <div>
+          <label for="updatePlanDescription">Plan Description</label>
+          <input type="text" id="updatePlanDescription" />
+        </div>
+        <div>
+          <label for="updatePlanStatus">Plan Status</label>
+          <input type="text" id="updatePlanStatus" />
+        </div>
+        <button type="submit">Update Plan</button>
+      </form>
+      <button onclick="closeModal('updatePlanModal')">Close</button>
+    </div>
+  </div>
+  
+  <!-- Register Plan Modal (placeholder) -->
+  <div id="registerPlanModal" class="modal-backdrop">
+    <div class="modal-content">
+      <p>Register Plan Modal</p>
+      <button onclick="closeModal('registerPlanModal')">Close</button>
+    </div>
+  </div>
+  
+  <!-- Operator QR Code Modal (placeholder) -->
+  <div id="operatorQRCodeModal" class="modal-backdrop">
+    <div class="modal-content">
+      <p>Operator QR Code Modal</p>
+      <button onclick="closeModal('operatorQRCodeModal')">Close</button>
+    </div>
+  </div>
+  
+  <!-- Onboarding Modal -->
+  <div id="onboardingModal" class="modal-backdrop">
+    <div class="modal-content" style="position: relative;">
+      <button class="close-btn" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 20px; color: #666; cursor: pointer;" onclick="closeOnboardingModal()">x</button>
+      <div id="onboarding"></div>
+    </div>
+  </div>
+  
+  <!-- ===== NEW DESIGN QR MODALS ===== -->
+  <!-- Update Payment Modal (Send Payment Link) -->
+  <div id="updatePaymentModal" class="modal-backdrop">
+    <div class="modal-content qr-modal">
+      <button class="close-btn" onclick="closeModal('updatePaymentModal')">×</button>
+      <h2>Send Payment Link to Customer</h2>
+      <div class="button-row">
+        <button class="action-btn disabled-btn">Send via Email</button>
+        <button class="action-btn disabled-btn">Send via SMS</button>
+      </div>
+      <p class="qr-instructions">Use this QR code to access the checkout</p>
+      <img id="updatePaymentQRCode" src="" alt="QR Code" class="qr-code"/>
+      <button class="copy-qr-btn" onclick="copyQRCode()">Copy QR Code</button>
+      <p class="payment-link-label">Payment Link:</p>
+      <p id="updatePaymentLink" class="payment-link-value"></p>
+    </div>
+  </div>
+  
+  <!-- Mandate Modal (Send Mandate Link) -->
+  <div id="mandateModal" class="modal-backdrop">
+    <div class="modal-content qr-modal">
+      <button class="close-btn" onclick="closeModal('mandateModal')">×</button>
+      <h2>Send Mandate Link to Customer</h2>
+      <div class="button-row">
+        <button class="action-btn disabled-btn">Send via Email</button>
+        <button class="action-btn disabled-btn">Send via SMS</button>
+      </div>
+      <p class="qr-instructions">Use this QR code to access the mandate</p>
+      <img id="mandateQRCode" src="" alt="Mandate QR Code" class="qr-code"/>
+      <button class="copy-qr-btn" onclick="copyMandateQRCode()">Copy QR Code</button>
+      <p class="payment-link-label">Mandate Link:</p>
+      <p id="mandateLink" class="payment-link-value"></p>
+    </div>
+  </div>
+  
+  <!-- Renew Plan Modal (Send Payment Link) -->
+  <div id="renewPlanModal" class="modal-backdrop">
+    <div class="modal-content qr-modal">
+      <button class="close-btn" onclick="closeModal('renewPlanModal')">×</button>
+      <h2>Send Payment Link to Customer</h2>
+      <div id="renewalPlanSelection" style="display:none;"></div>
+      <div class="button-row">
+        <button class="action-btn disabled-btn">Send via Email</button>
+        <button class="action-btn disabled-btn">Send via SMS</button>
+      </div>
+      <p class="qr-instructions">Use this QR code to access the checkout</p>
+      <img id="renewalQRCode" src="" alt="Renewal QR Code" class="qr-code"/>
+      <button class="copy-qr-btn" onclick="copyQRCode()">Copy QR Code</button>
+      <p class="payment-link-label">Payment Link:</p>
+      <p id="renewalPaymentLink" class="payment-link-value"></p>
+      <div id="renewalPlanDetails" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- ===== UPDATED MODAL: Payment Option Modal (with drop down & input) ===== -->
+  <div id="paymentOptionModal" class="modal-backdrop">
+    <div class="modal-content qr-modal">
+      <button class="close-btn" onclick="closeModal('paymentOptionModal')">×</button>
+      <h2>Select Payment Option</h2>
+      <div class="modal-header-details">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <label for="modalProductSelect" style="margin-right:0.5rem;">Product:</label>
+            <select id="modalProductSelect" onchange="updateModalProductAmount()">
+              <option value="15.00" data-name="Gym T‐Shirt">Gym T‐Shirt - £15.00</option>
+              <option value="25.00" data-name="Protein Shake">Protein Shake - £25.00</option>
+              <option value="12.00" data-name="Yoga Mat">Yoga Mat - £12.00</option>
+            </select>
+          </div>
+          <div>
+            <label for="modalAmountInput" style="margin-right:0.5rem;">Amount:</label>
+            <input type="text" id="modalAmountInput" value="15.00" style="width:80px;"/>
+          </div>
+        </div>
+        <div style="margin-top:0.5rem;">
+          <label style="margin-right:0.5rem;">Search Customer:</label>
+          <div class="selected-customer" style="display:inline-flex; align-items:center;">
+            <span class="customer-name-tag">John Mitch</span>
+            <span class="customer-email-tag" style="margin-left:0.5rem;">john.mitch@gmail.com</span>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-  
-  <!-- Estimate/Invoice Creation Modal -->
-  <div id="estimateModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
-    <div class="bg-white shadow-lg rounded-lg p-6 w-96 relative">
-      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeEstimateModal()">&times;</button>
-      <h2 class="text-xl font-semibold mb-4"><span class="underline">Create</span> Estimate/Invoice</h2>
-      <!-- Pet Dropdown -->
-      <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">Pet</label>
-          <select id="estimatePet" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-              <option value="">Select Pet</option>
-              <option value="pet1">Buddy (Dog)</option>
-              <option value="pet2">Mittens (Cat)</option>
-              <option value="pet3">Charlie (Parrot)</option>
-          </select>
-      </div>
-      <!-- Client Dropdown -->
-      <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">Client</label>
-          <select id="estimateClient" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-              <option value="">Select Client</option>
-              <option value="client1">John Doe</option>
-              <option value="client2">Jane Smith</option>
-              <option value="client3">Alice Brown</option>
-          </select>
-      </div>
-      <!-- Reference Input (Optional) -->
-      <div class="mb-4">
-          <label class="block text-sm font-medium text-gray-700">Reference (Optional)</label>
-          <input type="text" id="estimateReference" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="">
-      </div>
-      <!-- Buttons -->
-      <div class="flex justify-between">
-          <button class="text-indigo-600 hover:underline" onclick="closeEstimateModal()">Cancel</button>
-          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="createEstimate()">Create Estimate/Invoice</button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Invoice Details Modal -->
-  <div id="invoiceDetailsModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
-    <div class="bg-white shadow-lg rounded-lg p-6 w-full max-w-2xl relative max-h-screen overflow-y-auto">
-      <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-700" onclick="closeInvoiceDetailsModal()">&times;</button>
-      <h2 class="text-xl font-semibold mb-4"><span class="underline">Unipaas</span> Test : Louie @ 18 Jan 2025 - estimate</h2>
-      <!-- Services Section -->
-      <h3 class="text-lg font-semibold mt-4">Services</h3>
-      <div class="bg-gray-50 rounded-lg p-4 mt-2 overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-100">
-                  <tr>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Discount</th>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Final Price <span class="text-xs">(Incl. VAT)</span></th>
-                  </tr>
-              </thead>
-              <tbody class="bg-white divide-y divide-gray-200">
-                  <tr>
-                      <td class="px-4 py-2">BLOCK OFF</td>
-                      <td class="px-4 py-2">2</td>
-                      <td class="px-4 py-2">-</td>
-                      <td class="px-4 py-2">£0</td>
-                  </tr>
-                  <tr>
-                      <td class="px-4 py-2">BLOCK OFF</td>
-                      <td class="px-4 py-2">1</td>
-                      <td class="px-4 py-2">-</td>
-                      <td class="px-4 py-2">£0</td>
-                  </tr>
-              </tbody>
-          </table>
-      </div>
-      <!-- Products Section -->
-      <h3 class="text-lg font-semibold mt-6">Products</h3>
-      <div class="bg-gray-50 rounded-lg p-4 mt-2 overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-100">
-                  <tr>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Discount</th>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Final Price <span class="text-xs">(Incl. VAT)</span></th>
-                  </tr>
-              </thead>
-              <tbody class="bg-white divide-y divide-gray-200">
-                  <tr>
-                      <td class="px-4 py-2">1.25mg . NVS. Amodip (100 tabs)</td>
-                      <td class="px-4 py-2">1</td>
-                      <td class="px-4 py-2">-</td>
-                      <td class="px-4 py-2">£95.89</td>
-                  </tr>
-                  <tr>
-                      <td class="px-4 py-2">ACESADETE 2MG/ML SOL INJ DOG/CAT</td>
-                      <td class="px-4 py-2">1</td>
-                      <td class="px-4 py-2">-</td>
-                      <td class="px-4 py-2">£9.70</td>
-                  </tr>
-              </tbody>
-          </table>
-      </div>
-      <!-- Due Date -->
-      <div class="flex items-center mt-6">
-          <span class="bg-gray-200 p-2 rounded-full">📅</span>
-          <p class="ml-2 text-gray-700">Due on: <strong>17/02/2025</strong></p>
-      </div>
-      <!-- Billing Summary -->
-      <div class="mt-6 border-t pt-4">
-          <h3 class="text-lg font-semibold">Billing Summary</h3>
-          <div class="flex justify-between items-center mt-2">
-              <p class="text-indigo-600 font-semibold">Total Price <span class="text-xs">(Incl. VAT)</span></p>
-              <!-- This field is updated when the relevant invoice is viewed -->
-              <p class="text-xl font-bold" id="invoiceTotal">£105.59</p>
+      <div style="margin: 1rem 0; text-align: left;">
+        <div>
+          <label>
+            <input type="radio" name="paymentType" value="online" onchange="updatePaymentOptionButtonText()">
+            <img src="card.png" alt="Card Icon" style="width:50px; vertical-align: middle; margin-right:4px;">Online Payments
+          </label>
+        </div>
+        <div id="onlineOptions" style="margin-top: 0.5rem; padding-left: 1.5rem; display:none;">
+          <div style="margin-bottom: 0.5rem;">
+            <label>
+              <input type="checkbox" id="paymentOptionCards" checked onchange="updatePaymentOptionButtonText()">
+              <img src="cards.png" alt="Cards Icon" style="width:100px; vertical-align: middle; margin-right:4px;">Cards
+            </label>
+            <label>
+              <input type="checkbox" id="paymentOptionOpenBanking" checked onchange="updatePaymentOptionButtonText()">
+              <img src="bank.png" alt="Bank Icon" style="width:50px; vertical-align: middle; margin-right:4px;">Instant Bank Transfer
+            </label>
           </div>
+        </div>
+        <div>
+          <label>
+            <input type="radio" name="paymentType" value="directDebit" checked onchange="updatePaymentOptionButtonText()">
+            <img src="directdebit.png" alt="Direct Debit Icon" style="width:97px; vertical-align: middle; margin-right:0px;">Direct Debit
+          </label>
+        </div>
       </div>
-      <!-- Buttons Section -->
-      <div class="mt-6 flex justify-between">
-          <button id="chargeButton" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" onclick="chargeWithSavedCard()">Charge with Saved card</button>
-          <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" onclick="sendInvoicePayment()">Send Payment</button>
-      </div>
-      <script>
-          function generatePDF() {
-              alert("Generating PDF... (This will be replaced with actual PDF generation logic)");
-          }
-
-          function chargeWithSavedCard() {
-              const button = document.getElementById("chargeButton");
-              const originalText = "Charge with Saved card";
-              const originalWidth = button.offsetWidth;
-              button.style.minWidth = originalWidth + "px";
-              button.innerText = "Processing...";
-              button.disabled = true;
-              const invoiceTotalElement = document.getElementById("invoiceTotal");
-              let invoiceAmount = 0;
-              if (invoiceTotalElement) {
-                  invoiceAmount = parseFloat(invoiceTotalElement.innerText.replace('£',''));
-              }
-              const payload = {
-                  amount: invoiceAmount,
-                  currency: "GBP",
-                  description: "Invoice Payment",
-                  vendorId: globalVendorId,
-                  paymentOptionId: "67a3759c2d2d4420a8b7842f",
- 				 orderId: "item_payment_ref_" + new Date().getTime(),
-                  consumer: {
-                      email: "test@example.com",
-                      firstName: "John",
-                      lastName: "Mitch",
-                      country: "GB"
-                  }
-              };
-
-              fetch("https://sandbox.unipaas.com/platform/pay-ins", {
-                  method: "POST",
-                  headers: {
-                      "Content-Type": "application/json",
-                      "Authorization": "Bearer " + savedToken
-                  },
-                  body: JSON.stringify(payload)
-              })
-              .then(response => {
-                  if (!response.ok) {
-                      throw new Error("Network response was not OK, status = " + response.status);
-                  }
-                  return response.json();
-              })
-              .then(jsonData => {
-                  console.log("Payment Request Successful:", jsonData);
-                  if (jsonData.transactionStatus === "Approved") {
-                      if (currentInvoiceRow) {
-                          currentInvoiceRow.cells[4].innerHTML = `<span class="text-green-600 font-bold">Paid</span>`;
-                      }
-                  } else {
-                      if (currentInvoiceRow) {
-                          currentInvoiceRow.cells[4].innerHTML = `<span class="text-red-600 font-bold">Failed</span>`;
-                      }
-                  }
-                  closeInvoiceDetailsModal();
-              })
-              .catch(error => {
-                  console.error("Error in Payment Request:", error);
-                  if (currentInvoiceRow) {
-                      currentInvoiceRow.cells[4].innerHTML = `<span class="text-red-600 font-bold">Failed</span>`;
-                  }
-                  closeInvoiceDetailsModal();
-              })
-              .finally(() => {
-                  button.innerText = originalText;
-                  button.disabled = false;
-              });
-          }
-      </script>
+      <button id="paymentOptionSubmit" class="action-btn" onclick="handlePaymentOptionSubmit()">Request Mandate</button>
     </div>
   </div>
-  
-  <!-- ================= End Modals ================= -->
-  
-  <!-- JavaScript Functions -->
+
+  <!-- ===== NEW FLOATING PREVIEW MODAL (iPhone 12 size) ===== -->
+  <div id="floatingPreviewModal" class="floating-modal">
+    <div class="floating-modal-content">
+      <button class="floating-close-btn" onclick="closeFloatingModal()">×</button>
+      <iframe id="previewIframe" src=""></iframe>
+    </div>
+  </div>
+
   <script>
+    /* ---------------- JavaScript Section ---------------- */
     let savedToken = "bihXLAzIENTLuFY1pmWFcg==";
-    let globalVendorId = "67a85fe3fc5f8d3b7a1f17a7";
+    let globalVendorId = null;
     let uniPaasComponents = null;
+    let currentMemberRow = null;
+    let checkoutStatusTimer = null;
+    let isDashboardPayment = false; // flag to track if payment initiated from dashboard
+
+    const unipaasDefaultConfig = {
+      paymentsEnabled: true,
+      theme: {
+        colors: {
+          primaryColor: "#2916BA",
+          secondaryColor: "#f0f0f0",
+          accentTextColor: "#333",
+          primaryButtonColor: "#2916BA"
+        },
+        fontFamily: "inherit",
+        boxShadow: "0px 3px 15px rgba(0,0,0,0.1)"
+      }
+    };
+
     function getApiHeaders() {
       return {
         "Accept": "application/json",
@@ -788,137 +1584,259 @@
       };
     }
     
-    function loadPayPortal() {
-      fetch("https://sandbox.unipaas.com/platform/authorize", {
-        method: "POST",
-        headers: getApiHeaders(),
-        body: JSON.stringify({
-          scopes: ["portal_read", "portal_write"],
-          vendorId: globalVendorId
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        const newAccessToken = data.accessToken;
-        if (uniPaasComponents) {
-          console.log(newAccessToken);
-          uniPaasComponents.reset({ accessToken: newAccessToken });
-        } else {
-          uniPaasComponents = unipaas.components(newAccessToken, config_general);
-          const payPortal = uniPaasComponents.create("payPortal");
-          payPortal.mount("#pay_portal");
-        }
-      })
-      .catch(error => console.error('Error fetching access token:', error));
+    /* Toggle plan submenu */
+    function togglePlanSubmenu(event) {
+      event.preventDefault();
+      const sub = document.getElementById('planSubmenu');
+      sub.style.display = (sub.style.display === 'none' ? 'block' : 'none');
     }
-    
-    let currentItemPaymentAmount = 0;
-    let checkoutStatusTimer;
-    let selectedInvoiceClient = null;
-    let qrPaymentLinkValue = "";
-    let invoiceCounter = 1;
-    let currentInvoiceRow = null;
-    let invoicePaymentMapping = {};
-    const customers = [
-      { id: "1", name: "John Doe", phone: "555-1234", email: "john.doe@example.com" },
-      { id: "2", name: "Jane Smith", phone: "555-2345", email: "jane.smith@example.com" },
-      { id: "3", name: "Alice Brown", phone: "555-4567", email: "alice.brown@example.com" }
-    ];
-    
-    function showTab(tab) {
-      document.querySelectorAll('#tab-content .section').forEach(section => {
-        section.classList.add('hidden');
-      });
-      const activeSection = document.getElementById(tab + '-section');
-      if (activeSection) activeSection.classList.remove('hidden');
-      if(window.innerWidth < 768) {
-        document.getElementById('sidebar').classList.remove('open');
+
+    /* Toggle HIM Vendor Functionality */
+    function toggleHIMVendor(checkbox) {
+      if (checkbox.checked) {
+        globalVendorId = "67bcf9878d319d67880218d2";
+        // Hide the footer banner when HIM vendor is selected
+        document.querySelector('.footer-banner').style.display = "none";
+      } else {
+        globalVendorId = null;
+        // Restore the footer banner display
+        document.querySelector('.footer-banner').style.display = "flex";
       }
-      if(tab === "payments") {
+      loadPayPortal();
+      loadBalance();
+    }
+
+    /* Show Tab */
+    function showTab(tab) {
+      const sections = [
+        'dashboard', 'members', 'shop', 'finances', 'reports', 'plan', 'createPlan', 'managePlan', 'settings', 'member-profile'
+      ];
+      sections.forEach(s => {
+        const el = document.getElementById(s + '-section');
+        if (el) el.style.display = 'none';
+      });
+      const target = document.getElementById(tab + '-section');
+      if (target) target.style.display = 'block';
+
+      if (tab === 'reports') {
         loadPayPortal();
       }
-    }
-    document.addEventListener('DOMContentLoaded', () => { showTab('dashboard'); });
-    
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('open');
-    }
-    
-    function openUpdatePaymentModal() {
-      document.getElementById('updatePaymentModal').classList.remove('hidden');
-      updatePaymentCheckout();
-    }
-    function closeUpdatePaymentModal() {
-      document.getElementById('updatePaymentModal').classList.add('hidden');
-      document.getElementById('updatePaymentDetails').classList.add('hidden');
-    }
-    function updatePaymentCheckout() {
-      const uniqueRef = Date.now();
-      const data = {
-        amount: 0, 
-        currency: "GBP",
-        country: "GB",
-        phone: "+44 20 7123 4567",
-        email: "test@unipaas.com",
-        storePaymentMethod: true,
-        vendorId : globalVendorId,
-        paymentMethods: ["card"],
-        reference: "item_payment_ref_" + new Date().getTime(),
-        consumer: { reference: "consumer_ref"  + new Date().getTime()}
-      };
-      fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout", {
-        method: "POST",
-        headers: getApiHeaders(),
-        body: JSON.stringify(data)
-      })
-      .then(response => {
-        if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
-        return response.json();
-      })
-      .then(jsonData => {
-        console.log("Update Payment Checkout Session Created:", jsonData);
-        const paymentlink = jsonData.shortLink;
-        document.getElementById('updatePaymentLink').textContent = paymentlink;
-        document.getElementById('updatePaymentQRCode').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(paymentlink);
-        qrPaymentLinkValue = jsonData.qrPaymentLink;
-        document.getElementById('updatePaymentDetails').classList.remove('hidden');
-      })
-      .catch(error => console.error("Error:", error));
-    }
-    function sendUpdatedPaymentLink(method) {
-      alert('Payment link sent via ' + method + '!');
-      closeUpdatePaymentModal();
+      if (tab === 'managePlan') {
+        loadManagePlans();
+      }
+      if (tab === 'settings') {
+        const settingsSection = document.getElementById('settings-section');
+        const settingsModal = document.getElementById('settingsModal');
+        if (settingsModal.parentElement.id !== 'settings-section') {
+          settingsSection.appendChild(settingsModal);
+        }
+        settingsModal.classList.add('inline');
+        settingsModal.style.position = 'static';
+        settingsModal.style.display = 'block';
+        const closeBtn = settingsModal.querySelector('.close-btn');
+        if (closeBtn) { closeBtn.style.display = 'none'; }
+        const btn = settingsSection.querySelector('button.btn');
+        if (btn) { btn.style.display = 'none'; }
+      }
     }
     
-    function openChooseCustomerModal(amount) {
-      currentItemPaymentAmount = amount;
-      document.getElementById('chooseCustomerModal').classList.remove('hidden');
+    /* ---------- Member Profile ---------- */
+    function openMemberProfile(
+      fullName, joinedDate, email, address, phone, gender, dob, emName, emPhone, emRelation
+    ) {
+      document.getElementById('members-section').style.display = 'none';
+      document.getElementById('member-profile-section').style.display = 'block';
+      
+      document.getElementById('mpName').textContent = fullName;
+      document.getElementById('mpJoined').textContent = joinedDate;
+      document.getElementById('mpFieldName').textContent = fullName;
+      document.getElementById('mpEmail').textContent = email;
+      document.getElementById('mpAddress').textContent = address;
+      document.getElementById('mpPhone').textContent = phone;
+      document.getElementById('mpGender').textContent = gender;
+      document.getElementById('mpDOB').textContent = dob;
+      document.getElementById('mpEmergencyContactName').textContent = emName;
+      document.getElementById('mpEmergencyContactPhone').textContent = emPhone;
+      document.getElementById('mpEmergencyRelationship').textContent = emRelation;
+
+      const initials = fullName.split(" ")
+        .map(n => n.charAt(0).toUpperCase())
+        .join("");
+      document.getElementById('mpAvatar').textContent = initials;
     }
-    function closeChooseCustomerModal() {
-      document.getElementById('chooseCustomerModal').classList.add('hidden');
+
+    function closeMemberProfile() {
+      document.getElementById('member-profile-section').style.display = 'none';
+      document.getElementById('members-section').style.display = 'block';
+      document.getElementById('member-payment-details').innerHTML = "";
+      const detailsTable = document.querySelector("#member-profile-section .member-details-table");
+      if (detailsTable) {
+        detailsTable.style.display = "table"; 
+      }
     }
-    function chooseCustomerForItemPayment() {
-      const customerId = document.getElementById('customerSelect').value;
-      if (!customerId) {
-        alert("Please select a customer.");
+
+    /* Payment Tab: Hide personal details & show payment table */
+    function showPaymentDetailsForCustomer(button) {
+      const detailsTable = document.querySelector("#member-profile-section .member-details-table");
+      if (detailsTable) detailsTable.style.display = "none";
+
+      const container = document.getElementById('member-payment-details');
+      const name = document.getElementById('mpName').textContent;
+      const email = document.getElementById('mpEmail').textContent;
+      
+      container.innerHTML = 
+        `<table class="payment-method-table">
+          <thead>
+            <tr>
+              <th>Card</th>
+              <th>Expiration</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="visa-logo"></span> ****4436</td>
+              <td>04/25</td>
+              <td>
+                <button class="btn" onclick="updatePaymentMethodForMember(this)">Update</button>
+                <button class="btn" style="margin-left:0.5rem;" onclick="openSendMandateModal('${name}','${email}')">Send Mandate</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>`;
+    }
+
+    function showMembershipsForCustomer() {
+      const detailsTable = document.querySelector("#member-profile-section .member-details-table");
+      if (detailsTable) detailsTable.style.display = "none";
+      const container = document.getElementById('member-payment-details');
+      container.innerHTML = "<h3>Available Plans</h3><div id='plansList'></div>";
+      
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/plans", {
+        method: "GET",
+        headers: getApiHeaders()
+      })
+      .then(res => res.json())
+      .then(data => {
+        let plans = [];
+        if (Array.isArray(data)) {
+          plans = data.length > 0 && data[0].items ? data[0].items : data;
+        } else if (data.items) {
+          plans = data.items;
+        }
+        const plansListDiv = document.getElementById('plansList');
+        if (!plansListDiv) return;
+        plansListDiv.innerHTML = "";
+        
+        plans.forEach(plan => {
+          const div = document.createElement('div');
+          div.style.padding = "0.5rem";
+          div.style.marginBottom = "0.5rem";
+          div.style.cursor = "pointer";
+          div.style.backgroundColor = "#f5f5f5";
+          div.style.borderRadius = "4px";
+          div.textContent = `${plan.name || 'Plan'} - £${plan.price || 0}`;
+          div.onclick = () => {
+            checkoutRenew(plan.id, plan.price || 0, plan.currency || "GBP");
+            const modal = document.getElementById('renewPlanModal');
+            modal.classList.add('active');
+            modal.style.display = 'flex';
+          };
+          plansListDiv.appendChild(div);
+        });
+      })
+      .catch(e => console.error(e));
+    }
+
+    /* ---------- Mandate Flow ---------- */
+    function openSendMandateModal(consumerName, consumerEmail) {
+      const modal = document.getElementById('mandateModal');
+      modal.classList.add('active');
+      modal.style.display = 'flex';
+      document.getElementById('mandateLink').textContent = '';
+      document.getElementById('mandateQRCode').src = '';
+      sendMandate(consumerName, consumerEmail);
+    }
+
+    function sendMandate(cName, cEmail) {
+      if (!globalVendorId) {
+        alert("No vendor selected. Please configure a vendor first!");
         return;
       }
-      const selectedCustomer = customers.find(c => c.id === customerId);
-      closeChooseCustomerModal();
-      openItemPaymentModal(currentItemPaymentAmount, selectedCustomer);
+      const payload = {
+        consumer: {
+          name: cName || "Member Name",
+          email: cEmail || "member@example.com",
+          reference: "member-" + Date.now()
+        },
+        createMandateLink: true
+      };
+      fetch(`https://sandbox.unipaas.com/platform/vendors/${globalVendorId}/mandates`, {
+        method: "POST",
+        headers: getApiHeaders(),
+        body: JSON.stringify(payload)
+      })
+        .then(r => {
+          if (!r.ok) throw new Error("Error, status=" + r.status);
+          return r.json();
+        })
+        .then(data => {
+          const link = data.link.url;
+          document.getElementById('mandateLink').textContent = link;
+          document.getElementById('mandateQRCode').src =
+            "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(link);
+          openFloatingModal(link);
+        })
+        .catch(e => console.error("sendMandate error:", e));
     }
+    function copyMandateQRCode() {
+      alert("Mandate QR link copied to clipboard (simulate).");
+    }
+
+    /* ---------- Payment / Checkout ---------- */
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.add('active');
+        modal.style.display = 'flex';
+      }
+    }
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.classList.remove('active');
+        modal.style.display = 'none';
+      }
+    }
+    function copyQRCode() {
+      alert("Simulate copying QR code link to clipboard.");
+    }
+    
     function openItemPaymentModal(amount, customer) {
-      document.getElementById('updatePaymentModal').classList.remove('hidden');
+      currentMemberRow = null;
+      const modal = document.getElementById('updatePaymentModal');
+      if (checkoutStatusTimer) {
+        clearInterval(checkoutStatusTimer);
+        checkoutStatusTimer = null;
+      }
+      document.getElementById('updatePaymentLink').textContent = '';
+      document.getElementById('updatePaymentQRCode').src = '';
+      modal.classList.add('active');
+      modal.style.display = 'flex';
       itemPaymentCheckout(amount, customer);
     }
+    
     function itemPaymentCheckout(amount, customer) {
+      if (!customer || !customer.email) {
+        alert("Customer details are missing. Please select a valid customer.");
+        return;
+      }
       const data = {
         amount: amount,
         currency: "GBP",
         country: "GB",
         email: customer.email,
-        vendorId : globalVendorId,
+        vendorId: globalVendorId,
         paymentMethods: ["card"],
         reference: "item_payment_ref_" + new Date().getTime(),
         consumer: { reference: "item_consumer_ref_" + new Date().getTime() }
@@ -928,121 +1846,67 @@
         headers: getApiHeaders(),
         body: JSON.stringify(data)
       })
-      .then(response => {
-        if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
-        return response.json();
-      })
-      .then(jsonData => {
-        console.log("Item Payment Checkout Session Created:", jsonData);
-        const paymentlink = jsonData.shortLink;
-        const checkoutId = jsonData.id;
-        document.getElementById('updatePaymentLink').textContent = paymentlink;
-        document.getElementById('updatePaymentQRCode').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(paymentlink);
-        qrPaymentLinkValue = jsonData.qrPaymentLink;
-        document.getElementById('updatePaymentDetails').classList.remove('hidden');
-        if (currentInvoiceRow) {
-          invoicePaymentMapping[checkoutId] = currentInvoiceRow;
-          currentInvoiceRow = null;
-        }
-        startCheckoutStatusTimer(checkoutId);
-      })
-      .catch(error => console.error("Error:", error));
+        .then(r => {
+          if (!r.ok) throw new Error("Network error, status=" + r.status);
+          return r.json();
+        })
+        .then(jsonData => {
+          document.getElementById('updatePaymentLink').textContent = jsonData.shortLink;
+          document.getElementById('updatePaymentQRCode').src =
+            "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(jsonData.shortLink);
+          openFloatingModal(jsonData.shortLink);
+          openModal('updatePaymentModal');
+          startCheckoutStatusTimer(jsonData.id);
+        })
+        .catch(err => console.error(err));
     }
     function startCheckoutStatusTimer(checkoutId) {
       const startTime = Date.now();
       checkoutStatusTimer = setInterval(() => {
-        const elapsedSeconds = (Date.now() - startTime) / 1000;
-        if (elapsedSeconds > 400) {
+        const elapsed = (Date.now() - startTime) / 1000;
+        if (elapsed > 400) {
           clearInterval(checkoutStatusTimer);
-          console.log("Checkout status timer stopped after 400 seconds");
           return;
         }
         fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout/" + checkoutId, {
           method: "GET",
           headers: getApiHeaders()
         })
-        .then(response => {
-          if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
-          return response.json();
-        })
-        .then(data => {
-          console.log("Checkout status:", data.status);
-          if (data.status && data.status.toLowerCase() === "paid") {
-            clearInterval(checkoutStatusTimer);
-            document.getElementById("completedAmount").textContent = data.amount;
-            document.getElementById("completedCurrency").textContent = data.currency;
-            document.getElementById("completedReference").textContent = data.reference;
-            document.getElementById("purchaseCompleteModal").classList.remove('hidden');
-            if (invoicePaymentMapping[checkoutId]) {
-              const row = invoicePaymentMapping[checkoutId];
-              row.cells[4].innerHTML = `<span class="text-green-600 font-bold">Paid</span>`;
-              delete invoicePaymentMapping[checkoutId];
+          .then(r => r.json())
+          .then(data => {
+            if (data.status && data.status.toLowerCase() === 'paid') {
+              clearInterval(checkoutStatusTimer);
+              document.getElementById('completedAmount').textContent = data.amount;
+              document.getElementById('completedCurrency').textContent = data.currency;
+              document.getElementById('completedReference').textContent = data.reference;
+              openModal('purchaseCompleteModal');
             }
-          }
-        })
-        .catch(error => console.error("Error checking checkout status:", error));
+          })
+          .catch(e => console.error(e));
       }, 5000);
     }
-    function closePurchaseCompleteModal() {
-      document.getElementById("purchaseCompleteModal").classList.add('hidden');
-    }
     
-    function openRenewPlanModal() {
-      document.getElementById('renewPlanModal').classList.remove('hidden');
-      document.getElementById('renewalPlanSelection').classList.remove('hidden');
-      document.getElementById('renewalPlanDetails').classList.add('hidden');
-      fetchPlans();
+    function closePurchaseCompleteModal() {
+      closeModal('purchaseCompleteModal');
+      closeModal('updatePaymentModal');
     }
-    function closeRenewPlanModal() {
-      document.getElementById('renewPlanModal').classList.add('hidden');
-    }
-    function sendRenewalLink(method) {
-      alert('Renewal link sent via ' + method + '!');
-      closeRenewPlanModal();
-    }
-    function fetchPlans() {
-      fetch("https://sandbox.unipaas.com/platform/pay-ins/plans", {
-        method: "GET",
-        headers: getApiHeaders()
-      })
-      .then(response => {
-        if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
-        return response.json();
-      })
-      .then(data => {
-        let plans = [];
-        if (Array.isArray(data)) {
-          plans = data.length > 0 && data[0].items ? data[0].items : data;
-        } else if (data.items) {
-          plans = data.items;
-        }
-        const container = document.getElementById('planButtonsContainer');
-        container.innerHTML = "";
-        plans.forEach(plan => {
-          const btn = document.createElement('button');
-          btn.textContent = plan.description;
-          btn.className = "bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700";
-          btn.onclick = () => chooseRenewalPlan(plan.id, plan.price, plan.currency);
-          container.appendChild(btn);
-        });
-      })
-      .catch(error => console.error("Error fetching plans:", error));
-    }
-    function chooseRenewalPlan(planId, amount, currency) {
-      checkout(planId, amount, currency);
-    }
-    function checkout(planId, amount, currency) {
-      const uniqueRef = Date.now();
+
+    /* ---------- Renew Plan ---------- */
+    function checkoutRenew(planId, amount, currency) {
+      if (!globalVendorId) {
+        alert("No vendor selected. Please configure a vendor first!");
+        return;
+      }
       const data = {
         amount: amount,
         currency: currency,
         email: "demo@test.com",
         country: "GB",
-        paymentMethods: ["card"],
+        paymentMethods: ["card", "directDebit"],
         shippingSameAsBilling: true,
-        vendorId : globalVendorId,
-        reference: "item_payment_ref_" + new Date().getTime(),
-        consumer: { reference: "con_ref_" + new Date().getTime() },
+        vendorId: globalVendorId,
+        reference: "item_payment_ref_" + Date.now(),
+        consumer: { reference: "con_ref_" + Date.now() },
         plans: [planId]
       };
       fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout", {
@@ -1050,45 +1914,243 @@
         headers: getApiHeaders(),
         body: JSON.stringify(data)
       })
-      .then(response => {
-        if (!response.ok) throw new Error("Network response was not OK, status = " + response.status);
-        return response.json();
+        .then(r => {
+          if (!r.ok) throw new Error("Error, status=" + r.status);
+          return r.json();
+        })
+        .then(jsonData => {
+          const link = jsonData.shortLink;
+          document.getElementById('renewalPaymentLink').textContent = link;
+          document.getElementById('renewalQRCode').src =
+            "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(link);
+          openFloatingModal(link);
+        })
+        .catch(e => console.error(e));
+    }
+
+    /* ---------- Update Payment Method ---------- */
+    function updatePaymentMethodForMember(link) {
+      currentMemberRow = link.closest('tr');
+      const modal = document.getElementById('updatePaymentModal');
+      if (checkoutStatusTimer) {
+        clearInterval(checkoutStatusTimer);
+        checkoutStatusTimer = null;
+      }
+      document.getElementById('updatePaymentLink').textContent = '';
+      document.getElementById('updatePaymentQRCode').src = '';
+      modal.classList.add('active');
+      modal.style.display = 'flex';
+      updatePaymentCheckoutForExpired();
+    }
+    function updatePaymentCheckoutForExpired() {
+      if (!globalVendorId) {
+        alert("No vendor selected. Please configure a vendor first!");
+        return;
+      }
+      const data = {
+        amount: 0,
+        currency: "GBP",
+        country: "GB",
+        phone: "+44 20 7123 4567",
+        email: "test@unipaas.com",
+        storePaymentMethod: true,
+        vendorId: globalVendorId,
+        paymentMethods: ["card"],
+        reference: "expired_payment_ref_" + new Date().getTime(),
+        consumer: { reference: "expired_consumer_ref_" + new Date().getTime() }
+      };
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout", {
+        method: "POST",
+        headers: getApiHeaders(),
+        body: JSON.stringify(data)
       })
-      .then(jsonData => {
-        console.log("Checkout Session Created:", jsonData);
-        const paymentlink = jsonData.shortLink;
-        document.getElementById('renewalPaymentLink').textContent = paymentlink;
-        document.getElementById('renewalQRCode').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(paymentlink);
-        document.getElementById('renewalPlanSelection').classList.add('hidden');
-        document.getElementById('renewalPlanDetails').classList.remove('hidden');
+        .then(r => {
+          if (!r.ok) throw new Error("Network error, status=" + r.status);
+          return r.json();
+        })
+        .then(jsonData => {
+          document.getElementById('updatePaymentLink').textContent = jsonData.shortLink;
+          document.getElementById('updatePaymentQRCode').src =
+            "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(jsonData.shortLink);
+          startExpiredPaymentMethodTimer(jsonData.id, currentMemberRow);
+        })
+        .catch(err => console.error(err));
+    }
+    function startExpiredPaymentMethodTimer(checkoutId, clientRow) {
+      const startTime = Date.now();
+      const timer = setInterval(() => {
+        const elapsed = (Date.now() - startTime) / 1000;
+        if (elapsed > 400) {
+          clearInterval(timer);
+          return;
+        }
+        fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout/" + checkoutId, {
+          method: "GET",
+          headers: getApiHeaders()
+        })
+          .then(r => {
+            if (!r.ok) throw new Error("Network error, status=" + r.status);
+            return r.json();
+          })
+          .then(data => {
+            if (data.status && data.status.toLowerCase() === "paid") {
+              clearInterval(timer);
+              const authorizationId = data.authorizationId;
+              if (authorizationId) {
+                fetchAuthorizationDetails(authorizationId, clientRow);
+              }
+              closeModal('updatePaymentModal');
+            }
+          })
+          .catch(err => console.error(err));
+      }, 5000);
+    }
+    function fetchAuthorizationDetails(authorizationId, clientRow) {
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/" + authorizationId, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + savedToken
+        }
       })
-      .catch(error => console.error("Error:", error));
+        .then(r => {
+          if (!r.ok) throw new Error("Network error, status=" + r.status);
+          return r.json();
+        })
+        .then(data => {
+          if (data.paymentOption) {
+            let brand = "";
+            let last4 = "";
+            if (data.paymentOption.cardAccount) {
+              brand = data.paymentOption.cardAccount.brand;
+              last4 = data.paymentOption.cardAccount.last4Digits;
+            } else {
+              brand = data.paymentOption.brand;
+              last4 = data.paymentOption.last4digits;
+            }
+            let logoHtml = "";
+            if (brand) {
+              let brandLower = brand.toLowerCase();
+              if (brandLower === "visa") {
+                logoHtml = '<span class="visa-logo"></span>';
+              } else if (brandLower === "mastercard") {
+                logoHtml = '<span class="mastercard"></span>';
+              } else {
+                logoHtml = '<span>' + brand + '</span>';
+              }
+            }
+            if (clientRow && clientRow.cells.length >= 3) {
+              clientRow.cells[0].innerHTML = logoHtml + " ****" + last4;
+            }
+          }
+        })
+        .catch(e => console.error(e));
     }
-    
-    function openRegisterPlanModal() {
-      document.getElementById('registerPlanModal').classList.remove('hidden');
+
+    /* ---------- PayPortal, Balance ---------- */
+    function loadPayPortal() {
+      let payload = { scopes: ["portal_read", "portal_write"] };
+      if (globalVendorId) {
+        payload.vendorId = globalVendorId;
+      }
+      fetch("https://sandbox.unipaas.com/platform/authorize", {
+        method: "POST",
+        headers: getApiHeaders(),
+        body: JSON.stringify(payload)
+      })
+        .then(res => res.json())
+        .then(data => {
+          const newAccessToken = data.accessToken;
+          if (uniPaasComponents) {
+            uniPaasComponents.reset({ accessToken: newAccessToken, ...unipaasDefaultConfig });
+          } else {
+            uniPaasComponents = unipaas.components(newAccessToken, unipaasDefaultConfig);
+          }
+          const payPortal = uniPaasComponents.create("payPortal");
+          payPortal.mount("#pay_portal");
+        })
+        .catch(err => console.error("Error fetching token:", err));
     }
-    function closeRegisterPlanModal() {
-      document.getElementById('registerPlanModal').classList.add('hidden');
+    function loadBalance() {
+      let payload = { scopes: ["portal_read", "portal_write"] };
+      if (globalVendorId) {
+        payload.vendorId = globalVendorId;
+      }
+      fetch("https://sandbox.unipaas.com/platform/authorize", {
+        method: "POST",
+        headers: getApiHeaders(),
+        body: JSON.stringify(payload)
+      })
+        .then(res => res.json())
+        .then(data => {
+          const newAccessToken = data.accessToken;
+          const balanceContainer = document.getElementById("balance");
+          // If a previous balance instance exists, unmount it to prevent duplication.
+          if (window.balanceInstance && typeof window.balanceInstance.unmount === "function") {
+            window.balanceInstance.unmount();
+          }
+          balanceContainer.innerHTML = "";
+          window.balanceComponents = unipaas.components(newAccessToken, unipaasDefaultConfig);
+          window.balanceInstance = window.balanceComponents.create("balance");
+          window.balanceInstance.mount("#balance");
+        })
+        .catch(err => console.error("Error fetching balance token:", err));
     }
-    function sendRegistrationLink(method) {
-      alert('Registration link sent via ' + method + '!');
-      closeRegisterPlanModal();
-    }
-    
+
+    /* ---------- Settings (Restored Logic) ---------- */
     function openSettingsModal() {
-      document.getElementById('settingsModal').classList.remove('hidden');
+      const settingsModal = document.getElementById('settingsModal');
+      if (settingsModal.parentElement.id === 'settings-section') {
+        return;
+      }
+      settingsModal.classList.add('active');
+      settingsModal.style.display = 'flex';
       document.getElementById('accessTokenInput').value = savedToken;
     }
     function closeSettingsModal() {
-      document.getElementById('settingsModal').classList.add('hidden');
+      const settingsModal = document.getElementById('settingsModal');
+      if (settingsModal.parentElement.id === 'settings-section') {
+        return;
+      }
+      settingsModal.classList.remove('active');
+      settingsModal.style.display = 'none';
     }
     function saveAccessToken() {
       savedToken = document.getElementById('accessTokenInput').value;
+      const zeroState = document.getElementById('zeroStateToggle').checked;
+      if (!zeroState && !globalVendorId) {
+        fetchVendors(savedToken);
+        return;
+      } else if (zeroState) {
+        globalVendorId = null;
+        document.getElementById('stateStatusLabel').textContent = "Status: Zero state";
+      }
+      let payload = { scopes: ["portal_read", "portal_write"] };
+      if (globalVendorId) {
+        payload.vendorId = globalVendorId;
+      }
+      fetch("https://sandbox.unipaas.com/platform/authorize", {
+        method: "POST",
+        headers: getApiHeaders(),
+        body: JSON.stringify(payload)
+      })
+        .then(res => res.json())
+        .then(data => {
+          const newAccessToken = data.accessToken;
+          if (uniPaasComponents) {
+            uniPaasComponents.reset({ accessToken: newAccessToken, ...unipaasDefaultConfig });
+          } else {
+            uniPaasComponents = unipaas.components(newAccessToken, unipaasDefaultConfig);
+          }
+          const payPortal = uniPaasComponents.create("payPortal");
+          payPortal.mount("#pay_portal");
+          const balance = uniPaasComponents.create("balance");
+          balance.mount("#balance");
+        })
+        .catch(err => console.error("Error in saveAccessToken:", err));
       closeSettingsModal();
-      fetchVendors(savedToken);
     }
-    
+
     function fetchVendors(newKey) {
       fetch("https://sandbox.unipaas.com/platform/vendors", {
         method: "GET",
@@ -1097,154 +2159,580 @@
           "Content-Type": "application/json"
         }
       })
-      .then(response => response.json())
-      .then(data => {
-        const vendorSelect = document.getElementById("vendorSelect");
-        vendorSelect.innerHTML = "";
-        data.forEach(vendor => {
-          const option = document.createElement("option");
-          option.value = vendor.id;
-          option.text = vendor.name;
-          vendorSelect.appendChild(option);
-        });
-        document.getElementById("vendorSelectionModal").classList.remove("hidden");
-      })
-      .catch(error => console.error("Error fetching vendors:", error));
+        .then(r => r.json())
+        .then(data => {
+          const sel = document.getElementById('vendorSelect');
+          sel.innerHTML = "";
+          data.forEach(vendor => {
+            const op = document.createElement('option');
+            op.value = vendor.id;
+            op.text = vendor.name;
+            sel.appendChild(op);
+          });
+          openModal('vendorSelectionModal');
+        })
+        .catch(e => console.error(e));
     }
     function saveVendor() {
-      const vendorSelect = document.getElementById("vendorSelect");
-      globalVendorId = vendorSelect.value;
-      closeVendorSelectionModal();
+      const sel = document.getElementById('vendorSelect');
+      globalVendorId = sel.value;
+      const vendorName = sel.options[sel.selectedIndex].text;
+      const statusLabel = document.getElementById('stateStatusLabel');
+      if (statusLabel) {
+        statusLabel.textContent = "Status: Vendor - " + vendorName;
+      }
+      closeModal('vendorSelectionModal');
       loadPayPortal();
-    }
-    function closeVendorSelectionModal() {
-      document.getElementById("vendorSelectionModal").classList.add("hidden");
+      loadBalance();
     }
     
-    function openEstimateModal() {
-      document.getElementById('estimateModal').classList.remove('hidden');
+    /* ---------- Manage Plans ---------- */
+    function loadManagePlans() {
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/plans", {
+        method: "GET",
+        headers: getApiHeaders()
+      })
+        .then(r => r.json())
+        .then(data => {
+          let plans = [];
+          if (Array.isArray(data)) {
+            plans = data.length > 0 && data[0].items ? data[0].items : data;
+          } else if (data.items) {
+            plans = data.items;
+          }
+          const tbody = document.getElementById("plansTableBody");
+          tbody.innerHTML = "";
+          plans.forEach(plan => {
+            const row = document.createElement('tr');
+            row.innerHTML = 
+              `<td style="padding: 12px; border-bottom: 1px solid #eee;">${plan.id}</td>
+              <td style="padding: 12px; border-bottom: 1px solid #eee;">${plan.name || ''}</td>
+              <td style="padding: 12px; border-bottom: 1px solid #eee; color:#c62828; font-weight:600;">${plan.description || ''}</td>
+              <td style="padding: 12px; border-bottom: 1px solid #eee;">${plan.status || 'active'}</td>
+              <td style="padding: 12px; border-bottom: 1px solid #eee;">
+                <button class="btn btn-sm" onclick="openUpdatePlanModal('${plan.id}','${plan.name || ''}','${plan.description || ''}','${plan.status || 'active'}')">Update</button>
+                <button class="btn btn-sm" style="background:#333; margin-left:0.5rem;" onclick="deletePlan('${plan.id}')">Delete</button>
+              </td>`;
+            tbody.appendChild(row);
+          });
+        })
+        .catch(e => console.error(e));
     }
-    function closeEstimateModal() {
-      document.getElementById('estimateModal').classList.add('hidden');
+    function openUpdatePlanModal(planId, planName, planDescription, planStatus) {
+      document.getElementById('updatePlanId').value = planId;
+      document.getElementById('updatePlanName').value = planName;
+      document.getElementById('updatePlanDescription').value = planDescription;
+      document.getElementById('updatePlanStatus').value = planStatus;
+      openModal('updatePlanModal');
     }
-    function createEstimate() {
-      const petSelect = document.getElementById('estimatePet');
-      const clientSelect = document.getElementById('estimateClient');
-      const petValue = petSelect.value;
-      const clientValue = clientSelect.value;
-      if (!petValue || !clientValue) {
-        alert("Please select both a pet and a client.");
-        return;
-      }
-      const petText = petSelect.options[petSelect.selectedIndex].text;
-      const clientText = clientSelect.options[clientSelect.selectedIndex].text;
-      const reference = document.getElementById('estimateReference').value || "N/A";
-      
-      const fakeClients = {
-        "client1": { id: "client1", name: "John Doe", phone: "555-1234", email: "john.doe@example.com" },
-        "client2": { id: "client2", name: "Jane Smith", phone: "555-2345", email: "jane.smith@example.com" },
-        "client3": { id: "client3", name: "Alice Brown", phone: "555-4567", email: "alice.brown@example.com" }
+    function closeUpdatePlanModal() {
+      closeModal('updatePlanModal');
+    }
+    function deletePlan(planId) {
+      if (!confirm("Are you sure you want to delete plan " + planId + "?")) return;
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/plans/" + planId, {
+        method: "DELETE",
+        headers: getApiHeaders()
+      })
+        .then(r => {
+          if (!r.ok) throw new Error("Status=" + r.status);
+          return r.text();
+        })
+        .then(() => {
+          alert("Plan deleted!");
+          loadManagePlans();
+        })
+        .catch(e => alert("Error deleting plan: " + e.message));
+    }
+    document.getElementById('updatePlanForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const planId = document.getElementById('updatePlanId').value;
+      const payload = {
+        name: document.getElementById('updatePlanName').value,
+        description: document.getElementById('updatePlanDescription').value,
+        status: document.getElementById('updatePlanStatus').value
       };
-      selectedInvoiceClient = fakeClients[clientValue];
-      
-      var randomTotal = "£" + (Math.floor(Math.random() * 10) + 50).toFixed(2);
-      document.getElementById("invoiceTotal").innerText = randomTotal;
-      
-      const tbody = document.getElementById("invoicesTableBody");
-      const row = tbody.insertRow();
-      
-      let cell = row.insertCell();
-      cell.className = "px-4 py-2 text-left";
-      cell.innerText = "INV" + invoiceCounter;
-      
-      cell = row.insertCell();
-      cell.className = "px-4 py-2 text-left";
-      cell.innerText = petText;
-      
-      cell = row.insertCell();
-      cell.className = "px-4 py-2 text-left";
-      cell.innerText = clientText;
-      
-      cell = row.insertCell();
-      cell.className = "px-4 py-2 text-left";
-      cell.innerText = randomTotal;
-      
-      cell = row.insertCell();
-      cell.className = "px-4 py-2 text-left";
-      cell.innerText = "Pending";
-      
-      cell = row.insertCell();
-      cell.className = "px-4 py-2 text-left";
-      cell.innerHTML = `<a href="#" class="text-indigo-600 hover:underline" onclick="viewInvoiceModal(this)">View invoice</a>`;
-      
-      currentInvoiceRow = row;
-      invoiceCounter++;
-      
-      closeEstimateModal();
-      document.getElementById('invoiceDetailsModal').classList.remove('hidden');
-    }
-    // Updated viewInvoiceModal: updates the modal with the total from the clicked row.
-    function viewInvoiceModal(elem) {
-      currentInvoiceRow = elem.closest('tr');
-      const totalAmount = currentInvoiceRow.cells[3].innerText;
-      document.getElementById("invoiceTotal").innerText = totalAmount;
-      document.getElementById('invoiceDetailsModal').classList.remove('hidden');
-    }
-    function closeInvoiceDetailsModal() {
-      document.getElementById('invoiceDetailsModal').classList.add('hidden');
-    }
-    function sendInvoicePayment() {
-      const totalText = document.getElementById('invoiceTotal').innerText;
-      const total = parseFloat(totalText.replace('£',''));
-      if (!selectedInvoiceClient) {
-        alert("No client selected.");
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/plans/" + planId, {
+        method: "PATCH",
+        headers: getApiHeaders(),
+        body: JSON.stringify(payload)
+      })
+        .then(r => {
+          if (!r.ok) throw new Error("Network response not ok, status=" + r.status);
+          return r.json();
+        })
+        .then(data => {
+          alert("Plan updated successfully!");
+          closeUpdatePlanModal();
+          loadManagePlans();
+        })
+        .catch(err => {
+          alert("Error updating plan: " + err.message);
+        });
+    });
+
+    /* ---------- Create Plan ---------- */
+    document.getElementById('createPlanForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('planName').value.trim();
+      if (!name) { alert("Plan Name is required."); return; }
+      const desc = document.getElementById('planDescription').value.trim();
+      const amountVal = document.getElementById('amount').value.trim();
+      const amount = parseFloat(amountVal);
+      if (isNaN(amount) || amount <= 0) {
+        alert("Amount must be > 0.");
         return;
       }
-      openItemPaymentModal(total, selectedInvoiceClient);
-      closeInvoiceDetailsModal();
-    }
-    
-    const config_general = {
-      paymentsEnabled: true,
-      theme: { 
-        colors: { 
-          primaryColor: "#7b1adb", 
-          secondaryColor: "#b932f8", 
-          accentTextColor: "#7b1adb", 
-          primaryButtonColor: "#7b1adb" 
-        },
-        fontFamily: "inherit",
-        boxShadow: "0px 3px 15px rgba(27, 79, 162, 0.11)" 
-      }
-    };
-    
-    loadPayPortal();
-    
-    function copyQRCode() {
-      console.log("copyQRCode called, qrPaymentLinkValue:", qrPaymentLinkValue);
-      if (!qrPaymentLinkValue || qrPaymentLinkValue.trim() === "") {
-        alert("QR Code link not available yet.");
-        return;
-      }
-      const operatorQRCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(qrPaymentLinkValue);
-      document.getElementById('operatorQRCode').src = operatorQRCodeUrl;
-      document.getElementById('operatorQRCodeModal').classList.remove('hidden');
-    }
-    
-    function closeOperatorQRCodeModal() {
-      document.getElementById('operatorQRCodeModal').classList.add('hidden');
-    }
-    
-    document.addEventListener("keydown", function(event) {
-      if (event.key === "Escape") {
-        const operatorModal = document.getElementById('operatorQRCodeModal');
-        if (operatorModal && !operatorModal.classList.contains('hidden')) {
-          closeOperatorQRCodeModal();
+      const currency = document.getElementById('currency').value;
+      const frequency = document.getElementById('frequency').value;
+      let periodUOM = "month";
+      if (frequency === "weekly") periodUOM = "week";
+      else if (frequency === "yearly") periodUOM = "year";
+      const durationVal = document.getElementById('duration').value.trim();
+      const duration = durationVal !== "" ? parseInt(durationVal) : 0;
+      const autoRenewal = document.getElementById('autoRenewal').checked;
+      let payload = {
+        name,
+        description: desc,
+        currency,
+        period: duration,
+        periodUOM,
+        autoRenewal,
+        vendorId: globalVendorId,
+        country: "GB"
+      };
+      const isRamp = document.getElementById('pricingModelToggle').checked;
+      if (isRamp) {
+        payload.pricingModel = "ramp";
+        const container = document.getElementById('rampIntervalsContainer');
+        const intervals = container.querySelectorAll('.interval-box');
+        if (intervals.length === 0) {
+          alert("Add at least 1 ramp interval or set to fixed model.");
+          return;
         }
+        let rampArr = [];
+        intervals.forEach(div => {
+          const unitInput = div.querySelector('.ramp-unit');
+          const cyclesInput = div.querySelector('.ramp-cycles');
+          const unitAmt = parseFloat(unitInput.value);
+          const cyc = parseInt(cyclesInput.value);
+          if (isNaN(unitAmt) || unitAmt <= 0) { alert("Invalid ramp unit amount."); return; }
+          if (isNaN(cyc) || cyc <= 0) { alert("Invalid ramp cycles."); return; }
+          rampArr.push({ unitAmount: unitAmt, cycles: cyc });
+        });
+        payload.rampIntervals = rampArr;
+      } else {
+        payload.pricingModel = "fixed";
+        payload.price = amount;
       }
+      if (document.getElementById('trialPeriodToggle').checked) {
+        const tType = document.getElementById('trialPeriodType').value;
+        const tDur = parseInt(document.getElementById('trialPeriodDuration').value);
+        if (isNaN(tDur) || tDur <= 0) { alert("Trial duration must be > 0."); return; }
+        payload.trialUOM = tType;
+        payload.trialPeriod = tDur;
+      }
+      if (document.getElementById('setupFeeToggle').checked) {
+        const sFeeVal = document.getElementById('setupFeeAmount').value;
+        const setupFee = parseFloat(sFeeVal);
+        if (isNaN(setupFee) || setupFee < 0) { alert("Setup fee must be >=0."); return; }
+        payload.setupFee = setupFee;
+      }
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/plans", {
+        method: "POST",
+        headers: getApiHeaders(),
+        body: JSON.stringify(payload)
+      })
+        .then(r => {
+          if (!r.ok) {
+            return r.json().then(errData => {
+              throw new Error(errData.message || "Error: " + r.status);
+            });
+          }
+          return r.json();
+        })
+        .then(data => {
+          document.getElementById('planCreationResult').textContent = "Plan created! ID: " + data.id;
+          document.getElementById('createPlanForm').reset();
+          document.getElementById('trialPeriodFields').style.display = 'none';
+          document.getElementById('setupFeeFields').style.display = 'none';
+          document.getElementById('rampIntervalsSection').style.display = 'none';
+          document.getElementById('rampIntervalsContainer').innerHTML = "";
+          document.getElementById('pricingModelLabel').textContent = "Fixed";
+        })
+        .catch(err => {
+          document.getElementById('planCreationResult').textContent = "Error: " + err.message;
+        });
+    });
+    document.getElementById('trialPeriodToggle').addEventListener('change', function () {
+      document.getElementById('trialPeriodFields').style.display = this.checked ? 'block' : 'none';
+    });
+    document.getElementById('setupFeeToggle').addEventListener('change', function () {
+      document.getElementById('setupFeeFields').style.display = this.checked ? 'block' : 'none';
+    });
+    document.getElementById('pricingModelToggle').addEventListener('change', function () {
+      const isRamp = this.checked;
+      document.getElementById('pricingModelLabel').textContent = isRamp ? "Ramp" : "Fixed";
+      document.getElementById('rampIntervalsSection').style.display = isRamp ? "block" : "none";
+    });
+    document.getElementById('addRampInterval').addEventListener('click', function () {
+      const container = document.getElementById('rampIntervalsContainer');
+      const div = document.createElement('div');
+      div.className = 'interval-box';
+      div.style.display = 'flex';
+      div.style.gap = '0.5rem';
+      div.style.marginBottom = '0.5rem';
+      div.innerHTML = 
+        `<input type="number" step="0.01" min="0.01" class="ramp-unit" style="flex:1;" placeholder="Unit Amount" />
+        <input type="number" min="1" class="ramp-cycles" style="flex:1;" placeholder="Cycles" />
+        <button type="button" class="remove-ramp-interval">Remove</button>`;
+      container.appendChild(div);
+      div.querySelector('.remove-ramp-interval').addEventListener('click', () => {
+        container.removeChild(div);
+      });
+    });
+
+    document.getElementById('zeroStateToggle').addEventListener('change', function () {
+      // no-op
+    });
+
+    /* ---------- New Modal: Payment Option Modal Functions ---------- */
+    function updateModalProductAmount() {
+      var select = document.getElementById('modalProductSelect');
+      var amountInput = document.getElementById('modalAmountInput');
+      amountInput.value = select.value;
+    }
+    function updatePaymentOptionButtonText() {
+      var paymentType = document.querySelector('input[name="paymentType"]:checked').value;
+      var btn = document.getElementById('paymentOptionSubmit');
+      if(paymentType === 'directDebit') {
+        btn.textContent = "Request Mandate";
+        document.getElementById('onlineOptions').style.display = "none";
+      } else {
+        btn.textContent = "Create Payment";
+        document.getElementById('onlineOptions').style.display = "block";
+      }
+    }
+    function handlePaymentOptionSubmit() {
+      var paymentType = document.querySelector('input[name="paymentType"]:checked').value;
+      if(paymentType === 'directDebit') {
+        closeModal('paymentOptionModal');
+        openModal('mandateModal');
+        sendMandate("Demo User", "demo@example.com");
+      } else {
+        var isCard = document.getElementById('paymentOptionCards').checked;
+        var isIBT = document.getElementById('paymentOptionOpenBanking').checked;
+        var paymentMethods = [];
+        if(isCard) paymentMethods.push("card");
+        if(isIBT) paymentMethods.push("bankTransfer");
+        if(paymentMethods.length === 0) {
+          alert("Please select at least one online payment method.");
+          return;
+        }
+        closeModal('paymentOptionModal');
+        var amount = parseFloat(document.getElementById('modalAmountInput').value);
+        createCheckout(paymentMethods, amount);
+      }
+    }
+    function createCheckout(paymentMethods, amount) {
+      var data = {
+        amount: amount,
+        currency: "GBP",
+        country: "GB",
+        email: "demo@example.com",
+        vendorId: globalVendorId,
+        paymentMethods: paymentMethods,
+        reference: "checkout_" + Date.now(),
+        consumer: { reference: "consumer_" + Date.now() }
+      };
+      fetch("https://sandbox.unipaas.com/platform/pay-ins/checkout", {
+        method: "POST",
+        headers: getApiHeaders(),
+        body: JSON.stringify(data)
+      })
+      .then(r => {
+        if (!r.ok) throw new Error("Network error, status=" + r.status);
+        return r.json();
+      })
+      .then(jsonData => {
+        document.getElementById('updatePaymentLink').textContent = jsonData.shortLink;
+        document.getElementById('updatePaymentQRCode').src =
+          "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(jsonData.shortLink);
+        openFloatingModal(jsonData.shortLink);
+        openModal('updatePaymentModal');
+        startCheckoutStatusTimer(jsonData.id);
+      })
+      .catch(err => console.error("Error in createCheckout:", err));
+    }
+    
+    /* ---------- Floating Modal Functions ---------- */
+    function openFloatingModal(link) {
+      var iframe = document.getElementById("previewIframe");
+      iframe.src = link;
+      document.getElementById("floatingPreviewModal").style.display = "block";
+    }
+    function closeFloatingModal() {
+      document.getElementById("floatingPreviewModal").style.display = "none";
+    }
+    
+    /* New functions for Dashboard extra fields */
+    function dashboardCollectPayment() {
+      isDashboardPayment = true;
+      openModal('paymentOptionModal');
+    }
+    function updateDashboardPrice() {
+      var productSelect = document.getElementById('dashboardProduct');
+      var priceInput = document.getElementById('dashboardPrice');
+      priceInput.value = productSelect.value;
+    }
+    
+    window.addEventListener('DOMContentLoaded', () => {
+      showTab('dashboard');
+      loadPayPortal();
+      loadBalance();
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const checkComponents = setInterval(() => {
+        if (typeof uniPaasComponents !== "undefined" && uniPaasComponents) {
+          clearInterval(checkComponents);
+          document.getElementById("onboardingModal").style.display = "none";
+          uniPaasComponents.on("paymentsEnable", (e) => {
+            console.log("paymentsEnable event", e.detail);
+          });
+          uniPaasComponents.on("startOnboarding", (e) => {
+            console.log("startOnboarding event", e.detail);
+            document.getElementById("onboardingModal").style.display = "flex";
+            if (!globalVendorId) {
+              fetch("https://sandbox.unipaas.com/platform/vendors", {
+                method: "POST",
+                headers: getApiHeaders(),
+                body: JSON.stringify({
+                  "businessName": "Better Gym",
+                  "type": "individual",
+                  "firstName": "TESTcomplete John",
+                  "lastName": "Mitch",
+                  "email": "john.doe@example.com",
+                  "country": "GB",
+                  "url": "http://example.com",
+                  "serviceDescription": "Gym operator",
+                  "birthDate": "1980-01-01",
+                  "phone": "+447911123456",
+                  "category": "FOOD_DELIVERY",
+                  "createOnboardingLink": true
+                })
+              })
+                .then(response => response.json())
+                .then(data => {
+                  globalVendorId = data.id;
+                  return fetch(`https://sandbox.unipaas.com/platform/vendors/${globalVendorId}/onboarding`, {
+                    method: "POST",
+                    headers: getApiHeaders(),
+                    body: JSON.stringify({
+                      "fields":[
+                        {
+                          "alias": "individual.address",
+                          "value": {
+                            "country": "GB",
+                            "city": "London",
+                            "street": "New Cavendish Street",
+                            "houseNumber": "64",
+                            "postCode": "W1G 8TB"
+                          }
+                        },
+                        {
+                          "alias": "business.agreement",
+                          "value": {
+                            "accepted": true,
+                            "ipAddress": "1.1.1.1"
+                          }
+                        },
+                        {
+                          "alias": "individual.age",
+                          "value": "1"
+                        },
+                        {
+                          "alias": "business.bankAccount",
+                          "value": "38290008"
+                        },
+                        {
+                          "alias": "business.sortCode",
+                          "value": "200415"
+                        }
+                      ]
+                    })
+                  });
+                })
+                .then(response => response.json())
+                .then(() => {
+                  return fetch("https://sandbox.unipaas.com/platform/authorize", {
+                    method: "POST",
+                    headers: getApiHeaders(),
+                    body: JSON.stringify({
+                      scopes: ["portal_read", "portal_write"],
+                      vendorId:  globalVendorId
+                    })
+                  });
+                })
+                .then(res => res.json())
+                .then(data => {
+                  const newAccessToken = data.accessToken;
+                  uniPaasComponents.reset({ accessToken: newAccessToken, unipaasDefaultConfig });
+                  const onboarding = uniPaasComponents.create("onboarding");
+                  onboarding.mount("#onboarding");
+                })
+                .catch(err => console.error("Error during onboarding setup:", err));
+            } else {
+              fetch("https://sandbox.unipaas.com/platform/authorize", {
+                method: "POST",
+                headers: getApiHeaders(),
+                body: JSON.stringify({
+                  scopes: ["portal_read", "portal_write"],
+                  vendorId: globalVendorId
+                })
+              })
+                .then(res => res.json())
+                .then(data => {
+                  const newAccessToken = data.accessToken;
+                  const onboarding = uniPaasComponents.create("onboarding");
+                  onboarding.mount("#onboarding");
+                })
+                .catch(err => console.error("Error during re-authorizing for onboarding:", err));
+            }
+          });
+          uniPaasComponents.on("onboardingFinished", (e) => {
+            console.log("onboardingFinished event", e.detail);
+            document.getElementById("onboardingModal").style.display = "none";
+            let payload = { scopes: ["portal_read", "portal_write"] };
+            if (globalVendorId) {
+              payload.vendorId = globalVendorId;
+            }
+            fetch("https://sandbox.unipaas.com/platform/authorize", {
+              method: "POST",
+              headers: getApiHeaders(),
+              body: JSON.stringify(payload)
+            })
+              .then(res => res.json())
+              .then(data => {
+                const newAccessToken = data.accessToken;
+                if (uniPaasComponents) {
+                  uniPaasComponents.reset({ accessToken: newAccessToken });
+                } else {
+                  uniPaasComponents = unipaas.components(newAccessToken, unipaasDefaultConfig);
+                }
+                const payPortal = uniPaasComponents.create("payPortal");
+                payPortal.mount("#pay_portal");
+                const balance = uniPaasComponents.create("balance");
+                balance.mount("#balance");
+              })
+              .catch(err => console.error("Error fetching token on onboardingFinished:", err));
+          });
+          uniPaasComponents.on("payPortal", (e) => {
+            console.log("payPortal event", e.detail);
+          });
+          uniPaasComponents.on("invoicePage", (e) => {
+            console.log("invoicePage event", e.detail);
+          });
+          uniPaasComponents.on("buyerPage", (e) => {
+            console.log("buyerPage event", e.detail);
+          });
+        }
+      }, 100);
     });
     
+    function openOnboardingComponent() {
+      const modal = document.getElementById("onboardingModal");
+      modal.style.display = "flex";
+      if (!globalVendorId) {
+        fetch("https://sandbox.unipaas.com/platform/vendors", {
+          method: "POST",
+          headers: getApiHeaders(),
+          body: JSON.stringify({
+            "businessName": "Better Delivery",
+            "type": "individual",
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "john.doe@example.com",
+            "country": "GB",
+            "url": "http://example.com",
+            "serviceDescription": "Gym operator",
+            "birthDate": "1980-01-01",
+            "phone": "+44912345678",
+            "category": "FOOD_DELIVERY",
+            "createOnboardingLink": true
+          })
+        })
+          .then(response => response.json())
+          .then(data => {
+            globalVendorId = data.id;
+            return fetch(`https://sandbox.unipaas.com/platform/vendors/${globalVendorId}/onboarding`, {
+              method: "POST",
+              headers: getApiHeaders(),
+              body: JSON.stringify({
+                "fields":[
+                  {
+                    "alias": "individual.address",
+                    "value": {
+                      "country": "GB",
+                      "city": "London",
+                      "street": "New Cavendish Street",
+                      "houseNumber": "64",
+                      "postCode": "W1G 8TB"
+                    }
+                  },
+                  {
+                    "alias": "business.bankAccount",
+                    "value": "38290008"
+                  },
+                  {
+                    "alias": "business.sortCode",
+                    "value": "200415"
+                  }
+                ]
+              })
+            });
+          })
+          .then(response => response.json())
+          .then(() => {
+            return fetch("https://sandbox.unipaas.com/platform/authorize", {
+              method: "POST",
+              headers: getApiHeaders(),
+              body: JSON.stringify({
+                scopes: ["portal_read", "portal_write"],
+                vendorId: globalVendorId
+              })
+            });
+          })
+          .then(res => res.json())
+          .then(data => {
+            const newAccessToken = data.accessToken;
+            uniPaasComponents.reset({ accessToken: newAccessToken, unipaasDefaultConfig });
+            const onboarding = uniPaasComponents.create("onboarding");
+            onboarding.mount("#onboarding");
+          })
+          .catch(err => console.error("Error during onboarding setup:", err));
+      } else {
+        fetch("https://sandbox.unipaas.com/platform/authorize", {
+          method: "POST",
+          headers: getApiHeaders(),
+          body: JSON.stringify({
+            scopes: ["portal_read", "portal_write"],
+            vendorId: globalVendorId
+          })
+        })
+          .then(res => res.json())
+          .then(data => {
+            const newAccessToken = data.accessToken;
+            uniPaasComponents.reset({ accessToken: newAccessToken, unipaasDefaultConfig });
+            const onboarding = uniPaasComponents.create("onboarding");
+            onboarding.mount("#onboarding");
+          })
+          .catch(err => console.error("Error during re-authorizing for onboarding:", err));
+      }
+    }
+    function closeOnboardingModal() {
+      document.getElementById("onboardingModal").style.display = "none";
+    }
   </script>
-  
 </body>
 </html>
