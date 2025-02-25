@@ -313,14 +313,17 @@
       display: flex;
     }
     .modal-content {
-      background: #fff;
-      padding: 1rem;
-      border-radius: 6px;
-      max-width: 90%;
-      max-height: 90%;
-      overflow-y: auto;
-      position: relative;
-    }
+  background: #fff;
+  padding: 1rem;
+  border-radius: 6px;
+  width: 400px;       /* Added width */
+  max-width: 90%;
+  max-height: 90%;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);  /* Optional: for consistency */
+}
+
 
     /* New "QR style" modal design */
     .qr-modal {
@@ -405,6 +408,7 @@
     .qr-modal .copy-qr-btn:hover {
       background-color: #ddd;
     }
+    /* Note: The payment link elements below are now anchors with an onclick that opens the floating modal when clicked */
     .qr-modal .payment-link-label {
       font-weight: 600;
       margin-bottom: 0.25rem;
@@ -413,6 +417,8 @@
       color: var(--primary-color);
       word-break: break-all;
       font-size: 0.88rem;
+      text-decoration: underline;
+      cursor: pointer;
     }
 
     /* MEMBERS SECTION */
@@ -1064,12 +1070,12 @@
 
           <!-- Three Products -->
           <div class="store-products">
-            <!-- Product 1: Gym T-Shirt -->
+            <!-- Product 1: Yoga Class -->
             <div class="store-product-card">
               <div class="product-image-placeholder">
-                <img src="https://img.icons8.com/ios-filled/50/000000/t-shirt.png" alt="Gym T‐Shirt Icon" />
+                <img src="https://img.icons8.com/ios-filled/50/000000/lotus.png" alt="Yoga Class Icon" />
               </div>
-              <h3 class="product-title">Gym T‐Shirt</h3>
+              <h3 class="product-title">Yoga Class</h3>
               <p class="product-stock">12 left in stock</p>
               <p class="product-price">£15.00</p>
               <div class="product-quantity">
@@ -1342,8 +1348,8 @@
   
   <!-- FOOTER BANNER -->
   <div class="footer-banner">
-    <p>Integrate your gym finances with UniPaas for seamless transactions.</p>
-    <button class="learn-more-btn" onclick="openOnboardingComponent()">Learn more</button>
+    <p>join GymPro Pay to get paid securely and enhance your customers payment experience</p>
+    <button class="learn-more-btn" onclick="openOnboardingComponent()">Get Started</button>
   </div>
   <!-- ================= MODALS (except customer selector merged into store) ================= -->
 
@@ -1445,9 +1451,10 @@
       </div>
       <p class="qr-instructions">Use this QR code to access the checkout</p>
       <img id="updatePaymentQRCode" src="" alt="QR Code" class="qr-code"/>
-      <button class="copy-qr-btn" onclick="copyQRCode()">Copy QR Code</button>
+      <button class="copy-qr-btn" onclick="copyQRCode()">Open Link</button>
       <p class="payment-link-label">Payment Link:</p>
-      <p id="updatePaymentLink" class="payment-link-value"></p>
+      <!-- The link is now an anchor element; clicking it will open the floating modal -->
+      <a id="updatePaymentLink" class="payment-link-value" href="#" target="_blank" onclick="openFloatingModal(this.href); return false;"></a>
     </div>
   </div>
   
@@ -1455,7 +1462,7 @@
   <div id="mandateModal" class="modal-backdrop">
     <div class="modal-content qr-modal">
       <button class="close-btn" onclick="closeModal('mandateModal')">×</button>
-      <h2>Send Mandate Link to Customer</h2>
+      <h2>Collect Payment</h2>
       <div class="button-row">
         <button class="action-btn disabled-btn">Send via Email</button>
         <button class="action-btn disabled-btn">Send via SMS</button>
@@ -1464,7 +1471,8 @@
       <img id="mandateQRCode" src="" alt="Mandate QR Code" class="qr-code"/>
       <button class="copy-qr-btn" onclick="copyMandateQRCode()">Copy QR Code</button>
       <p class="payment-link-label">Mandate Link:</p>
-      <p id="mandateLink" class="payment-link-value"></p>
+      <!-- Changed to anchor element -->
+      <a id="mandateLink" class="payment-link-value" href="#" target="_blank" onclick="openFloatingModal(this.href); return false;"></a>
     </div>
   </div>
   
@@ -1482,7 +1490,8 @@
       <img id="renewalQRCode" src="" alt="Renewal QR Code" class="qr-code"/>
       <button class="copy-qr-btn" onclick="copyQRCode()">Copy QR Code</button>
       <p class="payment-link-label">Payment Link:</p>
-      <p id="renewalPaymentLink" class="payment-link-value"></p>
+      <!-- Changed to anchor element -->
+      <a id="renewalPaymentLink" class="payment-link-value" href="#" target="_blank" onclick="openFloatingModal(this.href); return false;"></a>
       <div id="renewalPlanDetails" style="display:none;"></div>
     </div>
   </div>
@@ -1491,13 +1500,13 @@
   <div id="paymentOptionModal" class="modal-backdrop">
     <div class="modal-content qr-modal">
       <button class="close-btn" onclick="closeModal('paymentOptionModal')">×</button>
-      <h2>Select Payment Option</h2>
+      <h2>Collect Payment</h2>
       <div class="modal-header-details">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div>
             <label for="modalProductSelect" style="margin-right:0.5rem;">Product:</label>
             <select id="modalProductSelect" onchange="updateModalProductAmount()">
-              <option value="15.00" data-name="Gym T‐Shirt">Gym T‐Shirt - £15.00</option>
+              <option value="15.00" data-name="Yoga Class">Yoga Class - £15.00</option>
               <option value="25.00" data-name="Protein Shake">Protein Shake - £25.00</option>
               <option value="12.00" data-name="Yoga Mat">Yoga Mat - £12.00</option>
             </select>
@@ -1518,30 +1527,31 @@
       <div style="margin: 1rem 0; text-align: left;">
         <div>
           <label>
-            <input type="radio" name="paymentType" value="online" onchange="updatePaymentOptionButtonText()">
+            <input type="radio" name="paymentType" value="online" checked onchange="updatePaymentOptionButtonText()">
             <img src="card.png" alt="Card Icon" style="width:50px; vertical-align: middle; margin-right:4px;">Online Payments
           </label>
         </div>
-        <div id="onlineOptions" style="margin-top: 0.5rem; padding-left: 1.5rem; display:none;">
+        <div id="onlineOptions" style="margin-top: 0.5rem; padding-left: 1.5rem;">
           <div style="margin-bottom: 0.5rem;">
             <label>
               <input type="checkbox" id="paymentOptionCards" checked onchange="updatePaymentOptionButtonText()">
-              <img src="cards.png" alt="Cards Icon" style="width:100px; vertical-align: middle; margin-right:4px;">Cards
+              Cards <img src="cards.png" alt="Cards Icon" style="width:53%; vertical-align: middle; margin-right:4px;">
             </label>
             <label>
+<br>
               <input type="checkbox" id="paymentOptionOpenBanking" checked onchange="updatePaymentOptionButtonText()">
-              <img src="bank.png" alt="Bank Icon" style="width:50px; vertical-align: middle; margin-right:4px;">Instant Bank Transfer
+              Instant Bank Transfer <img src="bank.png" alt="Bank Icon" style="width:50px; vertical-align: middle; margin-right:4px;">
             </label>
           </div>
         </div>
         <div>
           <label>
-            <input type="radio" name="paymentType" value="directDebit" checked onchange="updatePaymentOptionButtonText()">
+            <input type="radio" name="paymentType" value="directDebit" onchange="updatePaymentOptionButtonText()">
             <img src="directdebit.png" alt="Direct Debit Icon" style="width:97px; vertical-align: middle; margin-right:0px;">Direct Debit
           </label>
         </div>
       </div>
-      <button id="paymentOptionSubmit" class="action-btn" onclick="handlePaymentOptionSubmit()">Request Mandate</button>
+      <button id="paymentOptionSubmit" class="action-btn" onclick="handlePaymentOptionSubmit()">Create Payment</button>
     </div>
   </div>
 
@@ -1753,7 +1763,9 @@
       const modal = document.getElementById('mandateModal');
       modal.classList.add('active');
       modal.style.display = 'flex';
+      // Clear previous values
       document.getElementById('mandateLink').textContent = '';
+      document.getElementById('mandateLink').href = '#';
       document.getElementById('mandateQRCode').src = '';
       sendMandate(consumerName, consumerEmail);
     }
@@ -1783,14 +1795,17 @@
         .then(data => {
           const link = data.link.url;
           document.getElementById('mandateLink').textContent = link;
+          document.getElementById('mandateLink').href = link;
           document.getElementById('mandateQRCode').src =
             "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(link);
-          openFloatingModal(link);
         })
         .catch(e => console.error("sendMandate error:", e));
     }
     function copyMandateQRCode() {
-      alert("Mandate QR link copied to clipboard (simulate).");
+      var mandateLink = document.getElementById('mandateLink');
+      if(mandateLink && mandateLink.href && mandateLink.href !== '#'){
+        window.open(mandateLink.href, '_blank');
+      }
     }
 
     /* ---------- Payment / Checkout ---------- */
@@ -1809,7 +1824,16 @@
       }
     }
     function copyQRCode() {
-      alert("Simulate copying QR code link to clipboard.");
+      // First try the updatePaymentLink, then the renewalPaymentLink if present
+      var updateLink = document.getElementById('updatePaymentLink');
+      if (updateLink && updateLink.href && updateLink.href !== '#') {
+        window.open(updateLink.href, '_blank');
+        return;
+      }
+      var renewalLink = document.getElementById('renewalPaymentLink');
+      if (renewalLink && renewalLink.href && renewalLink.href !== '#') {
+        window.open(renewalLink.href, '_blank');
+      }
     }
     
     function openItemPaymentModal(amount, customer) {
@@ -1820,6 +1844,7 @@
         checkoutStatusTimer = null;
       }
       document.getElementById('updatePaymentLink').textContent = '';
+      document.getElementById('updatePaymentLink').href = '#';
       document.getElementById('updatePaymentQRCode').src = '';
       modal.classList.add('active');
       modal.style.display = 'flex';
@@ -1852,9 +1877,9 @@
         })
         .then(jsonData => {
           document.getElementById('updatePaymentLink').textContent = jsonData.shortLink;
+          document.getElementById('updatePaymentLink').href = jsonData.shortLink;
           document.getElementById('updatePaymentQRCode').src =
             "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(jsonData.shortLink);
-          openFloatingModal(jsonData.shortLink);
           openModal('updatePaymentModal');
           startCheckoutStatusTimer(jsonData.id);
         })
@@ -1921,9 +1946,7 @@
         .then(jsonData => {
           const link = jsonData.shortLink;
           document.getElementById('renewalPaymentLink').textContent = link;
-          document.getElementById('renewalQRCode').src =
-            "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(link);
-          openFloatingModal(link);
+          document.getElementById('renewalPaymentLink').href = link;
         })
         .catch(e => console.error(e));
     }
@@ -1937,6 +1960,7 @@
         checkoutStatusTimer = null;
       }
       document.getElementById('updatePaymentLink').textContent = '';
+      document.getElementById('updatePaymentLink').href = '#';
       document.getElementById('updatePaymentQRCode').src = '';
       modal.classList.add('active');
       modal.style.display = 'flex';
@@ -1970,9 +1994,11 @@
         })
         .then(jsonData => {
           document.getElementById('updatePaymentLink').textContent = jsonData.shortLink;
+          document.getElementById('updatePaymentLink').href = jsonData.shortLink;
           document.getElementById('updatePaymentQRCode').src =
             "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(jsonData.shortLink);
           startExpiredPaymentMethodTimer(jsonData.id, currentMemberRow);
+          openModal('updatePaymentModal');
         })
         .catch(err => console.error(err));
     }
@@ -2049,7 +2075,7 @@
 
     /* ---------- PayPortal, Balance ---------- */
     function loadPayPortal() {
-      let payload = { scopes: ["portal_read", "portal_write"] };
+       let payload = { scopes: ["portal_read", "portal_write"],vendor: {reference: 'oded-test' }};
       if (globalVendorId) {
         payload.vendorId = globalVendorId;
       }
@@ -2072,7 +2098,7 @@
         .catch(err => console.error("Error fetching token:", err));
     }
     function loadBalance() {
-      let payload = { scopes: ["portal_read", "portal_write"] };
+      let payload = { scopes: ["portal_read", "portal_write"],vendor: {reference: 'oded-test' }};
       if (globalVendorId) {
         payload.vendorId = globalVendorId;
       }
@@ -2085,7 +2111,6 @@
         .then(data => {
           const newAccessToken = data.accessToken;
           const balanceContainer = document.getElementById("balance");
-          // If a previous balance instance exists, unmount it to prevent duplication.
           if (window.balanceInstance && typeof window.balanceInstance.unmount === "function") {
             window.balanceInstance.unmount();
           }
@@ -2456,9 +2481,9 @@
       })
       .then(jsonData => {
         document.getElementById('updatePaymentLink').textContent = jsonData.shortLink;
+        document.getElementById('updatePaymentLink').href = jsonData.shortLink;
         document.getElementById('updatePaymentQRCode').src =
           "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent(jsonData.shortLink);
-        openFloatingModal(jsonData.shortLink);
         openModal('updatePaymentModal');
         startCheckoutStatusTimer(jsonData.id);
       })
@@ -2508,17 +2533,12 @@
                 method: "POST",
                 headers: getApiHeaders(),
                 body: JSON.stringify({
-                  "businessName": "Better Gym",
+                   "businessName": "Better Gym",
                   "type": "individual",
                   "firstName": "TESTcomplete John",
                   "lastName": "Mitch",
                   "email": "john.doe@example.com",
                   "country": "GB",
-                  "url": "http://example.com",
-                  "serviceDescription": "Gym operator",
-                  "birthDate": "1980-01-01",
-                  "phone": "+447911123456",
-                  "category": "FOOD_DELIVERY",
                   "createOnboardingLink": true
                 })
               })
@@ -2529,7 +2549,7 @@
                     method: "POST",
                     headers: getApiHeaders(),
                     body: JSON.stringify({
-                      "fields":[
+                       "fields":[
                         {
                           "alias": "individual.address",
                           "value": {
@@ -2541,6 +2561,30 @@
                           }
                         },
                         {
+                          "alias": "individual.phone",
+                          "value": "+447911123456" 
+                        },
+                        {
+                          "alias": "individual.birthDate",
+                          "value": "1980-01-01" 
+                        },
+                        {
+                          "alias": "business.url",
+                          "value": "http://example.com" 
+                        },
+                        {
+                          "alias": "business.businessAge",
+                          "value": "1-2 years"
+                        },
+                        {
+                          "alias": "business.category",
+                          "value": "FOOD_DELIVERY"
+                        },
+                        {
+                          "alias": "business.serviceDescription",
+                          "value": "Gym operator"
+                        },
+                        {
                           "alias": "business.agreement",
                           "value": {
                             "accepted": true,
@@ -2548,17 +2592,24 @@
                           }
                         },
                         {
-                          "alias": "individual.age",
-                          "value": "1"
+                            "alias": "business.bankDetails",
+                            "value": {
+                                "accountNumber": "38290008",
+                                "sortCode": "20-04-15"
+                            }
                         },
                         {
-                          "alias": "business.bankAccount",
-                          "value": "38290008"
+                          "alias": "business.avgMonthlyTurnover",
+                          "value": "£10,000 - £100,000"
                         },
                         {
-                          "alias": "business.sortCode",
-                          "value": "200415"
-                        }
+                          "alias": "business.avgSingleTrxValue",
+                          "value": "£500 - £14,999"
+                        },
+                        {
+                          "alias": "business.fulfillmentTimeframe",
+                          "value": "Within 2 weeks"
+                        },
                       ]
                     })
                   });
